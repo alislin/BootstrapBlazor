@@ -4,79 +4,81 @@
 
 using BootstrapBlazor.Components;
 using BootstrapBlazor.Shared.Common;
-using BootstrapBlazor.Shared.Pages.Components;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
 
-namespace BootstrapBlazor.Shared.Pages
+namespace BootstrapBlazor.Shared.Samples;
+
+/// <summary>
+/// Geolocation 地理定位/移动距离追踪
+/// <para></para>
+/// 扩展阅读:Chrome中模拟定位信息，清除定位信息<para></para>
+/// https://blog.csdn.net/u010844189/article/details/81163438
+/// </summary>
+public sealed partial class Geolocations
 {
+    [NotNull]
+    private string? Title { get; set; }
+
+    [NotNull]
+    private string? BaseUsageText { get; set; }
+
+    [NotNull]
+    private string? IntroText1 { get; set; }
+
+    [NotNull]
+    private string? IntroText2 { get; set; }
+
+    [NotNull]
+    private string? IntroText3 { get; set; }
+
+    [Inject]
+    [NotNull]
+    private IStringLocalizer<Geolocations>? Localizer { get; set; }
+
+    private string? status { get; set; }
+    private Geolocationitem? geolocations { get; set; }
+    private List<Geolocationitem> Items { get; set; } = new List<Geolocationitem>() { new Geolocationitem() };
+
+    private string ImageUrl(string image) => $"_content/BootstrapBlazor.Shared/images/{image}";
+
     /// <summary>
-    /// Geolocation 地理定位/移动距离追踪
-    /// <para></para>
-    /// 扩展阅读:Chrome中模拟定位信息，清除定位信息<para></para>
-    /// https://blog.csdn.net/u010844189/article/details/81163438
+    /// OnInitialized 方法
     /// </summary>
-    public sealed partial class Geolocations
+    protected override void OnInitialized()
     {
-        [NotNull]
-        private string? Title { get; set; }
+        base.OnInitialized();
 
-        [NotNull]
-        private string? BaseUsageText { get; set; }
-
-        [NotNull]
-        private string? IntroText1 { get; set; }
-
-        [NotNull]
-        private string? IntroText2 { get; set; }
-
-        [Inject]
-        [NotNull]
-        private IStringLocalizer<Geolocations>? Localizer { get; set; }
-
-        private string? status { get; set; }
-        private Geolocationitem? geolocations { get; set; }
-        private List<Geolocationitem> Items  { get; set; } = new List<Geolocationitem>() { new Geolocationitem()} ;
-
-        /// <summary>
-        /// OnInitialized 方法
-        /// </summary>
-        protected override void OnInitialized()
-        {
-            base.OnInitialized();
-
-            Title ??= Localizer[nameof(Title)];
-            BaseUsageText ??= Localizer[nameof(BaseUsageText)];
-            IntroText1 ??= Localizer[nameof(IntroText1)];
-            IntroText2 ??= Localizer[nameof(IntroText2)]; 
-        }
+        Title ??= Localizer[nameof(Title)];
+        BaseUsageText ??= Localizer[nameof(BaseUsageText)];
+        IntroText1 ??= Localizer[nameof(IntroText1)];
+        IntroText2 ??= Localizer[nameof(IntroText2)];
+        IntroText3 ??= Localizer[nameof(IntroText3)];
+    }
 
 
-        private Task OnResult(Geolocationitem geolocations)
-        {
-            this.geolocations = geolocations;
-            Items[0] = geolocations;
-            StateHasChanged();
-            return Task.CompletedTask;
-        }
+    private Task OnResult(Geolocationitem geolocations)
+    {
+        this.geolocations = geolocations;
+        Items[0] = geolocations;
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
 
-        private Task OnUpdateStatus(string status)
-        {
-            this.status = status;
-            StateHasChanged();
-            return Task.CompletedTask;
-        }
+    private Task OnUpdateStatus(string status)
+    {
+        this.status = status;
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
 
 
-        /// <summary>
-        /// 获得属性方法
-        /// </summary>
-        /// <returns></returns>
-        private IEnumerable<AttributeItem> GetAttributes() => new AttributeItem[]
-        {
+    /// <summary>
+    /// 获得属性方法
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerable<AttributeItem> GetAttributes() => new AttributeItem[]
+    {
             new AttributeItem()
             {
                 Name = "GetLocationButtonText",
@@ -115,7 +117,7 @@ namespace BootstrapBlazor.Shared.Pages
                 Type = "Func<Geolocationitem, Task>",
                 ValueList = " - ",
                 DefaultValue = " - "
-            }, 
+            },
             new AttributeItem()
             {
                 Name = "OnUpdateStatus",
@@ -124,6 +126,5 @@ namespace BootstrapBlazor.Shared.Pages
                 ValueList = " - ",
                 DefaultValue = " - "
             },
-        };
-    }
+    };
 }

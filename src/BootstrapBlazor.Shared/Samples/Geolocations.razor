@@ -1,5 +1,4 @@
 ﻿@page "/geolocations"
-    @namespace BootstrapBlazor.Shared.Pages
 
     <h3>@Title</h3>
 
@@ -9,9 +8,15 @@
 
         <Geolocation OnResult="@OnResult" OnUpdateStatus="@OnUpdateStatus" />
 
- 		<Table TItem="Geolocationitem" Items="Items" AutoGenerateColumns="true"> 
-		</Table>
+        <Badge Color="Color.Warning">@status</Badge>
 
+        <Table TItem="Geolocationitem" Items="Items" AutoGenerateColumns="true">
+        </Table>
+
+        <p>@IntroText3</p>
+
+        <hr />
+        <img class="barcode" src="@ImageUrl("Geolocation_s0.jpg")">
 
     </Block>
 
