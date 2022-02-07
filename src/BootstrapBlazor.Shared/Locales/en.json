@@ -2544,6 +2544,7 @@
     "Client": "WebClientService",
     "LayoutComponents": "LAYOUTS",
     "Divider": "Divider",
+    "Dragdrop": "DragDrop",
     "Layout": "Layout",
     "Footer": "Footer",
     "Row": "Row",

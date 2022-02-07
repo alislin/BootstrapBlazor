@@ -892,6 +892,12 @@ public sealed partial class NavMenu
         {
             new()
             {
+                IsNew = true,
+                Text = Localizer["Dragdrop"],
+                Url = "dragdrops"
+            },
+            new()
+            {
                 Text = Localizer["Divider"],
                 Url = "dividers"
             },
