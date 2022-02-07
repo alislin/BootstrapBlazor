@@ -7,10 +7,6 @@
     border: 1px solid #dee2e6;
 }
 
-    .table-wrapper .table-fixed-header {
-        border-radius: var(--bs-border-radius);
-    }
-
     .table-wrapper thead tr:first-child {
         border-top: none;
     }
@@ -238,7 +234,11 @@
     background-color: #007bff;
 }
 
-.table-pagination {
+.table-pagination.is-top {
+    margin-bottom: 0.5rem;
+}
+
+.table-pagination:not(.is-top) {
     margin-top: 0.5rem;
 }
 
@@ -271,17 +271,23 @@
         padding: 1px 6px;
     }
 
-.table-fixed .table {
-    table-layout: fixed;
+.table-fixed {
+    height: 100%;
 }
+
+    .table-fixed .table {
+        table-layout: fixed;
+    }
 
 .table-fixed-header {
     overflow: hidden;
+    border-top-left-radius: var(--bs-border-radius);
+    border-top-right-radius: var(--bs-border-radius);
 }
 
 .table-fixed-body {
-    overflow-x: auto;
-    overflow-y: scroll;
+    overflow-x: auto !important;
+    overflow-y: scroll !important;
 }
 
 .table-scroll {
@@ -347,7 +353,8 @@
 }
 
 .table-hover > tbody > tr.is-detail:hover,
-.table-hover > tbody > tr.is-edit.active {
+.table-hover > tbody > tr.is-edit.active,
+.table-excel > tbody > tr:hover {
     --bs-table-accent-bg: none;
 }
 
@@ -517,13 +524,16 @@
 }
 
     .table-cell.is-incell .switch {
-        height: 35px;
-        padding-left: 9px;
+        padding-left: 6px;
     }
 
     .table-cell.is-incell .select {
         width: 100%;
     }
+
+.table-cell .is-node .is-tree {
+    transition: transform .3s linear;
+}
 
 .table-sm .table-cell.is-incell {
     margin: -.25rem;
@@ -538,9 +548,9 @@
         padding-left: 4px;
     }
 
-.table-bordered thead tr:last-child {
+.table-bordered thead tr:last-child > th {
     border-bottom-width: 2px !important;
-    border-bottom-color: #c0c4cc;
+    border-bottom-color: var(--bs-secondary);
 }
 
 .table-striped > tbody > tr.is-master:nth-of-type(odd) {
@@ -570,4 +580,173 @@ form .table .table-cell > textarea {
 
 .table-search {
     margin-bottom: .5rem;
+}
+
+    .table-search .card-header {
+        padding: 0;
+    }
+
+        .table-search .card-header .table-search-title {
+            padding: .5rem 1rem;
+            flex: 1;
+            cursor: pointer;
+        }
+
+        .table-search .card-header .table-search-buttons {
+            padding: .25rem 1rem;
+        }
+
+            .table-search .card-header .table-search-buttons .btn {
+                padding: .275rem .5rem;
+            }
+
+.table-search-collapse {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding: 0 1rem;
+}
+
+    .table-search-collapse .table-search-collapse-arrow {
+        cursor: pointer;
+        transition: .3s transform linear;
+        transform: rotate(0);
+    }
+
+    .table-search-collapse.is-open .table-search-collapse-arrow {
+        transform: rotate(90deg);
+    }
+
+    .table-search-collapse .table-search-collapse-title {
+        cursor: pointer;
+        margin-left: .5rem;
+        flex: 1;
+    }
+
+.table-search .collapsed .card-header {
+    border-bottom-color: transparent;
+}
+
+.table-search .card-header .input-group,
+.table-search .collapsed .input-group + .table-search-buttons {
+    display: none;
+}
+
+.table-search .card-header .input-group {
+    width: auto;
+    padding: 2px;
+}
+
+    .table-search .card-header .input-group .table-toolbar-search,
+    .table-search .card-header .input-group .btn {
+        height: 34px;
+    }
+
+.table-search .collapsed .input-group {
+    display: flex;
+}
+
+.table-excel-toolbar {
+    display: none;
+    position: absolute;
+}
+
+.table-excel.table > :not(caption):not(thead) > * > * {
+    padding: 0;
+}
+
+.table-excel tbody .table-cell > .form-check {
+    padding: 6px 8px;
+}
+
+.table-excel tbody .table-cell .switch {
+    padding: .375rem .1875rem;
+    justify-content: center;
+}
+
+.table-excel .form-control,
+.table-excel .table-cell .select .form-select {
+    border: none;
+    border-radius: 0;
+    padding: .375rem .1875rem;
+}
+
+.table-excel .table-cell .select {
+    width: 100%;
+}
+
+.table-excel .table-cell > .disabled {
+    background-color: var(--bs-bg-disabled);
+    width: 100%;
+    padding: .375rem .1875rem;
+}
+
+.table-excel .datetime-picker-input {
+    padding-left: 2rem;
+}
+
+.table-excel .datetime-picker-input-icon {
+    line-height: 32px;
+}
+
+.table-excel.table tbody tr.active {
+    background-color: transparent;
+}
+
+.table-cell.text-center,
+.table-cell.text-center .switch {
+    justify-content: center;
+}
+
+    .table-cell.text-center input {
+        text-align: center;
+    }
+
+.table-cell.text-end,
+.table-cell.text-end .switch {
+    justify-content: end;
+}
+
+    .table-cell.text-end input {
+        text-align: right;
+    }
+
+.table-cell > .progress {
+    flex: 1;
+}
+
+.table-cell.is-ph {
+    height: 12.5px;
+    background-color: #e9ecef;
+    border-radius: var(--bs-border-radius);
+    margin: 5px 0;
+}
+
+.table-cell .is-dbcell {
+    display: flex;
+    cursor: pointer;
+    position: relative;
+}
+
+    .table-cell .is-dbcell:hover:before {
+        content: "";
+        position: absolute;
+        bottom: -3px;
+        height: 1px;
+        width: 100%;
+        background-color: var(--bs-primary);
+    }
+
+.table-cell .is-node {
+    width: 18px;
+}
+
+.table-cell .tag {
+    line-height: 22px;
+}
+
+.table-cell .is-color {
+    width: 28px;
+    height: 21px;
+    border-radius: 0.25rem;
 }

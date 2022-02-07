@@ -1,0 +1,22 @@
+<Project>
+
+  <Import Project="..\Directory.Build.props" />
+
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Using Include="BootstrapBlazor.Components"/>
+    <Using Include="Bunit"/>
+    <Using Include="Microsoft.AspNetCore.Components"/>
+    <Using Include="System.Diagnostics.CodeAnalysis"/>
+    <Using Include="UnitTest.Core"/>
+    <Using Include="Xunit"/>
+    <Using Include="Xunit.Abstractions"/>
+  </ItemGroup>
+
+</Project>

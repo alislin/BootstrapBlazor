@@ -13,6 +13,13 @@
     </div>
     <div class="step-main">
         <div class="@TitleClassString">@Title</div>
-        <div class="@DescClassString">@Description</div>
+        @if (DescriptionTemplate != null)
+        {
+            @DescriptionTemplate
+        }
+        else
+        {
+            <div class="@DescClassString">@Description</div>
+        }
     </div>
 </div>

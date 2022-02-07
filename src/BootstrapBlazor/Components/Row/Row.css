@@ -1,17 +1,22 @@
-﻿@media (min-width: 576px) {
+﻿:root {
+    --bs-row-label-width: 120px;
+}
+
+@media (min-width: 576px) {
     .form-inline .form-label {
         padding: 7px 0;
         margin-bottom: 0;
-        margin-right: 10px;
-        width: 90px;
+        padding-right: 10px;
+        width: var(--bs-row-label-width);
         text-overflow: ellipsis;
         white-space: nowrap;
         overflow: hidden;
         vertical-align: top;
+        display: inline-block;
     }
 
         .form-inline .form-label + * {
-            width: calc(100% - 100px);
+            width: calc(100% - var(--bs-row-label-width));
         }
 
             .form-inline .form-label + *:not(.input-group):not(.switch) {

@@ -1,4 +1,7 @@
 ﻿{
+  "BootstrapBlazor.Components.AnchorLink": {
+    "TooltipText": "拷贝成功"
+  },
   "BootstrapBlazor.Components.AutoComplete": {
     "NoDataTip": "无匹配数据",
     "PlaceHolder": "请输入"
@@ -100,9 +103,6 @@
     "ButtonNoText": "取消",
     "ButtonCloseText": "关闭"
   },
-  "BootstrapBlazor.Components.DialogService": {
-    "InvalidOperationExceptionMessage": "请在网页中添加 <Dialog /> 元素"
-  },
   "BootstrapBlazor.Components.DropdownList": {
     "PlaceHolder": "请选择 ..."
   },
@@ -119,8 +119,8 @@
   "BootstrapBlazor.Components.EqualToValidator": {
     "ErrorMessage": "你的输入不相同"
   },
-  "BootstrapBlazor.Components.FullScreenService": {
-    "InvalidOperationExceptionMessage": "请在网页中添加 <FullScreen /> 元素"
+  "BootstrapBlazor.Components.ErrorLogger": {
+    "ToastTitle": "应用程序错误"
   },
   "BootstrapBlazor.Components.GoTop": {
     "TooltipText": "返回顶端"
@@ -128,14 +128,20 @@
   "BootstrapBlazor.Components.Layout": {
     "TooltipText": "点击展开收缩左侧菜单"
   },
+  "BootstrapBlazor.Components.Logout": {
+    "PrefixDisplayNameText": "欢迎",
+    "PrefixUserNameText": "当前账号:"
+  },
+  "BootstrapBlazor.Components.LogoutLink": {
+    "Text": "注销"
+  },
   "BootstrapBlazor.Components.Menu": {
     "InvalidOperationExceptionMessage": "SideMenu 组件不可以独立使用，请使用 Menu 组件设置 IsVertical=true"
   },
-  "BootstrapBlazor.Components.MessageService": {
-    "InvalidOperationExceptionMessage": "请在网页中添加 <Message /> 元素"
-  },
   "BootstrapBlazor.Components.ModalDialog": {
-    "CloseButtonText": "关闭"
+    "CloseButtonText": "关闭",
+    "SaveButtonText": "保存",
+    "PrintButtonText": "打印"
   },
   "BootstrapBlazor.Components.MultiSelect": {
     "PlaceHolder": "点击进行多选 ...",
@@ -155,18 +161,15 @@
     "PrePageInfoText": "每页显示",
     "RowInfoText": "条记录",
     "LabelString": "第 {0} 页",
-    "SelectItemsText": "{0} 条/页"
+    "SelectItemsText": "{0}"
   },
   "BootstrapBlazor.Components.PopConfirmButton": {
     "CloseButtonText": "取消",
     "ConfirmButtonText": "确定",
     "Content": "你确定要执行此操作吗？"
   },
-  "BootstrapBlazor.Components.PopoverService": {
-    "InvalidOperationExceptionMessage": "请在网页中添加 <PopoverConfirm /> 元素"
-  },
-  "BootstrapBlazor.Components.PrintService": {
-    "InvalidOperationExceptionMessage": "请在网页中添加 <Print /> 元素"
+  "BootstrapBlazor.Components.PrintButton": {
+    "Text": "打印"
   },
   "BootstrapBlazor.Components.QRCode": {
     "PlaceHolder": "请输入内容",
@@ -181,9 +184,6 @@
   },
   "BootstrapBlazor.Components.StringLengthValidator": {
     "ErrorMessage": "最多可以输入 {{0}} 个字符"
-  },
-  "BootstrapBlazor.Components.SwalService": {
-    "InvalidOperationExceptionMessage": "请在网页中添加 <SweetAlert /> 元素"
   },
   "BootstrapBlazor.Components.SweetAlert": {
     "CloseButtonText": "关闭",
@@ -221,15 +221,16 @@
     "ResetSearchButtonText": "清空搜索",
     "AdvanceButtonText": "高级搜索",
     "CheckboxDisplayText": "选择",
-    "EditModalTitle": "编辑数据窗口",
-    "AddModalTitle": "新建数据窗口",
+    "EditModalTitle": "编辑窗口",
+    "AddModalTitle": "新建窗口",
     "ColumnButtonTemplateHeaderText": "操作",
     "SearchTooltip": "<div class='search-input-tooltip'>输入任意字符串全局搜索</br><kbd>Enter</kbd> 搜索 <kbd>ESC</kbd> 清除搜索</div>",
     "SearchModalTitle": "搜索条件",
     "AddButtonToastTitle": "新建数据",
-    "AddButtonToastContent": "未提供保存数据方法，无法新建数据",
+    "AddButtonToastContent": "未提供新建数据方法，无法新建数据",
     "EditButtonToastTitle": "编辑数据",
     "EditButtonToastNotSelectContent": "请选择要编辑的数据",
+    "EditButtonToastReadonlyContent": "选项不可编辑",
     "EditButtonToastMoreSelectContent": "只能选择一项要编辑的数据",
     "EditButtonToastNoSaveMethodContent": "未提供保存数据方法，无法编辑数据",
     "SaveButtonToastTitle": "保存数据",
@@ -240,15 +241,13 @@
     "DeleteButtonToastTitle": "删除数据",
     "DeleteButtonToastContent": "请选择要删除的数据, {0} 秒后自动关闭",
     "DeleteButtonToastResultContent": "删除数据{0}, {1} 秒后自动关闭",
+    "DeleteButtonToastCanNotDeleteContent": "选中数据中有不可删除数据, {0} 秒后自动关闭",
     "DataServiceInvalidOperationText": "未注册 'BootstrapBlazor.Components.IDataService`1[{0}]' 服务",
     "NotSetOnTreeExpandErrorMessage": "未设置 OnTreeExpand 回调委托方法",
     "UnsetText": "点击升序",
     "SortAscText": "点击降序",
     "SortDescText": "取消排序",
     "EmptyText": "无数据"
-  },
-  "BootstrapBlazor.Components.ToastService": {
-    "InvalidOperationExceptionMessage": "请在网页中添加 <Toast /> 元素"
   },
   "BootstrapBlazor.Components.EditDialog": {
     "CloseButtonText": "关闭",
@@ -270,6 +269,10 @@
     "Contains": "包含",
     "NotContains": "不包含",
     "EnumFilter.AllText": "全选"
+  },
+  "BootstrapBlazor.Components.FilterLogicItem": {
+    "And": "并且",
+    "Or": "或者"
   },
   "BootstrapBlazor.Components.SearchDialog": {
     "ResetButtonText": "重置",

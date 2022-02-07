@@ -1,6 +1,8 @@
 ﻿{
   "src": {
+    "anchorlinks": "AnchorLinks",
     "autocompletes": "AutoCompletes",
+    "autofills": "AutoFills",
     "autorefresh": "Table/TablesAutoRefresh",
     "bar": "Charts/Bar",
     "barcodereaders": "BarcodeReaders",
@@ -19,6 +21,8 @@
     "dialog": "Table/TablesDialog",
     "dynamic": "Table/TablesDynamic",
     "edit": "Table/TablesEdit",
+    "excel": "Table/TablesExcel",
+    "dynamicexcel": "Table/TablesDynamicExcel",
     "editdialogs": "EditDialogs",
     "editorforms": "EditorForms",
     "export": "Table/TablesExport",
@@ -29,8 +33,10 @@
     "groupboxs": "GroupBoxs",
     "globalexception": "GlobalException",
     "header": "Table/TablesFixedHeader",
+    "handwrittenpage": "HandwrittenPage",
     "inputnumbers": "InputNumbers",
     "line": "Charts/Line",
+    "linkbuttons": "LinkButtons",
     "listviews": "ListViews",
     "loading": "Table/TablesLoading",
     "multi-header": "Table/TablesHeader",
@@ -49,12 +55,13 @@
     "toolbar": "Table/TablesToolbar",
     "tree": "Table/TablesTree",
     "validateforms": "ValidateForms",
-    "wrap": "Table/TablesWrap"
+    "wrap": "Table/TablesWrap",
+    "virtualization": "Table/TablesVirtualization"
   },
   "video": {
     "autorefresh": "BV1ap4y1x7Qn?p=8",
     "column": "BV1ap4y1x7Qn?p=2",
-    "edit": "BV1ap4y1x7Qn?p=9",
+    "edit": "BV1ap4y1x7Qn?p=9;BV1ap4y1x7Qn?p=10;BV1ap4y1x7Qn?p=11;BV1ap4y1x7Qn?p=12;BV12P4y137Ar",
     "editdialogs": "BV1bT4y1N78e?p=10",
     "export": "BV1ap4y1x7Qn?p=6",
     "drawers": "BV1bT4y1N78e?p=7",
@@ -72,7 +79,7 @@
     "pages": "BV1Et4y1r7qr",
     "popconfirms": "BV1bT4y1N78e?p=5",
     "row": "BV1ap4y1x7Qn?p=3",
-    "search": "BV1ap4y1x7Qn?p=4",
+    "search": "BV1ap4y1x7Qn?p=4;BV1E34y1R7ia",
     "searchdialogs": "BV1bT4y1N78e?p=9",
     "selection": "BV1jh41127U6",
     "swals": "BV1bT4y1N78e?p=8",
@@ -84,6 +91,9 @@
     "wrap": "BV1ap4y1x7Qn?p=7",
     "uploads": "BV1hK4y157Rj",
     "validateforms": "BV1TU4y1Y7CM",
-    "dynamic": "BV1Eb4y1z7cY"
+    "dynamic": "BV1Eb4y1z7cY",
+    "excel": "BV1QL411x7v4",
+    "dynamicexcel": "BV1p3411278A",
+    "globalexception": "BV1xq4y1z7K2"
   }
 }

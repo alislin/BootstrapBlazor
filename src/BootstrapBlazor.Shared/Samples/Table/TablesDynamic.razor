@@ -1,0 +1,27 @@
+﻿@page "/tables/dynamic"
+
+<h3>Table 表格</h3>
+
+<h4>支持动态添加列</h4>
+
+<DemoBlock Title="普通用法" Introduction="仅展示 <code>DataTable</code> 数据" Name="DataTable">
+    <Table TItem="DynamicObject" DynamicContext="DataTableDynamicContext" />
+</DemoBlock>
+
+<DemoBlock Title="编辑功能" Introduction="增加编辑维护功能" Name="Edit">
+    <p>通过设置 <code>DataTableDynamicContext</code> 实例的 <code>OnChanged</code> 回调方法，新建行时自动设置值</p>
+    <Table TItem="DynamicObject" DynamicContext="DataTableDynamicContext"
+           IsMultipleSelect="true" IsBordered="true" IsStriped="true"
+           ShowToolbar="true" ShowExtendButtons="true" />
+</DemoBlock>
+
+<DemoBlock Title="动态列" Introduction="通过代码动态调整 <code>DataTable</code> 表格组件自动更新" Name="DynamicCol">
+    <Table TItem="DynamicObject" DynamicContext="DataTableDynamicContext"
+           IsMultipleSelect="true" IsBordered="true" IsStriped="true"
+           ShowToolbar="true" ShowExtendButtons="true">
+        <TableToolbarTemplate>
+            <TableToolbarButton TItem="DynamicObject" Color="Color.Info" Icon="fa fa-fw fa-plus-circle" Text="@ButtonAddColumnText" OnClick="OnAddColumn" />
+            <TableToolbarButton TItem="DynamicObject" Color="Color.Secondary" Icon="fa fa-fw fa-minus-circle" Text="@ButtonRemoveColumnText" OnClick="OnRemoveColumn" />
+        </TableToolbarTemplate>
+    </Table>
+</DemoBlock>

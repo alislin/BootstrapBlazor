@@ -1,26 +1,31 @@
-﻿// Copyright (c) .NET Foundation. All rights reserved.
+﻿// Copyright (c) Argo Zhang (argo@163.com). All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+// Website: https://www.blazor.zone or https://argozhang.github.io/
 
-namespace BootstrapBlazor.Components.Routing
+namespace Microsoft.AspNetCore.Components.Routing;
+
+[ExcludeFromCodeCoverage]
+#if NET5_0
+internal class RouteTable : IRouteTable
+#else
+internal class RouteTable
+#endif
 {
-    internal class RouteTable : IRouteTable
+    public RouteTable(RouteEntry[] routes)
     {
-        public RouteTable(RouteEntry[] routes)
-        {
-            Routes = routes;
-        }
+        Routes = routes;
+    }
 
-        public RouteEntry[] Routes { get; }
+    public RouteEntry[] Routes { get; }
 
-        public void Route(RouteContext routeContext)
+    public void Route(RouteContext routeContext)
+    {
+        for (var i = 0; i < Routes.Length; i++)
         {
-            for (var i = 0; i < Routes.Length; i++)
+            Routes[i].Match(routeContext);
+            if (routeContext.Handler != null)
             {
-                Routes[i].Match(routeContext);
-                if (routeContext.Handler != null)
-                {
-                    return;
-                }
+                return;
             }
         }
     }

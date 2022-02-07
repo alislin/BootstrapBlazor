@@ -4,95 +4,103 @@
 
 using BootstrapBlazor.Components;
 using BootstrapBlazor.Localization.Json;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Text.Json;
+using System.Globalization;
 
-namespace Microsoft.Extensions.DependencyInjection
+namespace Microsoft.Extensions.DependencyInjection;
+
+/// <summary>
+/// BootstrapBlazor 服务扩展类
+/// </summary>
+public static class BootstrapBlazorServiceCollectionExtensions
 {
     /// <summary>
-    /// BootstrapBlazor 服务扩展类
+    /// 增加 BootstrapBlazor 服务
     /// </summary>
-    public static class BootstrapBlazorServiceCollectionExtensions
+    /// <param name="services"></param>
+    /// <param name="configureOptions"></param>
+    /// <param name="localizationAction"></param>
+    /// <returns></returns>
+    public static IServiceCollection AddBootstrapBlazor(this IServiceCollection services, Action<BootstrapBlazorOptions>? configureOptions = null, Action<JsonLocalizationOptions>? localizationAction = null)
     {
-        /// <summary>
-        /// 增加 BootstrapBlazor 服务
-        /// </summary>
-        /// <param name="services"></param>
-        /// <param name="configureOptions"></param>
-        /// <param name="localizationAction"></param>
-        /// <param name="locatorAction"></param>
-        /// <returns></returns>
-        public static IServiceCollection AddBootstrapBlazor(this IServiceCollection services, Action<BootstrapBlazorOptions>? configureOptions = null, Action<JsonLocalizationOptions>? localizationAction = null, Action<IPLocatorOption>? locatorAction = null)
+        services.AddMemoryCache();
+        services.AddHttpClient();
+
+        services.AddAuthorizationCore();
+        services.AddJsonLocalization(localizationAction);
+        services.AddSingleton<ICacheManager, CacheManager>();
+
+        services.TryAddSingleton<IComponentIdGenerator, DefaultIdGenerator>();
+        services.TryAddSingleton(typeof(IDispatchService<>), typeof(DefaultDispatchService<>));
+        services.TryAddScoped<ITableExcelExport, DefaultExcelExport>();
+        services.TryAddScoped(typeof(IDataService<>), typeof(NullDataService<>));
+        services.TryAddScoped<TabItemTextOptions>();
+
+        services.TryAddScoped<DialogService>();
+        services.TryAddScoped<MessageService>();
+        services.TryAddScoped<PopoverService>();
+        services.TryAddScoped<ToastService>();
+        services.TryAddScoped<SwalService>();
+        services.TryAddScoped<FullScreenService>();
+        services.TryAddScoped<PrintService>();
+        services.TryAddScoped<TitleService>();
+        services.TryAddScoped<DownloadService>();
+        services.TryAddScoped<WebClientService>();
+        services.TryAddScoped<AjaxService>();
+
+        services.TryAddSingleton<IConfigureOptions<BootstrapBlazorOptions>, ConfigureOptions<BootstrapBlazorOptions>>();
+        services.ConfigureBootstrapBlazorOption(configureOptions);
+
+        services.TryAddSingleton<IIPLocatorProvider, DefaultIPLocatorProvider>();
+        services.TryAddSingleton<IConfigureOptions<IPLocatorOption>, ConfigureOptions<IPLocatorOption>>();
+        return services;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="services"></param>
+    /// <param name="locatorAction"></param>
+    /// <returns></returns>
+    public static IServiceCollection ConfigureIPLocatorOption(this IServiceCollection services, Action<IPLocatorOption> locatorAction)
+    {
+        services.Configure<IPLocatorOption>(locatorAction);
+        return services;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="services"></param>
+    /// <param name="options"></param>
+    /// <returns></returns>
+    public static IServiceCollection ConfigureBootstrapBlazorOption(this IServiceCollection services, Action<BootstrapBlazorOptions>? options = null)
+    {
+        services.Configure<BootstrapBlazorOptions>(op =>
         {
-            services.AddAuthorizationCore();
-            services.AddJsonLocalization(localizationAction);
-            services.TryAddScoped<IComponentIdGenerator, DefaultIdGenerator>();
-            services.TryAddScoped<ITableExcelExport, DefaultExcelExport>();
-            services.TryAddScoped(typeof(IDataService<>), typeof(NullDataService<>));
-            services.TryAddScoped<DialogService>();
-            services.TryAddScoped<MessageService>();
-            services.TryAddScoped<PopoverService>();
-            services.TryAddScoped<ToastService>();
-            services.TryAddScoped<SwalService>();
-            services.TryAddScoped<FullScreenService>();
-            services.TryAddScoped<PrintService>();
-            services.TryAddScoped<TabItemTextOptions>();
-            services.TryAddScoped<TitleService>();
-            services.TryAddScoped<DownloadService>();
-            services.TryAddScoped<WebClientService>();
-            services.TryAddSingleton<IConfigureOptions<BootstrapBlazorOptions>, ConfigureOptions<BootstrapBlazorOptions>>();
-            services.Configure<BootstrapBlazorOptions>(options =>
-            {
-                configureOptions?.Invoke(options);
-            });
+            options?.Invoke(op);
 
-            services.AddHttpClient();
-            services.TryAddSingleton<IIPLocatorProvider, DefaultIPLocatorProvider>();
-            services.Configure<IPLocatorOption>(options =>
+            // 设置默认文化信息
+            if (op.DefaultCultureInfo != null)
             {
-                locatorAction?.Invoke(options);
-            });
-            return services;
-        }
+                var culture = new CultureInfo(op.DefaultCultureInfo);
+                CultureInfo.DefaultThreadCurrentCulture = culture;
+                CultureInfo.DefaultThreadCurrentUICulture = culture;
+            }
+        });
+        return services;
+    }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="builder"></param>
-        /// <returns></returns>
-        public static IApplicationBuilder UseBootstrapBlazor(this IApplicationBuilder builder)
-        {
-            // 获得客户端 IP 地址
-            builder.UseWhen(context => context.Request.Path.StartsWithSegments("/ip.axd"), app => app.Run(async context =>
-            {
-                var ip = "";
-                var headers = context.Request.Headers;
-                if (headers.ContainsKey("X-Forwarded-For"))
-                {
-                    var ips = new List<string>();
-                    foreach (var xf in headers["X-Forwarded-For"])
-                    {
-                        if (!string.IsNullOrEmpty(xf))
-                        {
-                            ips.Add(xf);
-                        }
-                    }
-                    ip = string.Join(";", ips);
-                }
-                else
-                {
-                    ip = context.Connection.RemoteIpAddress.ToIPv4String();
-                }
-
-                context.Response.Headers.Add("Content-Type", new Microsoft.Extensions.Primitives.StringValues("application/json; charset=utf-8"));
-                await context.Response.WriteAsync(JsonSerializer.Serialize(new { Id = context.TraceIdentifier, Ip = ip }));
-            }));
-            return builder;
-        }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="services"></param>
+    /// <param name="localizationAction"></param>
+    /// <returns></returns>
+    public static IServiceCollection ConfigureJsonLocalizationOptions(this IServiceCollection services, Action<JsonLocalizationOptions> localizationAction)
+    {
+        services.Configure(localizationAction);
+        return services;
     }
 }

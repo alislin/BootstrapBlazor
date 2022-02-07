@@ -3,33 +3,58 @@
 // Website: https://www.blazor.zone or https://argozhang.github.io/
 
 using Microsoft.AspNetCore.Components;
-using System.Diagnostics.CodeAnalysis;
+using Microsoft.Extensions.Localization;
 
-namespace BootstrapBlazor.Components
+namespace BootstrapBlazor.Components;
+
+/// <summary>
+/// 
+/// </summary>
+public partial class PrintButton
 {
+    /// <summary>
+    /// 获得/设置 预览模板地址 默认为空
+    /// </summary>
+    [Parameter]
+    public string? PreviewUrl { get; set; }
+
+    [Inject]
+    [NotNull]
+    private IStringLocalizer<PrintButton>? Localizer { get; set; }
+
+    private string? Target { get; set; }
+
     /// <summary>
     /// 
     /// </summary>
-    public partial class PrintButton
+    protected override void OnInitialized()
     {
-        /// <summary>
-        /// 获得/设置 预览模板地址 必填项 默认为空
-        /// </summary>
-        [Parameter]
-        public string? PreviewUrl { get; set; }
+        // 不需要走 base.OnInitialized 方法
+        ButtonIcon = Icon;
+        Text ??= Localizer[nameof(Text)];
+    }
 
-        [Inject]
-        [NotNull]
-        private PrintService? PrintService { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        protected override void OnInitialized()
+    /// <summary>
+    /// OnParametersSet 方法
+    /// </summary>
+    protected override void OnParametersSet()
+    {
+        // 不需要走 base.OnParametersSet 方法
+        AdditionalAttributes ??= new Dictionary<string, object>();
+        if (string.IsNullOrEmpty(PreviewUrl))
         {
-            // 不需要走 base.OnInitialized 方法
+            AdditionalAttributes.Add("onclick", "$.bb_printview(this)");
+            Target = null;
+        }
+        else
+        {
+            AdditionalAttributes.Remove("onclick", out _);
+            Target = "_blank";
+        }
 
-            ButtonIcon = Icon;
+        if (string.IsNullOrEmpty(ButtonIcon))
+        {
+            ButtonIcon = "fa fa-print";
         }
     }
 }

@@ -1,0 +1,148 @@
+﻿@page "/cards"
+@inject IStringLocalizer<Cards> Localizer
+
+<h3>@Localizer["Title"]</h3>
+
+<h4>@Localizer["SubTitle"]</h4>
+
+<DemoBlock Title="@Localizer["BasicUsageTitle"]" Introduction="@Localizer["BasicUsageIntro"]" Name="Normal">
+    <Card>
+        <CardBody>
+            <h5 class="card-title">Card title</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+        </CardBody>
+    </Card>
+</DemoBlock>
+
+<DemoBlock Title="@Localizer["FooterTitle"]" Introduction="@Localizer["FooterIntro"]" Name="Footer">
+    <Card>
+        <CardHeader>
+            Featured
+        </CardHeader>
+        <CardBody>
+            <h5 class="card-title">Special title treatment</h5>
+            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+        </CardBody>
+        <CardFooter>
+            2 days ago
+        </CardFooter>
+    </Card>
+</DemoBlock>
+
+<DemoBlock Title="@Localizer["IsCenterTitle"]" Introduction="@Localizer["IsCenterIntro"]" Name="IsCenter">
+    <Card IsCenter="true">
+        <CardHeader>
+            Featured
+        </CardHeader>
+        <CardBody>
+            <h5 class="card-title">Special title treatment</h5>
+            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+        </CardBody>
+        <CardFooter>
+            2 days ago
+        </CardFooter>
+    </Card>
+</DemoBlock>
+
+<DemoBlock Title="@Localizer["ColorTitle"]" Introduction="@Localizer["ColorIntro"]" Name="Color">
+    <div class="row g-3">
+        <div class="col-12 col-sm-6 col-lg-4 col-xl-2">
+            <Card Color="Color.Primary" IsCenter="true">
+                <CardHeader>
+                    Header
+                </CardHeader>
+                <CardBody>
+                    <h5 class="card-title">Primary card title</h5>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                </CardBody>
+            </Card>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4 col-xl-2">
+            <Card Color="Color.Secondary" IsCenter="true">
+                <CardHeader>
+                    Header
+                </CardHeader>
+                <CardBody>
+                    <h5 class="card-title">Secondary card title</h5>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                </CardBody>
+            </Card>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4 col-xl-2">
+            <Card Color="Color.Success" IsCenter="true">
+                <CardHeader>
+                    Header
+                </CardHeader>
+                <CardBody>
+                    <h5 class="card-title">Success card title</h5>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                </CardBody>
+            </Card>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4 col-xl-2">
+            <Card Color="Color.Warning" IsCenter="true">
+                <CardHeader>
+                    Header
+                </CardHeader>
+                <CardBody>
+                    <h5 class="card-title">Warning card title</h5>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                </CardBody>
+            </Card>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4 col-xl-2">
+            <Card Color="Color.Danger" IsCenter="true">
+                <CardHeader>
+                    Header
+                </CardHeader>
+                <CardBody>
+                    <h5 class="card-title">Danger card title</h5>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                </CardBody>
+            </Card>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4 col-xl-2">
+            <Card Color="Color.Info" IsCenter="true">
+                <CardHeader>
+                    Header
+                </CardHeader>
+                <CardBody>
+                    <h5 class="card-title">Info card title</h5>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                </CardBody>
+            </Card>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4 col-xl-2">
+            <Card Color="Color.Dark" IsCenter="true">
+                <CardHeader>
+                    Header
+                </CardHeader>
+                <CardBody>
+                    <h5 class="card-title">Dark card title</h5>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                </CardBody>
+            </Card>
+        </div>
+    </div>
+</DemoBlock>
+
+<DemoBlock Title="@Localizer["CollapsibleTitle"]" Introduction="@Localizer["CollapsibleIntro"]" Name="Collapsible">
+    <Card IsCollapsible="true" HeaderText="@Localizer["CollapsibleTitle"]">
+        <CardBody>
+            @Localizer["CollapsibleBody"]
+        </CardBody>
+    </Card>
+</DemoBlock>
+
+<DemoBlock Title="@Localizer["ShadowTitle"]" Introduction="@Localizer["ShadowIntro"]" Name="Shadow">
+    <Card IsShadow="true" HeaderText="@Localizer["ShadowTitle"]">
+        <CardBody>
+            @Localizer["ShadowBody"]
+        </CardBody>
+    </Card>
+</DemoBlock>
+
+<AttributeTable Items="GetAttributes()" />

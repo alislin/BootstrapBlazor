@@ -2,29 +2,36 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Website: https://www.blazor.zone or https://argozhang.github.io/
 
-using Microsoft.Extensions.Localization;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components;
 
-namespace BootstrapBlazor.Components
+namespace BootstrapBlazor.Components;
+
+/// <summary>
+/// Print 服务
+/// </summary>
+public class PrintService : BootstrapServiceBase<DialogOption>
 {
     /// <summary>
-    /// Print 服务
+    /// 打印方法
     /// </summary>
-    public class PrintService : BootstrapServiceBase<PrintOption>
+    /// <param name="option"></param>
+    /// <returns></returns>
+    public Task PrintAsync(DialogOption option) => Invoke(option);
+
+    /// <summary>
+    /// 打印方法
+    /// </summary>
+    /// <typeparam name="TComponent"></typeparam>
+    /// <param name="parametersFactory"></param>
+    /// <returns></returns>
+    public async Task PrintAsync<TComponent>(Func<DialogOption, IDictionary<string, object?>> parametersFactory) where TComponent : ComponentBase
     {
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        public PrintService(IStringLocalizer<PrintService> localizer) : base(localizer)
+        var option = new DialogOption();
+        var parameters = parametersFactory(option);
+        if (option.Component == null)
         {
-
+            option.Component = BootstrapDynamicComponent.CreateComponent<TComponent>(parameters);
         }
-
-        /// <summary>
-        /// 打印方法
-        /// </summary>
-        /// <param name="option"></param>
-        /// <returns></returns>
-        public Task Print(PrintOption? option = null) => Invoke(option ?? new());
+        await PrintAsync(option);
     }
 }

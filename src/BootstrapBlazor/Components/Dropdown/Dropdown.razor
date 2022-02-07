@@ -2,14 +2,18 @@
 @typeparam TValue
 @inherits SelectBase<TValue>
 
+@if (IsShowLabel)
+{
+    <label class="form-label" for="@Id">@DisplayText</label>
+}
 <div @attributes="@AdditionalAttributes" id="@Id" class="@DirectionClassName">
-    <button type="button" class="@ButtonClassName" data-bs-toggle="@DropdownToggle" aria-expanded="false">@SelectedItem?.Text</button>
+    <button type="button" class="@ButtonClassName" data-bs-toggle="@DropdownToggle" aria-expanded="false">@GetText</button>
     @if (ShowSplit)
     {
         <button type="button" class="@ClassName" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
     }
     <div class="@MenuAlignmentClass">
-        @foreach (var item in Items)
+        @foreach (var item in GetItems())
         {
             <div class="@ActiveItem(item)" @onclick="e => OnItemClick(item)">@item.Text</div>
         }

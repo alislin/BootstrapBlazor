@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <Compile Include="..\..\src\BootstrapBlazor.Shared\Data\Foo.cs" Link="Mics\Foo.cs" />
+    <Compile Include="..\UnitTest\Core\BootstrapBlazorTestBase.cs" Link="Mics\BootstrapBlazorTestBase.cs" />
+    <Compile Include="..\UnitTest\Core\TestBase.cs" Link="Mics\TestBase.cs" />
+    <Compile Include="..\UnitTest\Extensions\IServiceCollectionExtensions.cs" Link="Mics\IServiceCollectionExtensions.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="bunit" Version="1.3.42" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
+    <PackageReference Include="xunit" Version="2.4.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="coverlet.collector" Version="3.1.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Locales\*.json" />
+    <EmbeddedResource Include="Locales\*.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\BootstrapBlazor\BootstrapBlazor.csproj" />
+  </ItemGroup>
+
+</Project>

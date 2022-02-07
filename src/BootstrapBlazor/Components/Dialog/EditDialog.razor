@@ -5,7 +5,7 @@
 <ValidateForm Model="@Model" OnValidSubmit="@OnValidSubmitAsync">
 	@if (BodyTemplate != null)
 	{
-		@BodyTemplate?.Invoke(Model)
+		@BodyTemplate.Invoke(Model)
 		@if (!IsTracking)
 		{
 			<div class="row mt-3">
@@ -17,7 +17,7 @@
 	}
 	else
 	{
-		<EditorForm TModel="TModel" Items="Items" ItemsPerRow="ItemsPerRow" RowType="RowType" LabelAlign="LabelAlign">
+		<EditorForm TModel="TModel" Items="Items" ItemChangedType="ItemChangedType" ItemsPerRow="ItemsPerRow" RowType="RowType" LabelAlign="LabelAlign">
 			<Buttons>
 				@if (!IsTracking)
 				{
@@ -34,7 +34,7 @@
 @code {
 	RenderFragment RenderFooter =>
 	@<div class="table-modal-footer">
-		<Button Color="Color.Secondary" Icon="fa fa-times" Text="@CloseButtonText" OnClickWithoutRender="@(new Func<Task>(OnClose))" />
+		<Button Color="Color.Secondary" Icon="fa fa-times" Text="@CloseButtonText" OnClickWithoutRender="OnClose" />
 		<Button Color="Color.Primary" ButtonType="ButtonType.Submit" Icon="fa fa-save" Text="@SaveButtonText" />
 	</div>;
 }

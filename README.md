@@ -3,19 +3,18 @@
 <div align="center">
 <h2>A set of enterprise-class UI components based on Bootstrap and Blazor.</h2>
 
-
-[![Github build](https://img.shields.io/github/workflow/status/ArgoZhang/BootstrapBlazor/Build%20Project/main?label=main&logo=github&logoColor=green)](https://github.com/ArgoZhang/BootstrapBlazor/actions?query=workflow%3A%22Build+Project%22+branch%3Amain)
+[![License](https://img.shields.io/github/license/argozhang/bootstrapblazor.svg?logo=git&logoColor=red)](https://github.com/ArgoZhang/BootstrapBlazor/blob/main/LICENSE)
 [![Nuget](https://img.shields.io/nuget/v/BootstrapBlazor.svg?color=red&logo=nuget&logoColor=green)](https://www.nuget.org/packages/BootstrapBlazor/)
 [![Nuget](https://img.shields.io/nuget/dt/BootstrapBlazor.svg?logo=nuget&logoColor=green)](https://www.nuget.org/packages/BootstrapBlazor/)
-[![Github](https://img.shields.io/github/license/argozhang/bootstrapblazor.svg?logo=git&logoColor=red)](https://github.com/ArgoZhang/BootstrapBlazor/blob/main/LICENSE)
 [![Repo Size](https://img.shields.io/github/repo-size/ArgoZhang/BootstrapBlazor.svg?logo=github&logoColor=green&label=repo)](https://github.com/ArgoZhang/BootstrapBlazor)
 [![Commit Date](https://img.shields.io/github/last-commit/ArgoZhang/BootstrapBlazor/main.svg?logo=github&logoColor=green&label=commit)](https://github.com/ArgoZhang/BootstrapBlazor)
-
+[![Github build](https://img.shields.io/github/workflow/status/ArgoZhang/BootstrapBlazor/Build%20Project/main?label=main&logo=github&logoColor=green)](https://github.com/ArgoZhang/BootstrapBlazor/actions?query=workflow%3A%22Build+Project%22+branch%3Amain)
+[![codecov](https://codecov.io/gh/dotnetcore/BootstrapBlazor/branch/main/graph/badge.svg?token=5SXIWHXZC3)](https://codecov.io/gh/dotnetcore/BootstrapBlazor)
 </div>
 
----
-
 English | <a href="README.zh-CN.md">中文</a>
+
+---
 
 ## Features
 - Enterprise-class UI designed for web applications.
@@ -34,7 +33,7 @@ English | <a href="README.zh-CN.md">中文</a>
 ## Installation Guide
 
 - Install .net core sdk [Offical website](https://dotnet.microsoft.com/download)
-- Install Visual Studio 2019 lastest [Offical website](https://visualstudio.microsoft.com/vs/getting-started/)
+- Install Visual Studio 2022 lastest [Offical website](https://visualstudio.microsoft.com/vs/getting-started/)
 
 ## Create a new project from the dotnet new template
 

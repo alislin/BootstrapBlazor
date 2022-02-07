@@ -3,16 +3,14 @@
 <div align="center">
 <h2>一套基于 Bootstrap 和 Blazor 的企业级组件库</h2>
 
-[![Github build](https://img.shields.io/github/workflow/status/ArgoZhang/BootstrapBlazor/Build%20Project/main?label=main&logo=github&logoColor=green)](https://github.com/ArgoZhang/BootstrapBlazor/actions?query=workflow%3A%22Build+Project%22+branch%3Amain)
+[![License](https://img.shields.io/github/license/argozhang/bootstrapblazor.svg?logo=git&logoColor=red)](https://github.com/ArgoZhang/BootstrapBlazor/blob/main/LICENSE)
 [![Nuget](https://img.shields.io/nuget/v/BootstrapBlazor.svg?color=red&logo=nuget&logoColor=green)](https://www.nuget.org/packages/BootstrapBlazor/)
 [![Nuget](https://img.shields.io/nuget/dt/BootstrapBlazor.svg?logo=nuget&logoColor=green)](https://www.nuget.org/packages/BootstrapBlazor/)
-[![Github](https://img.shields.io/github/license/argozhang/bootstrapblazor.svg?logo=git&logoColor=red)](https://github.com/ArgoZhang/BootstrapBlazor/blob/main/LICENSE)
 [![Repo Size](https://img.shields.io/github/repo-size/ArgoZhang/BootstrapBlazor.svg?logo=github&logoColor=green&label=repo)](https://github.com/ArgoZhang/BootstrapBlazor)
 [![Commit Date](https://img.shields.io/github/last-commit/ArgoZhang/BootstrapBlazor/main.svg?logo=github&logoColor=green&label=commit)](https://github.com/ArgoZhang/BootstrapBlazor)
-
+[![Github build](https://img.shields.io/github/workflow/status/ArgoZhang/BootstrapBlazor/Build%20Project/main?label=main&logo=github&logoColor=green)](https://github.com/ArgoZhang/BootstrapBlazor/actions?query=workflow%3A%22Build+Project%22+branch%3Amain)
+[![codecov](https://codecov.io/gh/dotnetcore/BootstrapBlazor/branch/main/graph/badge.svg?token=5SXIWHXZC3)](https://codecov.io/gh/dotnetcore/BootstrapBlazor)
 </div>
-
----
 
 <a href="README.md">English</a> | <span>中文</span>
 
@@ -39,13 +37,16 @@ Blazor 是一个使用 .NET 生成交互式客户端 Web UI 的框架：
 
 ## 生态伙伴
 
-WTM 快速开发框架，设计的核心理念就是”尽一切可能提高开发效率“。WTM框架把常规编码结构化，重复编码自动化，它不仅是一个框架，它是强有力的生产力工具！目前 WTM 快速开发框架已深度集成 Blazor 欢迎大家使用 [传送门](https://wtmdoc.walkingtec.cn)
+WTM 快速开发框架，设计的核心理念就是 "尽一切可能提高开发效率"。WTM框架把常规编码结构化，重复编码自动化，它不仅是一个框架，它是强有力的生产力工具！目前 WTM 快速开发框架已深度集成 Blazor 欢迎大家使用 [传送门](https://wtmdoc.walkingtec.cn)
 
 <a href="https://wtmdoc.walkingtec.cn" target="_blank"><img src="http://images.gitee.com/uploads/images/2021/0718/194451_5b6cff04_554725.png" width="100px" /></a>
 
+WTM 快速开发框架，设计的核心理念就是 "尽一切可能提高开发效率"。WTM框架把常规编码结构化，重复编码自动化，它不仅是一个框架，它是强有力的生产力工具！目前 WTM 快速开发框架已深度集成 Blazor 欢迎大家使用 [传送门](https://wtmdoc.walkingtec.cn)
+
 ## 开发环境搭建
+
 1. 安装 .net core sdk 最新版 [官方网址](http://www.microsoft.com/net/download)
-2. 安装 Visual Studio 2019 最新版 [官方网址](https://visualstudio.microsoft.com/vs/getting-started/)
+2. 安装 Visual Studio 2022 最新版 [官方网址](https://visualstudio.microsoft.com/vs/getting-started/)
 3. 获取本项目代码 [BootstrapBlazor](https://gitee.com/LongbowEnterprise/BootstrapBlazor)
 
 ## 相关资源
@@ -62,7 +63,7 @@ WTM 快速开发框架，设计的核心理念就是”尽一切可能提高开�
 
 ## QQ交流群
 
-[![QQ](https://img.shields.io/badge/QQ-795206915(满)-red.svg?logo=tencent%20qq&logoColor=red)](https://qm.qq.com/cgi-bin/qm/qr?k=1-jF9-5WA_3GFiJgXem2U_AQfqbdyOlV&jump_from=webapi) [![QQ](https://img.shields.io/badge/QQ-675147445-green.svg?logo=tencent%20qq&logoColor=red)](https://qm.qq.com/cgi-bin/qm/qr?k=Geker7hCXK0HC-J8_974645j_n6w0OE0&jump_from=webapi)
+[![QQ](https://img.shields.io/badge/QQ-795206915-green.svg?logo=tencent%20qq&logoColor=red)](https://qm.qq.com/cgi-bin/qm/qr?k=1-jF9-5WA_3GFiJgXem2U_AQfqbdyOlV&jump_from=webapi) [![QQ](https://img.shields.io/badge/QQ-675147445-green.svg?logo=tencent%20qq&logoColor=red)](https://qm.qq.com/cgi-bin/qm/qr?k=Geker7hCXK0HC-J8_974645j_n6w0OE0&jump_from=webapi)
 
 ## 视频教程
 
@@ -89,7 +90,7 @@ Blazor 应用基于组件。 Blazor 中的组件是指 UI 元素，例如页面�
 - 其他 均为临时分支
 
 ## 演示地址
-[![website](https://img.shields.io/badge/Github-海外-success.svg?logo=buzzfeed&logoColor=red&color=red)](https://argozhang.github.io) [![website](https://img.shields.io/badge/linux-备站-success.svg?logo=buzzfeed&logoColor=green)](https://blazor.zylweb.cn) [![website](https://img.shields.io/badge/linux-主站-success.svg?logo=buzzfeed&logoColor=green)](https://www.blazor.zone)
+[![website](https://img.shields.io/badge/Github-海外-success.svg?logo=buzzfeed&logoColor=red&color=red)](https://argozhang.github.io) [![website](https://img.shields.io/badge/linux-主站-success.svg?logo=buzzfeed&logoColor=green)](https://www.blazor.zone)
 
 ## GVP 奖杯
 ![项目奖杯](https://images.gitee.com/uploads/images/2021/0112/120620_e596ac3c_554725.png "GVP.png")

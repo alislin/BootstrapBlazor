@@ -2,41 +2,36 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Website: https://www.blazor.zone or https://argozhang.github.io/
 
-using System;
 using System.Diagnostics;
-using System.Linq;
-using System.Linq.Expressions;
-using Xunit;
-using Xunit.Abstractions;
 
-namespace UnitTest.Performance
+namespace UnitTest.Performance;
+
+public class ReflectionTest
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    public class ReflectionTest
+    private ITestOutputHelper Logger { get; }
+
+    private int Count { get; } = 1000;
+
+    public ReflectionTest(ITestOutputHelper logger)
     {
-        private readonly ITestOutputHelper Logger;
-        /// <summary>
-        /// 
-        /// </summary>
-        public ReflectionTest(ITestOutputHelper logger)
-        {
-            Logger = logger;
-        }
+        Logger = logger;
+    }
 
-        [Fact]
-        public void GetProperty()
+    [Fact]
+    public void GetProperty()
+    {
+        var s1 = new Dummy()
         {
-            var count = 10000000;
-            var s1 = new Dummy()
-            {
-                Name = "Argo"
-            };
+            Name = "Argo"
+        };
 
-            var pi = s1.GetType().GetProperty("Name");
+        var pi = s1.GetType().GetProperty("Name");
+        Assert.NotNull(pi);
+
+        if (pi != null)
+        {
             var sw = Stopwatch.StartNew();
-            for (var i = 0; i < count; i++)
+            for (var i = 0; i < Count; i++)
             {
                 pi.GetValue(s1);
             }
@@ -45,124 +40,124 @@ namespace UnitTest.Performance
 
             var invoker = LambdaExtensions.GetPropertyValueLambda<Dummy, string>(s1, "Name").Compile();
             sw = Stopwatch.StartNew();
-            for (var i = 0; i < count; i++)
+            for (var i = 0; i < Count; i++)
             {
                 invoker(s1);
             }
             sw.Stop();
             Logger.WriteLine($"Expression: {sw.Elapsed}");
         }
+    }
 
-        [Fact]
-        public void SetProperty()
+    [Fact]
+    public void SetProperty()
+    {
+        var s1 = new Dummy()
         {
-            var count = 10000000;
-            var s1 = new Dummy()
-            {
-                Name = "Argo"
-            };
+            Name = "Argo"
+        };
 
-            var sw = Stopwatch.StartNew();
-            var pi = s1.GetType().GetProperty("Name");
-            for (var i = 0; i < count; i++)
+        var sw = Stopwatch.StartNew();
+        var pi = s1.GetType().GetProperty("Name");
+        Assert.NotNull(pi);
+
+        for (var i = 0; i < Count; i++)
+        {
+            if (pi != null && pi.CanWrite)
             {
-                if (pi != null && pi.CanWrite)
+                if ((Nullable.GetUnderlyingType(pi.PropertyType) ?? pi.PropertyType) == typeof(string) && pi.CanWrite)
                 {
-                    if ((Nullable.GetUnderlyingType(pi.PropertyType) ?? pi.PropertyType) == typeof(string) && pi.CanWrite)
-                    {
-                        pi.SetValue(s1, "Dummy");
-                    }
+                    pi.SetValue(s1, "Dummy");
                 }
             }
-            sw.Stop();
-            Logger.WriteLine($"Reflection: {sw.Elapsed}");
-
-            sw = Stopwatch.StartNew();
-            var invoker = LambdaExtensions.SetPropertyValueLambda<Dummy, object>(s1, "Name").Compile();
-            for (var i = 0; i < count; i++)
-            {
-                invoker(s1, "Dummy");
-            }
-            sw.Stop();
-            Logger.WriteLine($"Expression: {sw.Elapsed}");
         }
+        sw.Stop();
+        Logger.WriteLine($"Reflection: {sw.Elapsed}");
 
-        [Fact]
-        public void InvokeMethod()
+        sw = Stopwatch.StartNew();
+        var invoker = LambdaExtensions.SetPropertyValueLambda<Dummy, object>(s1, "Name").Compile();
+        for (var i = 0; i < Count; i++)
         {
-            var count = 10000000;
-            var s1 = new Dummy()
-            {
-                Name = "Argo"
-            };
-            var mi = s1.GetType().GetMethod("Method");
-
-            var sw = Stopwatch.StartNew();
-            for (var i = 0; i < count; i++)
-            {
-                if (mi != null)
-                {
-                    mi.Invoke(s1, null);
-                }
-            }
-            sw.Stop();
-            Logger.WriteLine($"Reflection: {sw.Elapsed}");
-
-            var target = Expression.Parameter(typeof(Dummy));
-            Expression expression = Expression.Call(target, mi);
-            var func = Expression.Lambda<Func<Dummy, string>>(expression, target).Compile();
-
-            sw = Stopwatch.StartNew();
-            for (var i = 0; i < count; i++)
-            {
-                func.Invoke(s1);
-            }
-            sw.Stop();
-            Logger.WriteLine($"Expression: {sw.Elapsed}");
+            invoker(s1, "Dummy");
         }
+        sw.Stop();
+        Logger.WriteLine($"Expression: {sw.Elapsed}");
+    }
 
-        delegate string DummyCallback<TModel>(TModel dummy);
-        [Fact]
-        public void Delegate_Test()
+    [Fact]
+    public void InvokeMethod()
+    {
+        var s1 = new Dummy()
         {
-            var test = new Dummy { Name = "Test" };
-            var count = 10000000;
-            var obj = LambdaExtensions.GetPropertyValue(test, "Name");
-            var stopWatch = Stopwatch.StartNew();
-            for (int i = 0; i < count; i++)
-            {
-                LambdaExtensions.GetPropertyValue(test, "Name");
-            }
-            stopWatch.Stop();
-            Logger.WriteLine($"Expression: {stopWatch.ElapsedMilliseconds}");
+            Name = "Argo"
+        };
+        var mi = s1.GetType().GetMethod("Method");
+        Assert.NotNull(mi);
 
-            var objectType = test.GetType();
-            var method = objectType.GetProperty("Name")?.GetGetMethod(false);
+        var sw = Stopwatch.StartNew();
+        for (var i = 0; i < Count; i++)
+        {
+            if (mi != null)
+            {
+                mi.Invoke(s1, null);
+            }
+        }
+        sw.Stop();
+        Logger.WriteLine($"Reflection: {sw.Elapsed}");
+
+        var invoker = LambdaExtensions.GetPropertyValueLambda<Dummy, string>(s1, "Name").Compile();
+        sw = Stopwatch.StartNew();
+        for (var i = 0; i < Count; i++)
+        {
+            invoker.Invoke(s1);
+        }
+        sw.Stop();
+        Logger.WriteLine($"Expression: {sw.Elapsed}");
+    }
+
+    delegate string DummyCallback<TModel>(TModel dummy);
+    [Fact]
+    public void Delegate_Test()
+    {
+        var test = new Dummy { Name = "Test" };
+        var invoker = LambdaExtensions.GetPropertyValueLambda<Dummy, string>(test, "Name").Compile();
+        var stopWatch = Stopwatch.StartNew();
+        for (int i = 0; i < Count; i++)
+        {
+            invoker(test);
+        }
+        stopWatch.Stop();
+        Logger.WriteLine($"Expression: {stopWatch.Elapsed}");
+
+        var objectType = test.GetType();
+        var method = objectType.GetProperty("Name")?.GetGetMethod(false);
+        if (method != null)
+        {
             var proxy = (DummyCallback<Dummy>)Delegate.CreateDelegate(typeof(DummyCallback<Dummy>), method);
             stopWatch.Restart();
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < Count; i++)
             {
                 proxy(test);
             }
-            stopWatch.Stop();
-            Logger.WriteLine($"Delegate: {stopWatch.ElapsedMilliseconds}");
         }
+        stopWatch.Stop();
+        Logger.WriteLine($"Delegate: {stopWatch.Elapsed}");
+    }
 
-        private class Dummy
+    private class Dummy
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        public string? Name { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string? Method()
         {
-            /// <summary>
-            /// 
-            /// </summary>
-            public string Name { get; set; }
-
-            /// <summary>
-            /// 
-            /// </summary>
-            /// <returns></returns>
-            public string Method()
-            {
-                return Name;
-            }
+            return Name;
         }
     }
 }

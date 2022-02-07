@@ -1,7 +1,9 @@
 <Project>
 
   <Import Project="..\Directory.Build.props" />
-  <Import Project="bundleconfig.props" />
+  <Import Project="..\Frameworks.props" />
+  <Import Project="..\bundleconfig.props" />
+  <Import Project="..\SourceLink.targets" />
 
   <PropertyGroup>
     <PackageTags>Bootstrap Blazor WebAssembly wasm UI Components</PackageTags>
@@ -9,8 +11,10 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <TargetFrameworks>net5.0;net6.0</TargetFrameworks>
     <IsPackable>true</IsPackable>
     <PackageIcon>logo.png</PackageIcon>
+    <PackageReadmeFile>readme.md</PackageReadmeFile>
     <PackageReleaseNotes>https://gitee.com/LongbowEnterprise/BootstrapBlazor/wikis</PackageReleaseNotes>
   </PropertyGroup>
 
@@ -20,6 +24,7 @@
 
   <ItemGroup>
     <None Include="logo.png" Pack="true" PackagePath="" />
+    <None Include="readme.md" Pack="true" PackagePath="" />
   </ItemGroup>
 
 </Project>

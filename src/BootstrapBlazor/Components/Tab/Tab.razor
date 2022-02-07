@@ -28,6 +28,10 @@ else
                             @ChildContent
                         </CascadingValue>
                         <RenderTemplate>
+                            @if (!Items.Any() && !string.IsNullOrEmpty(DefaultUrl))
+                            {
+                                AddTabItem(DefaultUrl);
+                            }
                             @if (FirstRender)
                             {
                                 if (!Items.Any(t => t.IsActive))
@@ -37,7 +41,7 @@ else
                             }
                             @foreach (var item in Items)
                             {
-                                <DynamicElement href="@item.Url" role="tab" tabindex="-1" class="@GetClassString(item.IsActive)" TagName="a" TriggerClick="!ClickTabToNavigation" PreventDefault="@(!ClickTabToNavigation)" OnClick="@(() => OnClickTabItem(item))">
+                                <DynamicElement href="@item.Url" role="tab" tabindex="-1" class="@GetClassString(item)" TagName="a" TriggerClick="!ClickTabToNavigation" PreventDefault="@(!ClickTabToNavigation)" OnClick="@(() => OnClickTabItem(item))">
                                     @if (!string.IsNullOrEmpty(item.Icon))
                                     {
                                         <i class="@GetIconClassString(item.Icon)"></i>
@@ -60,7 +64,7 @@ else
                     <div class="dropdown nav-link-bar dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <div class="nav-link-close"><i class="fa fa-chevron-down"></i></div>
                     </div>
-                    <div class="dropdown-menu dropdown-menu-right">
+                    <div class="dropdown-menu dropdown-menu-right shadow">
                         <DynamicElement class="dropdown-item" OnClick="@CloseCurrentTab"><span>@CloseCurrentTabText</span></DynamicElement>
                         <div class="dropdown-item" @onclick="@OnClickCloseOtherTabs"><span>@CloseOtherTabsText</span></div>
                         <div class="dropdown-item" @onclick="@OnClickCloseAllTabs"><span>@CloseAllTabsText</span></div>
@@ -80,7 +84,7 @@ else
                     if (item != null)
                     {
                         <div class="@GetContentClassString(item)">
-                            @item.ChildContent
+                            @RenderTabItemContent(item.ChildContent)
                         </div>
                     }
                 }
@@ -89,7 +93,7 @@ else
                     foreach (var item in Items)
                     {
                         <div @key="@item" class="@GetContentClassString(item)">
-                            @item.ChildContent
+                            @RenderTabItemContent(item.ChildContent)
                         </div>
                     }
                 }

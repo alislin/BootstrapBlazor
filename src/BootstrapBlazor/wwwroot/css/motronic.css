@@ -31,6 +31,7 @@
     --bs-body-rgb: 24,28,50;
     --bs-body-color: #181C32;
     --bs-border-radius: .475rem;
+    --bs-bg-disabled: #f5f8fa;
 }
 
 .btn,
@@ -636,7 +637,7 @@
         background-color: #fff;
     }
 
-.input-group .form-control:hover {
+.input-group .form-control:not(.invalid):not(.valid):hover {
     border-color: #b5b5c3;
 }
 
@@ -860,7 +861,7 @@
 }
 
     .table > :not(:last-child) > :last-child > * {
-        border-bottom-color: var(--bs-primary);
+        border-bottom-color: var(--bs-secondary);
     }
 
 .menu .nav-link {
@@ -904,3 +905,12 @@
 .tree .tree-item.active > .tree-content > .tree-node {
     color: #009ef7;
 }
+
+.card-header {
+    background-color: var(--bs-secondary);
+    border-color: var(--bs-secondary);
+}
+
+    .card-header:first-child {
+        border-radius: var(--bs-border-radius) var(--bs-border-radius) 0 0;
+    }

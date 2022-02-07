@@ -3,12 +3,10 @@
         bb_tooltip: function (id, method, title, placement, html, trigger) {
             var ele = document.getElementById(id);
             var instance = bootstrap.Tooltip.getInstance(ele);
-            if (method === 'dispose') {
-                if (instance) {
-                    instance.dispose();
-                }
+            if (instance) {
+                instance.dispose();
             }
-            else {
+            if (method !== 'dispose') {
                 var op = { html: html, sanitize: !html, title: title, placement: placement, trigger: trigger };
                 instance = new bootstrap.Tooltip(ele, op);
                 var $ele = $(ele);
@@ -26,7 +24,7 @@
                         $ctl.trigger('focus');
                     }
                 }
-                else {
+                else if (method !== '') {
                     $ele.tooltip(method);
                 }
             }

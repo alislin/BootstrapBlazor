@@ -1,0 +1,9 @@
+﻿@page "/ips"
+@inject IStringLocalizer<Ips> Localizer
+
+<DemoBlock Title="@Localizer["BasicUsageTitle"]" Name="Normal">
+    <IpAddress @bind-Value="@Value" />
+
+    <div>@Value</div>
+</DemoBlock>
+

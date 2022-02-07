@@ -13,7 +13,11 @@
     }
 
         .form-check .form-check-input + .form-check-label {
-            padding-left: .5rem;
+            padding: 0 .5rem;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            vertical-align: top;
         }
 
 .form-label + .form-check {

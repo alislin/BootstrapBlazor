@@ -2,26 +2,22 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Website: https://www.blazor.zone or https://argozhang.github.io/
 
-using System.Collections.Generic;
-using System.Threading.Tasks;
+namespace BootstrapBlazor.Shared.Pages;
 
-namespace BootstrapBlazor.Shared.Pages
+/// <summary>
+/// 
+/// </summary>
+public sealed partial class Coms
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    public sealed partial class Coms
+    private List<string> ComponentItems { get; set; } = new List<string>();
+
+    private string? SearchText { get; set; }
+
+    private Task OnSearch(string searchText)
     {
-        private List<string> ComponentItems { get; set; } = new List<string>();
+        SearchText = searchText;
 
-        private string? SearchText { get; set; }
-
-        private Task OnSearch(string searchText)
-        {
-            SearchText = searchText;
-
-            StateHasChanged();
-            return Task.CompletedTask;
-        }
+        StateHasChanged();
+        return Task.CompletedTask;
     }
 }

@@ -2,10 +2,28 @@
 @inherits CardBase
 
 <div @attributes="@AdditionalAttributes" class="@ClassName">
-    @if (CardHeader != null)
+    @if (CardHeader != null || !string.IsNullOrEmpty(HeaderText))
     {
         <div class="card-header">
-            @CardHeader
+            @if (IsCollapsible)
+            {
+                <div class="card-collapse is-open" @ref="CardEelement">
+                    <i class="card-collapse-arrow fa fa-chevron-circle-right"></i>
+                    <div class="card-title">@HeaderText</div>
+                </div>
+
+            }
+            else
+            {
+                if (CardHeader != null)
+                {
+                    @CardHeader
+                }
+                else
+                {
+                    @HeaderText
+                }
+            }
         </div>
     }
     <div class="@BodyClassName">

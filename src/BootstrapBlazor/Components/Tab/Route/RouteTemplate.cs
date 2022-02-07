@@ -1,29 +1,45 @@
-﻿// Copyright (c) .NET Foundation. All rights reserved.
+﻿// Copyright (c) Argo Zhang (argo@163.com). All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+// Website: https://www.blazor.zone or https://argozhang.github.io/
 
 
 using System.Diagnostics;
-using System.Linq;
 
-namespace BootstrapBlazor.Components.Routing
+namespace Microsoft.AspNetCore.Components.Routing;
+
+[DebuggerDisplay("{TemplateText}")]
+[ExcludeFromCodeCoverage]
+internal class RouteTemplate
 {
-    [DebuggerDisplay("{TemplateText}")]
-    internal class RouteTemplate
+    public RouteTemplate(string templateText, TemplateSegment[] segments)
     {
-        public RouteTemplate(string templateText, TemplateSegment[] segments)
+        TemplateText = templateText;
+        Segments = segments;
+
+#if NET5_0
+        OptionalSegmentsCount = segments.Count(template => template.IsOptional);
+        ContainsCatchAllSegment = segments.Any(template => template.IsCatchAll);
+#else
+        for (var i = 0; i < segments.Length; i++)
         {
-            TemplateText = templateText;
-            Segments = segments;
-            OptionalSegmentsCount = segments.Count(template => template.IsOptional);
-            ContainsCatchAllSegment = segments.Any(template => template.IsCatchAll);
+            var segment = segments[i];
+            if (segment.IsOptional)
+            {
+                OptionalSegmentsCount++;
+            }
+            if (segment.IsCatchAll)
+            {
+                ContainsCatchAllSegment = true;
+            }
         }
-
-        public string TemplateText { get; }
-
-        public TemplateSegment[] Segments { get; }
-
-        public int OptionalSegmentsCount { get; }
-
-        public bool ContainsCatchAllSegment { get; }
+#endif
     }
+
+    public string TemplateText { get; }
+
+    public TemplateSegment[] Segments { get; }
+
+    public int OptionalSegmentsCount { get; }
+
+    public bool ContainsCatchAllSegment { get; }
 }

@@ -1,12 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <Version>5.10.6</Version>
+    <Version>6.2.9-beta10</Version>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
     <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="5.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="5.0" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="5.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Localization" Version="5.0" />
@@ -14,12 +15,13 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
-    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="6.0.0-preview.7.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.0-preview.7.*" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0-preview.7.*" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0-preview.7.*" />
-    <PackageReference Include="Microsoft.Extensions.Localization" Version="6.0.0-preview.7.*" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="6.0.0-preview.7.*" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="6.0" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="6.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="6.0" />
+    <PackageReference Include="Microsoft.Extensions.Localization" Version="6.0" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="6.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -36,10 +38,6 @@
     <Content Include="wwwroot\lib\summernote\font\*.*" />
     <None Include="*.json" />
     <None Include="wwwroot\**\*.*" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
   </ItemGroup>
 
 </Project>
