@@ -1,18 +1,16 @@
 ﻿@namespace BootstrapBlazor.Components
 
-
 <div @ref="GeolocationElement">
-	@if (ShowButtons)
-	{
-		if (WatchID == null)
-		{
-			<Button OnClick="@GetLocation">@GetLocationButtonText</Button>
-			<Button OnClick="@WatchPosition">@WatchPositionButtonText</Button>
-		}
-		else
-		{
-			<Button OnClick="@ClearWatch">@ClearWatchPositionButtonText</Button>
-		}
-	}
+    @if (ShowButtons)
+    {
+        if (WatchID == null)
+        {
+            <Button OnClick="@GetLocation">@GetLocationButtonText</Button>
+            <Button OnClick="@WatchPosition">@WatchPositionButtonText</Button>
+        }
+        else
+        {
+            <Button OnClick="@ClearWatch">@ClearWatchPositionButtonText</Button>
+        }
+    }
 </div>
-
