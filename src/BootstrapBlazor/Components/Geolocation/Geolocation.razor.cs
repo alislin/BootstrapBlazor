@@ -3,21 +3,15 @@
 // Website: https://www.blazor.zone or https://argozhang.github.io/
 
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.Localization;
 using Microsoft.JSInterop;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BootstrapBlazor.Components;
 
-    /// <summary>
-    /// Geolocation 组件基类
-    /// </summary>
-public partial class Geolocation
+/// <summary>
+/// Geolocation 组件基类
+/// </summary>
+public partial class Geolocation : IDisposable
 {
     /// <summary>
     /// 获得/设置 IJSRuntime 实例
@@ -26,14 +20,8 @@ public partial class Geolocation
     [NotNull]
     protected IJSRuntime? JSRuntime { get; set; }
 
-    private JSInterop<Geolocation>? Interop { get; set; }
-
-    /// <summary>
-    /// 获得/设置 定位
-    /// </summary>
-    [Parameter]
     [NotNull]
-    public string? GeolocationInfo { get; set; }
+    private JSInterop<Geolocation>? Interop { get; set; }
 
     /// <summary>
     /// 获得/设置 获取位置按钮文字 默认为 获取位置
@@ -68,9 +56,6 @@ public partial class Geolocation
     [Parameter]
     public bool ShowButtons { get; set; } = true;
 
-    /// <summary>
-    /// 
-    /// </summary>
     [Inject]
     [NotNull]
     private IStringLocalizer<Geolocation>? Localizer { get; set; }
@@ -84,7 +69,7 @@ public partial class Geolocation
     /// 获得/设置 定位结果回调方法
     /// </summary>
     [Parameter]
-    public Func<Geolocationitem, Task>? OnResult { get; set; }
+    public Func<GeolocationItem, Task>? OnResult { get; set; }
 
     /// <summary>
     /// 获得/设置 状态更新回调方法
@@ -102,25 +87,13 @@ public partial class Geolocation
         GetLocationButtonText ??= Localizer[nameof(GetLocationButtonText)];
         WatchPositionButtonText ??= Localizer[nameof(WatchPositionButtonText)];
         ClearWatchPositionButtonText ??= Localizer[nameof(ClearWatchPositionButtonText)];
-    }
-
-    /// <summary>
-    /// OnAfterRender 方法
-    /// </summary>
-    /// <param name="firstRender"></param>
-    /// <returns></returns>
-    protected override void OnAfterRender(bool firstRender)
-    {
-        if (firstRender && JSRuntime != null)
-        {
-            Interop = new JSInterop<Geolocation>(JSRuntime);
-        }
+        Interop = new JSInterop<Geolocation>(JSRuntime);
     }
 
     /// <summary>
     /// 获取定位
     /// </summary>
-    public virtual async Task GetLocation()
+    public async Task GetLocation()
     {
         await Interop.InvokeVoidAsync(this, GeolocationElement, "bb_getLocation");
     }
@@ -128,7 +101,7 @@ public partial class Geolocation
     /// <summary>
     /// 持续定位
     /// </summary>
-    public virtual async Task WatchPosition()
+    public async Task WatchPosition()
     {
         await Interop.InvokeVoidAsync(this, GeolocationElement, "bb_getLocation", false);
     }
@@ -138,8 +111,11 @@ public partial class Geolocation
     /// </summary>
     public virtual async Task ClearWatch()
     {
-        await JSRuntime.InvokeVoidAsync(GeolocationElement, "bb_clearWatchLocation", WatchID);
-        WatchID = null;
+        if (WatchID.HasValue)
+        {
+            await JSRuntime.InvokeVoidAsync(GeolocationElement, "bb_clearWatchLocation", WatchID);
+            WatchID = null;
+        }
     }
 
     /// <summary>
@@ -148,9 +124,12 @@ public partial class Geolocation
     /// <param name="geolocations"></param>
     /// <returns></returns>
     [JSInvokable]
-    public async Task GetResult(Geolocationitem geolocations)
+    public async Task GetResult(GeolocationItem geolocations)
     {
-        if (OnResult != null) await OnResult.Invoke(geolocations);
+        if (OnResult != null)
+        {
+            await OnResult(geolocations);
+        }
     }
 
     /// <summary>
@@ -161,7 +140,10 @@ public partial class Geolocation
     [JSInvokable]
     public async Task UpdateStatus(string status)
     {
-        if (OnUpdateStatus != null) await OnUpdateStatus.Invoke(status);
+        if (OnUpdateStatus != null)
+        {
+            await OnUpdateStatus.Invoke(status);
+        }
     }
 
     /// <summary>
@@ -172,8 +154,33 @@ public partial class Geolocation
     [JSInvokable]
     public Task UpdateWatchID(long watchID)
     {
-        this.WatchID = watchID;
+        WatchID = watchID;
         return Task.CompletedTask;
     }
 
+    /// <summary>
+    /// Dispose 方法
+    /// </summary>
+    /// <param name="disposing"></param>
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            if (Interop != null)
+            {
+                Interop.Dispose();
+                Interop = null;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Dispose 方法
+    /// </summary>
+    /// <exception cref="NotImplementedException"></exception>
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
 }
