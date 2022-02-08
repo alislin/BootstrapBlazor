@@ -7,7 +7,7 @@ namespace BootstrapBlazor.Components;
 /// <summary>
 /// 定位数据类
 /// </summary>
-public class GeolocationItemT
+public class GeolocationItem
 {
     /// <summary>
     /// 状态

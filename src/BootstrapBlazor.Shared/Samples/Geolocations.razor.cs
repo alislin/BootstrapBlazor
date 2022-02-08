@@ -37,8 +37,8 @@ public sealed partial class Geolocations
     private IStringLocalizer<Geolocations>? Localizer { get; set; }
 
     private string? status { get; set; }
-    private GeolocationItemT? geolocations { get; set; }
-    private List<GeolocationItemT> Items { get; set; } = new List<GeolocationItemT>() { new GeolocationItemT() };
+    private GeolocationItem? geolocations { get; set; }
+    private List<GeolocationItem> Items { get; set; } = new List<GeolocationItem>() { new GeolocationItem() };
 
     private string ImageUrl(string image) => $"_content/BootstrapBlazor.Shared/images/{image}";
 
@@ -57,7 +57,7 @@ public sealed partial class Geolocations
     }
 
 
-    private Task OnResult(GeolocationItemT geolocations)
+    private Task OnResult(GeolocationItem geolocations)
     {
         this.geolocations = geolocations;
         Items[0] = geolocations;
