@@ -1,23 +1,16 @@
 ﻿@page "/geolocations"
 
-    <h3>@Title</h3>
+<h3>@Title</h3>
 
-    <Block Title="@BaseUsageText" Introduction="@IntroText1">
+<DemoBlock Title="@BaseUsageText" Introduction="@IntroText1" Name="Normal">
+    <p>@IntroText2</p>
+    <Geolocation OnResult="@OnResult" OnUpdateStatus="@OnUpdateStatus" />
+    <Badge Color="Color.Warning">@status</Badge>
+    <Table TItem="GeolocationItemT" Items="Items" AutoGenerateColumns="true">
+    </Table>
+    <p>@IntroText3</p>
+    <hr />
+    <img class="barcode" src="@ImageUrl("Geolocation_s0.jpg")">
+</DemoBlock>
 
-        <p>@IntroText2</p>
-
-        <Geolocation OnResult="@OnResult" OnUpdateStatus="@OnUpdateStatus" />
-
-        <Badge Color="Color.Warning">@status</Badge>
-
-        <Table TItem="Geolocationitem" Items="Items" AutoGenerateColumns="true">
-        </Table>
-
-        <p>@IntroText3</p>
-
-        <hr />
-        <img class="barcode" src="@ImageUrl("Geolocation_s0.jpg")">
-
-    </Block>
-
-    <AttributeTable Items="@GetAttributes()" />
+<AttributeTable Items="@GetAttributes()" />
