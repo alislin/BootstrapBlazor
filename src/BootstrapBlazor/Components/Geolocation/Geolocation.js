@@ -1,8 +1,8 @@
 ﻿(function ($) {
     $.extend({
-        bb_getLocation: function (el, obj, getPosition=true) {
-            //var $el = $(el);
-            console.log('start ' + (getPosition?'getLocation':'watchPosition'));
+        bb_getLocation: function (el, obj, getPosition = true) {
+            var $el = $(el);
+            //console.log('start getLocation');
             var currentDistance = 0.0;
             var totalDistance = 0.0;
             var lastLat;
@@ -14,7 +14,6 @@
             Number.prototype.toRadians = function () {
                 return this * Math.PI / 180;
             }
-
 
             function distance(latitude1, longitude1, latitude2, longitude2) {
                 // R is the radius of the earth in kilometers
@@ -37,7 +36,6 @@
                 return d;
             }
 
-
             function updateStatus(message) {
                 status = message;
                 obj.invokeMethodAsync('UpdateStatus', message);
@@ -47,10 +45,9 @@
                 if (navigator.geolocation) {
                     status = "HTML5 Geolocation is supported in your browser.";
                     updateStatus(status);
-                    var id = navigator.geolocation.watchPosition(updateLocation,
+                    navigator.geolocation.watchPosition(updateLocation,
                         handleLocationError,
                         { maximumAge: 20000 });
-                    obj.invokeMethodAsync('UpdateWatchID', id);
                 }
             }
 
@@ -88,17 +85,17 @@
 
                 updateStatus("Location successfully updated.");
 
-                console.log("updateLocation end");
+                //console.log("updateLocation end");
                 var geolocationitem = {
                     "Status": status,
-                    "Latitude" : latitude,
-                    "Longitude" : longitude,
-                    "Accuracy" : accuracy,
-                    "Timestamp" : timestamp,
+                    "Latitude": latitude,
+                    "Longitude": longitude,
+                    "Accuracy": accuracy,
+                    "Timestamp": timestamp,
                     "CurrentDistance": currentDistance,
                     "TotalDistance": totalDistance,
-                    "LastLat" : lastLat,
-                    "LastLong" : lastLong,
+                    "LastLat": lastLat,
+                    "LastLong": lastLong,
                 };
                 obj.invokeMethodAsync('GetResult', geolocationitem);
             }
@@ -119,12 +116,11 @@
                         break;
                 }
             }
-
         },
         bb_clearWatchLocation: function (el,id) {
             //扩展阅读:移除的监听器
             //id = navigator.geolocation.watchPosition(success, error, options);
-            console.log('clearWatch ' + id);
+            //console.log('clearWatch ' + id);
             navigator.geolocation.clearWatch(id);
         }
      });
