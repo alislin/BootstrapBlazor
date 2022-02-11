@@ -347,6 +347,7 @@
     "EditorText": "Editor",
     "InputText": "Input",
     "InputNumberText": "InputNumber",
+    "InputGroupText": "InputGroup",
     "MarkdownText": "Markdown",
     "FloatingLabelText": "FloatingLabel",
     "RadioText": "Radio",
@@ -1274,6 +1275,18 @@
     "Att6": "Whether to display the front label",
     "Att7": "The front label displays text"
   },
+  "BootstrapBlazor.Shared.Samples.InputGroups": {
+    "Title": "InputGroup",
+    "H1": "Input can add lables and buttons before or after it to make as a group",
+    "Block1Title": "Basic usage",
+    "Block1Intro": "Add a label before the <code>Input</code>, or Add a <code>Button</code> after the <code>Input</code>",
+    "Block2Title": "Add multiple components",
+    "Block2Intro": "The <code>InputGroup</code> can have lots of children",
+    "Block3Title": "Add Select",
+    "Block3Intro": "Add <code>Select</code> component to the <code>InputGroup</code>",
+    "UserName": "UserName",
+    "Distance": "Distance"
+  },
   "BootstrapBlazor.Shared.Samples.Markdowns": {
     "Title": "Markdown",
     "H1": "A text editor that provides support for the Markdown syntax",
@@ -1760,6 +1773,7 @@
     "BasicUsageLi6": "The form checks by default whether the binding field values within the form are legitimate, and you can set the <code> ValidateAllProperties </code> property value to <code> true </code> if you need to check all fields in the model",
     "BasicUsageLi7": "Set the asynchronous submission form by setting the value of the Button <code> Button </code> property <code> IsAsync </code>",
     "BasicUsageLi8": "Components within a form are typically used to bind the property values of <code> Model </code> in both directions using bidirectional binding techniques, causing the component to refresh and re-render when its value changes <code> StateHasChanged </code>, and the method is called, i.e. its component or page is refreshed and re-rendered",
+    "BasicUsageLi9": "After the value of the component control in the form is modified, the <code>OnFieldChanged</code> method is called",
     "BasicUsageP2": "Note:",
     "InnerComponentTitle": "Built-in components",
     "InnerComponentIntro": "Place the support form components into the <code>ValidateForm </code>",
@@ -2752,6 +2766,21 @@
     "BaseUsageText": "Basic usage",
     "IntroText1": "Obtain location information through browser API.",
     "IntroText2": "Click the button to get your coordinates.",
-    "IntroText3": "Note: For security reasons, when a web page tries to access location information, the user is notified and asked to grant permission. Be aware that each browser has its own policies and methods for requesting this permission."
+    "IntroText3": "Note: For security reasons, when a web page tries to access location information, the user is notified and asked to grant permission. Be aware that each browser has its own policies and methods for requesting this permission.",
+    "GetLocationButtonText": "Get Location",
+    "WatchPositionButtonText": "Watch Position",
+    "ClearWatchPositionButtonText": "Stop Watch Position",
+    "GetLocationResultSuccess": "Call GetLocaltion success",
+    "GetLocationResultFailed": "Call GetLocaltion failed",
+    "Longitude": "Longitude",
+    "Latitude": "Latitude",
+    "Accuracy": "Accuracy",
+    "Altitude": "Altitude",
+    "AltitudeAccuracy": "AltitudeAccuracy",
+    "Heading": "Heading",
+    "Speed": "Speed",
+    "LastUpdateTime": "UpdateTime",
+    "CurrentDistance": "CurrentDistance",
+    "TotalDistance": "TotalDistance"
   }
 }

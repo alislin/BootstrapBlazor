@@ -289,6 +289,11 @@ public sealed partial class NavMenu
                 },
                 new()
                 {
+                    Text = Localizer["InputGroup"],
+                    Url = "inputgroups"
+                },
+                new()
+                {
                     Text = Localizer["Markdown"],
                     Url = "markdowns"
                 },
@@ -443,6 +448,12 @@ public sealed partial class NavMenu
             {
                 Text=Localizer["Empty"],
                 Url = "empties"
+            },
+            new()
+            {
+                IsNew= true,
+                Text = Localizer["Geolocation"],
+                Url = "geolocations"
             },
             new()
             {

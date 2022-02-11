@@ -347,6 +347,7 @@
     "EditorText": "富文本框 Editor",
     "InputText": "输入框 Input",
     "InputNumberText": "数字框 InputNumber",
+    "InputGroupText": "输入组 InputGroup",
     "MarkdownText": "富文本框 Markdown",
     "FloatingLabelText": "悬浮标签 FloatingLabel",
     "RadioText": "单选框 Radio",
@@ -1275,6 +1276,18 @@
     "Att6": "是否显示前置标签",
     "Att7": "前置标签显示文本"
   },
+  "BootstrapBlazor.Shared.Samples.InputGroups": {
+    "Title": "InputGroup 组件",
+    "H1": "Input的前后可以增加与一些标签和按钮，拼成一组。其排版格式紧凑，非常适合单行多列的场景，比如搜索等。",
+    "Block1Title": "基础用法",
+    "Block1Intro": "在<code>Input</code>前增加标签，或者在<code>Input</code>后增加<code>Button</code>",
+    "Block2Title": "增加多个组件",
+    "Block2Intro": "<code>InputGroup</code>里面可以增加很多组件",
+    "Block3Title": "增加Select",
+    "Block3Intro": "往<code>InputGroup</code>里面增加<code>Select</code>",
+    "UserName": "用户名",
+    "Distance": "距离"
+  },
   "BootstrapBlazor.Shared.Samples.Markdowns": {
     "Title": "Markdown 编辑器",
     "H1": "提供 Markdown 语法支持的文本编辑器",
@@ -1762,6 +1775,7 @@
     "BasicUsageLi6": "表单默认检查表单内绑定字段值是否合法，如需要检查模型所有字段时可设置 <code>ValidateAllProperties</code> 属性值为 <code>true</code>",
     "BasicUsageLi7": "通过设置提交按钮 <code>Button</code> 属性 <code>IsAsync</code> 值，设置异步提交表单",
     "BasicUsageLi8": "表单内组件通常用法都是使用双向绑定技术对 <code>Model</code> 的属性值进行双向绑定，当其值改变时会导致所在组件 <code>StateHasChanged</code>,方法被调用，即其所在组件或者页面进行刷新重新渲染",
+    "BasicUsageLi9": "表单内组件控件的值修改后 <code>OnFieldChanged</code> 方法被调用",
     "BasicUsageP2": "注意事项：",
     "InnerComponentTitle": "内置组件",
     "InnerComponentIntro": "放置支持表单组件到 <code>ValidateForm</code> 中",
@@ -2602,6 +2616,7 @@
     "EditorForm": "表单编辑框 EditorForm",
     "Input": "输入框 Input",
     "InputNumber": "数字框 InputNumber",
+    "InputGroup": "输入组 InputGroup",
     "Ip": "IP 地址 IpAddress",
     "Markdown": "富文本框 Markdown",
     "MultiSelect": "多项选择器 MultiSelect",
@@ -2756,7 +2771,22 @@
     "Title": "地理定位/移动距离追踪",
     "BaseUsageText": "基础用法",
     "IntroText1": "通过浏览器API获取定位信息。",
-    "IntroText2": "单击按钮以获取您的坐标。",
-    "IntroText3": "注意: 出于安全考虑，当网页请求获取用户位置信息时，用户会被提示进行授权。注意不同浏览器在请求权限时有不同的策略和方式。Windows10在未开启定位的情况下无法获取位置。"
+    "IntroText2": "单击按钮以获取地理位置坐标。",
+    "IntroText3": "注意: 出于安全考虑，当网页请求获取用户位置信息时，用户会被提示进行授权。注意不同浏览器在请求权限时有不同的策略和方式。Windows10 在未开启定位的情况下无法获取位置。",
+    "GetLocationButtonText": "获取位置",
+    "WatchPositionButtonText": "移动距离追踪",
+    "ClearWatchPositionButtonText": "停止追踪",
+    "GetLocationResultSuccess": "调用 GetLocaltion 成功",
+    "GetLocationResultFailed": "调用 GetLocaltion 失败",
+    "Longitude": "经度",
+    "Latitude": "纬度",
+    "Accuracy": "位置精度",
+    "Altitude": "海拔",
+    "AltitudeAccuracy": "海拔精度",
+    "Heading": "方向",
+    "Speed": "速度",
+    "LastUpdateTime": "时间戳",
+    "CurrentDistance": "移动距离",
+    "TotalDistance": "总移动距离"
   }
 }
