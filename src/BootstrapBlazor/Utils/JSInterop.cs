@@ -71,6 +71,26 @@ public class JSInterop<TValue> : IDisposable where TValue : class
     }
 
     /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    internal ValueTask<int> GetGeowatchPositionItemAsync(TValue value, string callbackMethodName)
+    {
+        _objRef = DotNetObjectReference.Create(value);
+        return _jsRuntime.InvokeAsync<int>("$.bb_geo_watchPosition", _objRef, callbackMethodName);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    internal ValueTask<object> GeoClearWatchAsync(TValue value,long watchID)
+    {
+        _objRef = DotNetObjectReference.Create(value);
+        return _jsRuntime.InvokeAsync<object>("$.bb_geo_clearWatchLocation", _objRef, watchID);
+    }
+
+    /// <summary>
     /// Dispose 方法
     /// </summary>
     /// <param name="disposing"></param>

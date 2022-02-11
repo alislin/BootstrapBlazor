@@ -35,11 +35,27 @@ public partial class Geolocations : IDisposable
 
     private GeolocationItem? Model { get; set; }
 
+    /// <summary>
+    /// 获得/设置 获取持续定位监听器ID
+    /// </summary>
+    public long? WatchID { get; set; }
+
     private async Task GetLocation()
     {
         Interop ??= new JSInterop<Geolocations>(JSRuntime);
         var ret = await GeolocationService.GetLocaltion(Interop, this, nameof(GetLocationCallback));
         Trace.Log(ret ? Localizer["GetLocationResultSuccess"] : Localizer["GetLocationResultFailed"]);
+    }
+    private async Task WatchPosition()
+    {
+        Interop ??= new JSInterop<Geolocations>(JSRuntime);
+        WatchID = await GeolocationService.WatchPosition(Interop, this, nameof(GetLocationCallback));
+        Trace.Log($"WatchID: {WatchID}");
+    }
+    private async Task ClearWatch()
+    {
+        Interop ??= new JSInterop<Geolocations>(JSRuntime);
+        await GeolocationService.ClearWatch(Interop, this, WatchID??1);
     }
 
     /// <summary>

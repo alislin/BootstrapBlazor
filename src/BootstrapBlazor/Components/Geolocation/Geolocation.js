@@ -23,7 +23,7 @@
             var d = R * c;
             return d;
         },
-        bb_geo_updateLocaltion: function (position) {
+        bb_geo_updateLocaltion: function (position, lastLat, lastLong, currentDistance, totalDistance) {
             // 纬度
             var latitude = position.coords.latitude;
             // 经度
@@ -49,15 +49,15 @@
             }
 
             // calculate distance
-            var currentDistance = 0.0;
-            var totalDistance = 0.0;
+            currentDistance = 0.0;
+            console.log(lastLat, lastLong);
             if (lastLat != null && lastLong != null) {
                 currentDistance = $.bb_geo_distance(latitude, longitude, lastLat, lastLong);
                 totalDistance += currentDistance;
             }
 
-            var lastLat = latitude;
-            var lastLong = longitude;
+            lastLat = latitude;
+            lastLong = longitude;
 
             if (altitude == null) {
                 altitude = 0;
@@ -116,11 +116,16 @@
             }
             return ret;
         },
-        bb_geo_watchPosition: function (obj) {
+        bb_geo_watchPosition: function (obj, method) {
             var id = 0;
+            var currentDistance = 0.0;
+            var totalDistance = 0.0;
+            var lastLat=null;
+            var lastLong =null;
             if (navigator.geolocation) {
                 id = navigator.geolocation.watchPosition(position => {
-                    $.bb_geo_updateLocaltion(position);
+                    var info = $.bb_geo_updateLocaltion(position, lastLat, lastLong, currentDistance, totalDistance);
+                    obj.invokeMethodAsync(method, info);
                 }, $.bb_geo_handleLocationError, {
                     maximumAge: 20000
                 });
