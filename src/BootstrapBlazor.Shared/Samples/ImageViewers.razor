@@ -1,0 +1,18 @@
+﻿@page "/imageviewers"
+
+<h3>ImageViewer 图片浏览器</h3>
+
+<h4>用于查看单张/浏览多张图片</h4>
+
+
+<DemoBlock Title="基本用法" Introduction="网页中添加 <code>ImageViewer</code> 组件并设置 <code>Images</code> 属性即可" Name="Normal">
+    <ImageViewer Images='@Images' />
+</DemoBlock>
+
+<DemoBlock Title="单图片" Introduction="网页中添加 <code>ImageViewer</code> 组件并设置 <code>Src</code> 属性即可" Name="Normal">
+    <ImageViewer Src="@Images.First()" />
+</DemoBlock>
+
+<DemoBlock Title="简化工具条" Introduction="网页中添加 <code>ImageViewer</code> 组件并设置  <code>Images</code> <code>toolbarlite</code> 属性即可" Name="Advance">
+    <ImageViewer Images="@Images" toolbarlite="true" />
+</DemoBlock>

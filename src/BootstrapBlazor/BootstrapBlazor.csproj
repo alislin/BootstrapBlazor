@@ -44,4 +44,8 @@
     <None Remove="wwwroot\Notification.js" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\lib\viewerjs\" />
+  </ItemGroup>
+
 </Project>
