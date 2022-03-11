@@ -38,9 +38,19 @@
 </DemoBlock>
 
 <DemoBlock Title="@Localizer["Block3Title"]" Introduction="@Localizer["Block3Intro"]" Name="Select">
-    <BootstrapInputGroup>
-        <BootstrapInputGroupLabel Text="@Localizer["UserName"]" />
-        <Select TValue="string" Items="@Items3" />
-    </BootstrapInputGroup>
+    <div class="row g-3">
+        <div class="col-12 col-sm-6">
+            <BootstrapInputGroup>
+                <BootstrapInputGroupLabel DisplayText="@Localizer["UserName"]" />
+                <Select TValue="string" Items="@Items3" />
+            </BootstrapInputGroup>
+        </div>
+        <div class="col-12 col-sm-6">
+            <BootstrapInputGroup>
+                <Select TValue="string" Items="@Items3" />
+                <BootstrapInputGroupLabel DisplayText="@Localizer["UserName"]" />
+            </BootstrapInputGroup>
+        </div>
+    </div>
 </DemoBlock>
 
