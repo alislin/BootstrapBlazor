@@ -9,7 +9,7 @@
     <div class="row g-3">
         <div class="col-12 col-sm-6">
             <BootstrapInputGroup>
-                <BootstrapInputGroupLabel Text="@Localizer["UserName"]" />
+                <BootstrapInputGroupLabel DisplayText="@Localizer["UserName"]" />
                 <BootstrapInput @bind-Value="@BindValue" />
             </BootstrapInputGroup>
         </div>
@@ -24,13 +24,13 @@
 
 <DemoBlock Title="@Localizer["Block2Title"]" Introduction="@Localizer["Block2Intro"]" Name="Multiple">
     <BootstrapInputGroup>
-        <BootstrapInputGroupLabel Text="@Localizer["Distance"]" />
+        <BootstrapInputGroupLabel DisplayText="@Localizer["Distance"]" />
         <BootstrapInput @bind-Value="@BindValue" />
-        <BootstrapInputGroupLabel Text="km" />
+        <BootstrapInputGroupLabel DisplayText="km" />
     </BootstrapInputGroup>
     <BootstrapInputGroup class="mt-2">
         <BootstrapInput @bind-Value="@BindValue" />
-        <BootstrapInputGroupLabel Text="@StringAt" />
+        <BootstrapInputGroupLabel DisplayText="@StringAt" />
         <BootstrapInput @bind-Value="@StringMailServer" />
         <Button Icon="fa fa-print" IsOutline="true"></Button>
         <Button Icon="fa fa-search" IsOutline="true"></Button>
