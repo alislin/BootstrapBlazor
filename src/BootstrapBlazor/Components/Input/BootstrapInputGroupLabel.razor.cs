@@ -13,6 +13,7 @@ public partial class BootstrapInputGroupLabel
 {
     private string? ClassString => CssBuilder.Default()
         .AddClass("input-group-text", IsInnerLabel)
+        .AddClass("form-label", !IsInnerLabel)
         .AddClassFromAttributes(AdditionalAttributes)
         .Build();
 
@@ -20,9 +21,6 @@ public partial class BootstrapInputGroupLabel
     /// 
     /// </summary>
     [Parameter]
-#if NET6_0_OR_GREATER
-    [EditorRequired]
-#endif
     public string? Text { get; set; }
 
     private bool IsInnerLabel { get; set; }
@@ -35,5 +33,6 @@ public partial class BootstrapInputGroupLabel
         base.OnParametersSet();
 
         IsInnerLabel = InputGroup != null;
+        DisplayText = Text;
     }
 }
