@@ -78,7 +78,7 @@ public abstract class DisplayBase<TValue> : TooltipComponentBase
     /// 获得 InputGroup 实例
     /// </summary>
     [CascadingParameter]
-    public BootstrapInputGroup? InputGroup { get; set; }
+    protected BootstrapInputGroup? InputGroup { get; set; }
 
     /// <summary>
     /// SetParametersAsync 方法
