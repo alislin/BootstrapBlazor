@@ -18,10 +18,11 @@ public partial class BootstrapInputGroupLabel
         .Build();
 
     /// <summary>
-    /// 
+    /// 获得/设置 显示名称 已弃用，请使用 DisplayText
     /// </summary>
     [Parameter]
-    public string? Text { get; set; }
+    [Obsolete("已弃用，请使用 DisplayText")]
+    public string? Text { get => DisplayText; set => DisplayText = value; }
 
     private bool IsInnerLabel { get; set; }
 
@@ -33,6 +34,5 @@ public partial class BootstrapInputGroupLabel
         base.OnParametersSet();
 
         IsInnerLabel = InputGroup != null;
-        DisplayText = Text;
     }
 }
