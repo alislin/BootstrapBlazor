@@ -72,6 +72,13 @@ public class InputTest : BootstrapBlazorTestBase
     }
 
     [Fact]
+    public void Password_Ok()
+    {
+        var cut = Context.RenderComponent<BootstrapPassword>();
+        cut.Contains("type=\"password\"");
+    }
+
+    [Fact]
     public void IsTrim_Ok()
     {
         var val = "    test    ";
