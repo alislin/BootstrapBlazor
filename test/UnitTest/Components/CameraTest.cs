@@ -6,6 +6,36 @@ namespace UnitTest.Components;
 
 public class CameraTest : BootstrapBlazorTestBase
 {
+    [Fact]
+    public async Task InitDevices_Ok()
+    {
+        var count = 0;
+        var cut = Context.RenderComponent<Camera>(pb =>
+        {
+            pb.Add(a => a.OnInit, devices =>
+            {
+                count = devices.Count();
+                return Task.CompletedTask;
+            });
+            pb.Add(a => a.NotFoundDevicesString, "NotFound");
+        });
+        await cut.InvokeAsync(() => cut.Instance.InitDevices(Enumerable.Empty<DeviceItem>()));
+        cut.Contains("NotFound");
+
+        await cut.InvokeAsync(() => cut.Instance.InitDevices(new DeviceItem[]
+        {
+            new DeviceItem()
+            {
+                DeviceId = "1",
+                Label = "Device 1"
+            },
+            new DeviceItem()
+            {
+                DeviceId = "1"
+            }
+        }));
+        Assert.Equal(2, count);
+    }
 
     [Fact]
     public void Width_Height_Ok()
