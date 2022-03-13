@@ -52,6 +52,22 @@ public class CameraTest : BootstrapBlazorTestBase
         await cut.InvokeAsync(() => cut.Instance.OnError!("Error"));
         Assert.Equal("Error", msg);
     }
+
+    [Fact]
+    public async Task Start_Ok()
+    {
+        var start = false;
+        var cut = Context.RenderComponent<Camera>(pb =>
+        {
+            pb.Add(a => a.OnStart, () =>
+            {
+                start = true;
+                return Task.CompletedTask;
+            });
+        });
+        await cut.InvokeAsync(() => cut.Instance.Start());
+        Assert.True(start);
+    }
     [Fact]
     public void Width_Height_Ok()
     {
