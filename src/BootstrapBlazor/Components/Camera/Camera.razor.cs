@@ -167,8 +167,8 @@ public partial class Camera : IAsyncDisposable
 
         Cameras = new SelectedItem[]
         {
-                new SelectedItem { Text = FrontText!, Value = "user", Active = true },
-                new SelectedItem { Text = BackText!, Value = "environment" }
+            new SelectedItem { Text = FrontText!, Value = "user", Active = true },
+            new SelectedItem { Text = BackText!, Value = "environment" }
         };
     }
 
