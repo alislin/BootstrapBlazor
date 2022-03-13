@@ -18,6 +18,7 @@ public class CameraTest : BootstrapBlazorTestBase
                 return Task.CompletedTask;
             });
             pb.Add(a => a.NotFoundDevicesString, "NotFound");
+            pb.Add(a => a.AutoStart, true);
         });
         await cut.InvokeAsync(() => cut.Instance.InitDevices(Enumerable.Empty<DeviceItem>()));
         cut.Contains("NotFound");
@@ -49,7 +50,7 @@ public class CameraTest : BootstrapBlazorTestBase
                 return Task.CompletedTask;
             });
         });
-        await cut.InvokeAsync(() => cut.Instance.OnError!("Error"));
+        await cut.InvokeAsync(() => cut.Instance.GetError("Error"));
         Assert.Equal("Error", msg);
     }
 
