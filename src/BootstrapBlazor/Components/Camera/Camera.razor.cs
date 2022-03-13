@@ -319,11 +319,14 @@ public partial class Camera : IAsyncDisposable
     /// <returns></returns>
     protected virtual async ValueTask DisposeAsyncCore(bool disposing)
     {
-        if (disposing && Interop != null)
+        if (disposing)
         {
-            await JSRuntime.InvokeVoidAsync(CameraElement, "bb_camera", "", "stop").ConfigureAwait(false);
-            Interop.Dispose();
-            Interop = null;
+            if (Interop != null)
+            {
+                await JSRuntime.InvokeVoidAsync(CameraElement, "bb_camera", "", "stop").ConfigureAwait(false);
+                Interop.Dispose();
+                Interop = null;
+            }
         }
     }
 
