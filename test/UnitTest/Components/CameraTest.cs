@@ -103,6 +103,16 @@ public class CameraTest : BootstrapBlazorTestBase
     }
 
     [Fact]
+    public void ShowPreview_Ok()
+    {
+        var cut = Context.RenderComponent<Camera>(pb =>
+        {
+            pb.Add(a => a.ShowPreview, true);
+        });
+        cut.Contains("camera-header");
+    }
+
+    [Fact]
     public void Width_Height_Ok()
     {
         var cut = Context.RenderComponent<Camera>(pb =>
