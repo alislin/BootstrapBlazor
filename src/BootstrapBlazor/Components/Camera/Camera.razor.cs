@@ -232,7 +232,6 @@ public partial class Camera : IAsyncDisposable
                     d.Label = $"Video device {index + 1}";
                 }
             }
-            IsDisabled = false;
             ActiveCamera = Cameras.First();
         }
 
