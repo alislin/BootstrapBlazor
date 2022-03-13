@@ -153,7 +153,7 @@ public partial class Captcha : IDisposable
     protected void OnClickRefresh() => Reset();
 
     /// <summary>
-    /// 清除 ToastBox 方法
+    /// 验证方差方法
     /// </summary>
     [JSInvokable]
     public Task<bool> Verify(int offset, IEnumerable<int> trails)
@@ -220,8 +220,11 @@ public partial class Captcha : IDisposable
     {
         if (disposing)
         {
-            Interop?.Dispose();
-            Interop = null;
+            if (Interop != null)
+            {
+                Interop.Dispose();
+                Interop = null;
+            }
         }
     }
 
@@ -230,7 +233,7 @@ public partial class Captcha : IDisposable
     /// </summary>
     public void Dispose()
     {
-        Dispose(disposing: true);
+        Dispose(true);
         GC.SuppressFinalize(this);
     }
 
@@ -245,6 +248,6 @@ public partial class Captcha : IDisposable
             Interop = new JSInterop<Captcha>(JSRuntime);
         }
 
-        var _ = Interop?.InvokeVoidAsync(this, CaptchaElement, "captcha", nameof(Verify), option);
+        _ = Interop.InvokeVoidAsync(this, CaptchaElement, "captcha", nameof(Verify), option);
     }
 }
