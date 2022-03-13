@@ -121,6 +121,8 @@ public sealed partial class EditorForm<TModel> : IShowLabel
     [NotNull]
     private IStringLocalizer<EditorForm<TModel>>? Localizer { get; set; }
 
+    [Inject]
+    private ILookUpService? LookUpService { get; set; }
     /// <summary>
     /// 获得/设置 配置编辑项目集合
     /// </summary>
@@ -225,6 +227,7 @@ public sealed partial class EditorForm<TModel> : IShowLabel
                                 item.Text = el.Text;
                                 item.Items = el.Items;
                                 item.Lookup = el.Lookup;
+                                item.LookUpServiceCatalog = el.LookUpServiceCatalog;
                                 item.ComponentType = el.ComponentType;
                                 item.ComponentParameters = el.ComponentParameters;
                                 item.SkipValidate = el.SkipValidate;
@@ -252,7 +255,7 @@ public sealed partial class EditorForm<TModel> : IShowLabel
         else
         {
             item.PlaceHolder ??= PlaceHolderText;
-            builder.CreateComponentByFieldType(this, item, Model, ShowLabel, ItemChangedType, IsSearch.Value);
+            builder.CreateComponentByFieldType(this, item, Model, ShowLabel, ItemChangedType, IsSearch.Value, LookUpService);
         }
 
         bool CanWrite(IEditorItem item) => item.CanWrite(typeof(TModel)) && item.IsEditable(ItemChangedType, IsSearch.Value);
