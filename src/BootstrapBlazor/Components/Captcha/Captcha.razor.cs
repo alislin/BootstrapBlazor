@@ -13,7 +13,7 @@ namespace BootstrapBlazor.Components;
 /// </summary>
 public partial class Captcha : IDisposable
 {
-    private static Random ImageRandomer { get; set; } = new Random();
+    private static Random ImageRandomer { get; } = new Random();
 
     private int OriginX { get; set; }
 
