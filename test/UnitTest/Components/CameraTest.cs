@@ -38,6 +38,21 @@ public class CameraTest : BootstrapBlazorTestBase
     }
 
     [Fact]
+    public async Task GetError_Ok()
+    {
+        var msg = "";
+        var cut = Context.RenderComponent<Camera>(pb =>
+        {
+            pb.Add(a => a.OnError, error =>
+            {
+                msg = error;
+                return Task.CompletedTask;
+            });
+        });
+        await cut.InvokeAsync(() => cut.Instance.OnError!("Error"));
+        Assert.Equal("Error", msg);
+    }
+    [Fact]
     public void Width_Height_Ok()
     {
         var cut = Context.RenderComponent<Camera>(pb =>
