@@ -199,7 +199,7 @@ public partial class Camera : IAsyncDisposable
     {
         await base.OnAfterRenderAsync(firstRender);
 
-        if (firstRender && JSRuntime != null)
+        if (firstRender)
         {
             Interop = new JSInterop<Camera>(JSRuntime);
             await Interop.InvokeVoidAsync(this, CameraElement, "bb_camera", "init", AutoStart);
