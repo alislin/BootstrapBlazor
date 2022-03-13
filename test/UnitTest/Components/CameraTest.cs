@@ -6,4 +6,16 @@ namespace UnitTest.Components;
 
 public class CameraTest : BootstrapBlazorTestBase
 {
+
+    [Fact]
+    public void Width_Height_Ok()
+    {
+        var cut = Context.RenderComponent<Camera>(pb =>
+        {
+            pb.Add(a => a.VideoWidth, 30);
+            pb.Add(a => a.VideoHeight, 20);
+        });
+        Assert.Equal(40, cut.Instance.VideoWidth);
+        Assert.Equal(30, cut.Instance.VideoHeight);
+    }
 }
