@@ -9,11 +9,11 @@ namespace BootstrapBlazor.Services;
 /// <summary>
 /// 内部默认字典服务实现类
 /// </summary>
-internal class EmptyLookUpService : ILookUpService
+internal class NullLookUpService : ILookUpService
 {
     /// <summary>
     /// 根据指定键值获取 Lookup 集合方法
     /// </summary>
     /// <param name="key">获得 Lookup 数据集合键值</param>
-    public IEnumerable<SelectedItem>? GetItemsByKey(string key) => Enumerable.Empty<SelectedItem>();
+    public IEnumerable<SelectedItem>? GetItemsByKey(string key) => null;
 }
