@@ -283,7 +283,7 @@ public static class Utility
     /// <param name="showLabel"></param>
     /// <param name="changedType"></param>
     /// <param name="isSearch"></param>
-    public static void CreateComponentByFieldType(this RenderTreeBuilder builder, ComponentBase component, IEditorItem item, object model, bool? showLabel = null, ItemChangedType changedType = ItemChangedType.Update, bool isSearch = false)
+    public static void CreateComponentByFieldType(this RenderTreeBuilder builder, ComponentBase component, IEditorItem item, object model, bool? showLabel = null, ItemChangedType changedType = ItemChangedType.Update, bool isSearch = false, ILookUpService? lookUpService = null)
     {
         var fieldType = item.PropertyType;
         var fieldName = item.GetFieldName();
@@ -317,7 +317,15 @@ public static class Utility
         {
             builder.AddAttribute(7, nameof(CheckboxList<IEnumerable<string>>.Items), item.Items.Clone());
         }
-
+        // 增加字典服务类型的下拉框,手动设定 ComponentType 为 Select 并且 Data 有值 自动生成下拉框
+        if (item.Items == null && item.ComponentType == typeof(Select<>).MakeGenericType(fieldType)
+            && (item.LookUpServiceCatalog != null || item.Lookup != null))
+        {
+            if (item.Lookup == null && item.LookUpServiceCatalog != null && lookUpService != null)
+            {
+                item.Lookup = lookUpService?.GetLookUpByCatalog(item.LookUpServiceCatalog);
+            }
+        }
         // Lookup
         if (lookup != null && item.Items == null)
         {

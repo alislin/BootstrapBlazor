@@ -174,6 +174,12 @@ public class AutoGenerateColumnAttribute : AutoGenerateBaseAttribute, ITableColu
     IEnumerable<SelectedItem>? IEditorItem.Lookup { get; set; }
 
     /// <summary>
+    /// 获得/设置 字典数据源服务的类别 常用于外键自动转换为名称操作
+    /// </summary>
+    public string? LookUpServiceCatalog { get; set; }
+    string? IEditorItem.LookUpServiceCatalog { get { return LookUpServiceCatalog; } set { value = LookUpServiceCatalog; } }
+
+    /// <summary>
     /// 获得/设置 单元格回调方法
     /// </summary>
     Action<TableCellArgs>? ITableColumn.OnCellRender { get; set; }
