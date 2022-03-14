@@ -117,7 +117,7 @@ internal class InternalTableColumn : ITableColumn
     public IEnumerable<SelectedItem>? Lookup { get; set; }
 
     /// <summary>
-    /// 获得/设置 字典数据源服务的类别 常用于外键自动转换为名称操作
+    /// 获得/设置 LookupService 服务获取 Lookup 数据集合键值 常用于外键自动转换为名称操作
     /// </summary>
     public string? LookUpServiceKey { get; set; }
 
