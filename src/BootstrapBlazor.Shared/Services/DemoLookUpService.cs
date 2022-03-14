@@ -3,6 +3,8 @@
 // Website: https://www.blazor.zone or https://argozhang.github.io/
 
 using BootstrapBlazor.Components;
+using BootstrapBlazor.Shared;
+using Microsoft.Extensions.Localization;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -11,25 +13,22 @@ namespace Microsoft.Extensions.DependencyInjection;
 /// </summary>
 internal class DemoLookUpService : ILookUpService
 {
+    private IServiceProvider Provider { get; }
+
+    public DemoLookUpService(IServiceProvider provider) => Provider = provider;
+
     public IEnumerable<SelectedItem>? GetItemsByKey(string? key)
     {
-        if (key == "user_sex")
+        IEnumerable<SelectedItem>? items = null;
+        if (key == "Foo.Complete")
         {
-            return new List<SelectedItem>()
+            var localizer = Provider.GetRequiredService<IStringLocalizer<Foo>>();
+            items = new List<SelectedItem>()
             {
-                new SelectedItem(){ Value="0",Text="未知"},
-                new SelectedItem(){ Value="1",Text="男"},
-                new SelectedItem(){ Value="2",Text="女"},
+                new() { Value = "true", Text = localizer["True"].Value },
+                new() { Value = "false", Text = localizer["False"].Value }
             };
         }
-        if (key == "show_hide")
-        {
-            return new List<SelectedItem>()
-            {
-                new SelectedItem(){ Value="0",Text="显示"},
-                new SelectedItem(){ Value="1",Text="隐藏"},
-            };
-        }
-        return null;
+        return items;
     }
 }

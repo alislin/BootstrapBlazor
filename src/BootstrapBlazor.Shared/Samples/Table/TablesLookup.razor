@@ -19,7 +19,7 @@
             <TableColumns>
                 <TableColumn @bind-Field="@context.DateTime" Width="180" />
                 <TableColumn @bind-Field="@context.Name" />
-                <TableColumn @bind-Field="@context.Complete" Lookup="@DataSource" />
+                <TableColumn @bind-Field="@context.Complete" LookupServiceKey="Foo.Complete" />
             </TableColumns>
         </Table>
     }
