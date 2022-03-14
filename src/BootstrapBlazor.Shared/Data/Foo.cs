@@ -78,15 +78,6 @@ public class Foo
     [AutoGenerateColumn(Order = 70, Editable = false)]
     public IEnumerable<string> Hobby { get; set; } = new List<string>();
 
-
-    /// <summary>
-    ///
-    /// </summary>
-    [Required(ErrorMessage = "请选择{0}")]
-    [Display(Name = "性别")]
-    [AutoGenerateColumn(Order = 80, LookUpServiceCatalog = "user_sex", ComponentType = typeof(Select<int>))]
-    public int Sex { get; set; } = 0;
-
     #region Static methods
     private static readonly Random random = new();
 
