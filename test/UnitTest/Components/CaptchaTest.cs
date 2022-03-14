@@ -11,6 +11,8 @@ public class CaptchaTest : BootstrapBlazorTestBase
         var verify = false;
         var cut = Context.RenderComponent<Captcha>(pb =>
         {
+            pb.Add(a => a.Width, 280);
+            pb.Add(a => a.Height, 150);
             pb.Add(a => a.Offset, 1000);
             pb.Add(a => a.OnValid, b =>
             {
@@ -19,6 +21,16 @@ public class CaptchaTest : BootstrapBlazorTestBase
         });
         await cut.InvokeAsync(() => cut.Instance.Verify(10, new int[] { 1, 2, 3, 4, 1 }));
         Assert.True(verify);
+
+        await cut.InvokeAsync(() => cut.Instance.Verify(10, new int[] { 1, 2, 3, 4 }));
+        Assert.False(verify);
+
+        cut.SetParametersAndRender(pb =>
+        {
+            pb.Add(a => a.Offset, 5);
+            pb.Add(a => a.OnValid, null);
+        });
+        await cut.InvokeAsync(() => cut.Instance.Verify(10, new int[] { 1, 2, 3, 4, 1 }));
     }
 
     [Fact]
@@ -26,6 +38,8 @@ public class CaptchaTest : BootstrapBlazorTestBase
     {
         var cut = Context.RenderComponent<Captcha>(pb =>
         {
+            pb.Add(a => a.ImagesPath, "images");
+            pb.Add(a => a.ImagesName, "Pic.jpg");
             pb.Add(a => a.GetImageName, () => "test.jpg");
         });
         await cut.InvokeAsync(() => cut.Find(".captcha-refresh").Click());
