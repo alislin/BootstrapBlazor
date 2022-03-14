@@ -122,7 +122,9 @@ public sealed partial class EditorForm<TModel> : IShowLabel
     private IStringLocalizer<EditorForm<TModel>>? Localizer { get; set; }
 
     [Inject]
+    [NotNull]
     private ILookUpService? LookUpService { get; set; }
+
     /// <summary>
     /// 获得/设置 配置编辑项目集合
     /// </summary>
@@ -250,7 +252,7 @@ public sealed partial class EditorForm<TModel> : IShowLabel
     {
         if (IsDisplay || !CanWrite(item))
         {
-            builder.CreateDisplayByFieldType(this, item, Model, ShowLabel);
+            builder.CreateDisplayByFieldType(item, Model, ShowLabel, LookUpService);
         }
         else
         {
