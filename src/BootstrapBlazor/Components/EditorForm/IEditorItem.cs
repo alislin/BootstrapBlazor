@@ -88,9 +88,9 @@ public interface IEditorItem
     IEnumerable<SelectedItem>? Lookup { get; set; }
 
     /// <summary>
-    /// 获得/设置 字典数据源服务的类别参数
+    /// 获得/设置 LookupService 服务获取 Lookup 数据集合键值
     /// </summary>
-    string? LookUpServiceCatalog { get; set; }
+    string? LookUpServiceKey { get; set; }
 
     /// <summary>
     /// 获得/设置 自定义验证集合

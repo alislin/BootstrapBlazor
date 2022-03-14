@@ -4,6 +4,7 @@
 
 using BootstrapBlazor.Components;
 using BootstrapBlazor.Localization.Json;
+using BootstrapBlazor.Services;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using System.Globalization;
@@ -33,9 +34,9 @@ public static class BootstrapBlazorServiceCollectionExtensions
 
         services.TryAddSingleton<IComponentIdGenerator, DefaultIdGenerator>();
         services.TryAddSingleton(typeof(IDispatchService<>), typeof(DefaultDispatchService<>));
+        services.TryAddSingleton(typeof(ILookUpService), typeof(EmptyLookUpService));
         services.TryAddScoped<ITableExcelExport, DefaultExcelExport>();
         services.TryAddScoped(typeof(IDataService<>), typeof(NullDataService<>));
-        services.TryAddSingleton(typeof(ILookUpService), typeof(NullLookUpService));
         services.TryAddScoped<TabItemTextOptions>();
 
         services.TryAddScoped<DialogService>();

@@ -263,11 +263,13 @@ public partial class Table<TItem> : BootstrapComponentBase, IDisposable, ITable 
     [NotNull]
     private IOptions<BootstrapBlazorOptions>? Options { get; set; }
 
+    [Inject]
+    [NotNull]
+    private ILookUpService? LookUpService { get; set; }
+
     [NotNull]
     private string? NotSetOnTreeExpandErrorMessage { get; set; }
 
-    [Inject]
-    private ILookUpService? LookUpService { get; set; }
     private bool ShowDetails() => IsDetails == null
         ? DetailRowTemplate != null
         : IsDetails.Value && DetailRowTemplate != null;
@@ -949,10 +951,13 @@ public partial class Table<TItem> : BootstrapComponentBase, IDisposable, ITable 
             var content = "";
             var val = GetItemValue(col.GetFieldName(), item);
 
-            if (col.LookUpServiceCatalog != null && col.Lookup == null)
+            if (col.Lookup == null && !string.IsNullOrEmpty(col.LookUpServiceKey))
             {
-                col.Lookup = LookUpService?.GetLookUpByCatalog(col.LookUpServiceCatalog);
+                // 未设置 Lookup
+                // 设置 LookupService 键值
+                col.Lookup = LookUpService.GetItemsByKey(col.LookUpServiceKey);
             }
+
             if (col.Lookup == null && val is bool v1)
             {
                 // 自动化处理 bool 值
@@ -1033,7 +1038,7 @@ public partial class Table<TItem> : BootstrapComponentBase, IDisposable, ITable 
 
     private RenderFragment RenderCell(ITableColumn col, TItem item, ItemChangedType changedType) => col.CanWrite(typeof(TItem)) && col.IsEditable(changedType)
         ? (col.EditTemplate == null
-            ? builder => builder.CreateComponentByFieldType(this, col, item, false, changedType,false,LookUpService)
+            ? builder => builder.CreateComponentByFieldType(this, col, item, false, changedType, false, LookUpService)
             : col.EditTemplate(item))
         : (col.Template == null
             ? builder => builder.CreateDisplayByFieldType(this, col, item, false)
@@ -1069,7 +1074,7 @@ public partial class Table<TItem> : BootstrapComponentBase, IDisposable, ITable 
                     parameters.Add(new(nameof(ValidateBase<string>.OnValueChanged), onValueChanged.Invoke(d, col, (model, column, val) => DynamicContext.OnValueChanged(model, column, val))));
                     col.ComponentParameters = parameters;
                 }
-                builder.CreateComponentByFieldType(this, col, row, false, changedType,false, LookUpService);
+                builder.CreateComponentByFieldType(this, col, row, false, changedType, false, LookUpService);
             };
         }
 

@@ -227,7 +227,7 @@ public sealed partial class EditorForm<TModel> : IShowLabel
                                 item.Text = el.Text;
                                 item.Items = el.Items;
                                 item.Lookup = el.Lookup;
-                                item.LookUpServiceCatalog = el.LookUpServiceCatalog;
+                                item.LookUpServiceKey = el.LookUpServiceKey;
                                 item.ComponentType = el.ComponentType;
                                 item.ComponentParameters = el.ComponentParameters;
                                 item.SkipValidate = el.SkipValidate;
