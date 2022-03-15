@@ -11,13 +11,12 @@ namespace BootstrapBlazor.Components;
 /// Cascader 组件实现类
 /// </summary>
 /// <typeparam name="TValue"></typeparam>
-public sealed partial class Cascader<TValue>
+public partial class Cascader<TValue>
 {
     /// <summary>
     /// 当前选中节点集合
     /// </summary>
     private readonly List<CascaderItem> _selectedItems = new();
-
 
     /// <summary>
     /// 获得/设置 Cascader 内部 Input 组件 Id
@@ -45,7 +44,8 @@ public sealed partial class Cascader<TValue>
     /// 获得/设置 绑定数据集
     /// </summary>
     [Parameter]
-    public IEnumerable<CascaderItem> Items { get; set; } = Enumerable.Empty<CascaderItem>();
+    [NotNull]
+    public IEnumerable<CascaderItem>? Items { get; set; }
 
     /// <summary>
     /// ValueChanged 方法
@@ -82,10 +82,13 @@ public sealed partial class Cascader<TValue>
     {
         base.OnParametersSet();
 
-        if (_lastVaslue == CurrentValueAsString) return;
+        Items ??= Enumerable.Empty<CascaderItem>();
 
-        _lastVaslue = CurrentValueAsString;
-        SetDefaultValue(CurrentValueAsString);
+        if (_lastVaslue != CurrentValueAsString)
+        {
+            _lastVaslue = CurrentValueAsString;
+            SetDefaultValue(CurrentValueAsString);
+        }
     }
 
     /// <summary>
@@ -111,13 +114,17 @@ public sealed partial class Cascader<TValue>
         foreach (var item in items)
         {
             if (item.Value == value)
+            {
                 return item;
+            }
 
             if (item.HasChildren)
             {
                 var nd = GetNodeByValue(item.Items, value);
                 if (nd != null)
+                {
                     return nd;
+                }
             }
         }
         return null;
@@ -161,18 +168,13 @@ public sealed partial class Cascader<TValue>
     /// <summary>
     /// 下拉框选项点击时调用此方法
     /// </summary>
-    private async Task OnItemClick(CascaderItem item) => await SetSelectedItem(item);
+    private Task OnItemClick(CascaderItem item) => SetSelectedItem(item);
 
     private async Task SetSelectedItem(CascaderItem item)
     {
-        if (item == null) return;
-
-        {
-            _selectedItems.Clear();
-            SetSelectedNodeWithParent(item, _selectedItems);
-            await SetValue(item.Value);
-        }
-
+        _selectedItems.Clear();
+        SetSelectedNodeWithParent(item, _selectedItems);
+        await SetValue(item.Value);
     }
 
     private async Task SetValue(string value)
@@ -185,7 +187,10 @@ public sealed partial class Cascader<TValue>
 
         CurrentValueAsString = value;
 
-        if (OnSelectedItemChanged != null) await OnSelectedItemChanged.Invoke(_selectedItems.ToArray());
+        if (OnSelectedItemChanged != null)
+        {
+            await OnSelectedItemChanged.Invoke(_selectedItems.ToArray());
+        }
     }
 
     private void RefreshDisplayValue() => _displayText = string.Join("/", _selectedItems.Select(item => item.Text));
@@ -197,7 +202,10 @@ public sealed partial class Cascader<TValue>
     /// <param name="list"></param>
     private static void SetSelectedNodeWithParent(CascaderItem? item, List<CascaderItem> list)
     {
-        if (item == null) return;
+        if (item == null)
+        {
+            return;
+        }
 
         SetSelectedNodeWithParent(item.Parent, list);
         list.Add(item);
