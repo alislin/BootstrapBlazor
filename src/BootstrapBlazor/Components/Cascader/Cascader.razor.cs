@@ -21,12 +21,9 @@ public partial class Cascader<TValue>
     /// <summary>
     /// 获得/设置 Cascader 内部 Input 组件 Id
     /// </summary>
-    private string? InputId => string.IsNullOrEmpty(Id) ? null : $"{Id}_input";
+    private string? InputId => $"{Id}_input";
 
-    /// <summary>
-    /// 显示文本
-    /// </summary>
-    private string _displayText = string.Empty;
+    private string? DisplayTextString { get; set; }
 
     /// <summary>
     /// 获得/设置 按钮颜色
@@ -56,12 +53,6 @@ public partial class Cascader<TValue>
     [Inject]
     [NotNull]
     private IStringLocalizer<Cascader<TValue>>? Localizer { get; set; }
-
-    /// <summary>
-    /// 获得 input 组件 Id 方法
-    /// </summary>
-    /// <returns></returns>
-    protected override string? RetrieveId() => InputId;
 
     /// <summary>
     /// OnInitialized 方法
@@ -200,7 +191,7 @@ public partial class Cascader<TValue>
         }
     }
 
-    private void RefreshDisplayValue() => _displayText = string.Join("/", _selectedItems.Select(item => item.Text));
+    private void RefreshDisplayValue() => DisplayTextString = string.Join("/", _selectedItems.Select(item => item.Text));
 
     /// <summary>
     /// 设置选中所有父节点
