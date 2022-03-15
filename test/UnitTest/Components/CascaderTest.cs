@@ -23,4 +23,14 @@ public class CascaderTest : BootstrapBlazorTestBase
         });
         cut.Contains("Test_DisplayText");
     }
+
+    [Fact]
+    public void Color_Ok()
+    {
+        var cut = Context.RenderComponent<Cascader<string>>(pb =>
+        {
+            pb.Add(a => a.Color, Color.Success);
+        });
+        cut.Contains("border-success");
+    }
 }
