@@ -194,7 +194,7 @@ public static class DialogServiceExtensions
     /// <param name="configureOption"><see cref="DialogOption"/> 实例配置回调方法</param>
     /// <param name="dialog"></param>
     /// <returns></returns>
-    public static async Task ShowSaveDialog<TComponent>(this DialogService service, string title, Func<Task<bool>> saveCallback, Dictionary<string, object?>? parameters = null, Action<DialogOption>? configureOption = null, Dialog? dialog = null) where TComponent : ComponentBase
+    public static async Task ShowSaveDialog<TComponent>(this DialogService service, string title, Func<Task<bool>>? saveCallback = null, Dictionary<string, object?>? parameters = null, Action<DialogOption>? configureOption = null, Dialog? dialog = null) where TComponent : ComponentBase
     {
         var option = new DialogOption()
         {
