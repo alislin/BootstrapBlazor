@@ -114,4 +114,16 @@ public class CascaderTest : BootstrapBlazorTestBase
         });
         Assert.Empty(cut.Instance.Value);
     }
+
+    [Fact]
+    public void IsDisabled_Ok()
+    {
+        var cut = Context.RenderComponent<Cascader<string>>(pb =>
+        {
+            pb.Add(a => a.IsDisabled, true);
+        });
+
+        var input = cut.Find(".dropdown > input");
+        Assert.True(input.HasAttribute("disabled"));
+    }
 }
