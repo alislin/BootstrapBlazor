@@ -99,7 +99,14 @@ public partial class Cascader<TValue>
     {
         _selectedItems.Clear();
         var item = GetNodeByValue(Items, defaultValue);
-        SetSelectedNodeWithParent(item, _selectedItems);
+        if (item != null)
+        {
+            SetSelectedNodeWithParent(item, _selectedItems);
+        }
+        else
+        {
+            CurrentValueAsString = Items.FirstOrDefault()?.Value ?? string.Empty;
+        }
         RefreshDisplayValue();
     }
 
@@ -202,12 +209,10 @@ public partial class Cascader<TValue>
     /// <param name="list"></param>
     private static void SetSelectedNodeWithParent(CascaderItem? item, List<CascaderItem> list)
     {
-        if (item == null)
+        if (item != null)
         {
-            return;
+            SetSelectedNodeWithParent(item.Parent, list);
+            list.Add(item);
         }
-
-        SetSelectedNodeWithParent(item.Parent, list);
-        list.Add(item);
     }
 }
