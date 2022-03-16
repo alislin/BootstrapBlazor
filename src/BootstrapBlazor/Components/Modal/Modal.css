@@ -47,3 +47,9 @@
             display: none !important;
         }
 }
+
+@media (min-width: 1400px) {
+    .modal-xxl {
+        max-width: 1200px;
+    }
+}
