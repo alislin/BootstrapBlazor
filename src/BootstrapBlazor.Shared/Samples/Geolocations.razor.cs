@@ -30,11 +30,40 @@ public partial class Geolocations : IDisposable
 
     private GeolocationItem? Model { get; set; }
 
+    /// <summary>
+    /// 获得/设置 获取持续定位监听器ID
+    /// </summary>
+    [Parameter]
+    public long? WatchID { get; set; }
+
     private async Task GetLocation()
     {
         Interop ??= new JSInterop<Geolocations>(JSRuntime);
         var ret = await Geolocation.GetLocaltion(Interop, this, nameof(GetLocationCallback));
         Trace.Log(ret ? Localizer["GetLocationResultSuccess"] : Localizer["GetLocationResultFailed"]);
+    }
+    private async Task WatchPosition()
+    {
+        try
+        {
+            Interop ??= new JSInterop<Geolocations>(JSRuntime);
+            WatchID = await Geolocation.WatchPosition(Interop, this, nameof(GetLocationCallback));
+            Trace.Log(WatchID!=0 ? Localizer["WatchPositionResultSuccess"] : Localizer["WatchPositionResultFailed"]);
+            Trace.Log($"WatchID : {WatchID}");
+        }
+        catch (Exception)
+        {
+            Trace.Log(Localizer["WatchPositionResultFailed"]);
+        }
+    }
+
+    private async Task ClearWatchPosition()
+    {
+        if (WatchID == null) return;
+        Interop ??= new JSInterop<Geolocations>(JSRuntime);
+        var ret = await Geolocation.ClearWatchPosition(Interop, WatchID!.Value);
+        if (ret) WatchID = null;
+        Trace.Log(ret ? Localizer["ClearWatchPositionResultSuccess"] : Localizer["ClearWatchPositionResultFailed"]);
     }
 
     /// <summary>
@@ -52,12 +81,13 @@ public partial class Geolocations : IDisposable
     /// 
     /// </summary>
     /// <param name="disposing"></param>
-    protected virtual void Dispose(bool disposing)
+    protected virtual async void Dispose(bool disposing)
     {
         if (disposing)
         {
             if (Interop != null)
             {
+                if (WatchID != null) await Geolocation.ClearWatchPosition(Interop, WatchID!.Value);
                 Interop.Dispose();
                 Interop = null;
             }

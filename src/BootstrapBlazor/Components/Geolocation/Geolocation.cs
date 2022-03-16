@@ -18,4 +18,24 @@ public static class Geolocation
         var ret = await interop.GetGeolocationItemAsync(component, callbackMethodName);
         return ret;
     }
+
+    /// <summary>
+    /// 持续定位
+    /// </summary>
+    /// <returns></returns>
+    public static async Task<long> WatchPosition<TComponent>(JSInterop<TComponent> interop, TComponent component, string callbackMethodName) where TComponent : class
+    {
+        var watchID = await interop.GetWatchPositionItemAsync(component, callbackMethodName);
+        return watchID;
+    }
+
+    /// <summary>
+    /// 停止持续定位
+    /// </summary>
+    /// <returns></returns>
+    public static async Task<bool> ClearWatchPosition<TComponent>(JSInterop<TComponent> interop, long watchID) where TComponent : class
+    {
+        var ret = await interop.SetClearWatchPositionAsync(watchID);
+        return ret;
+    }
 }
