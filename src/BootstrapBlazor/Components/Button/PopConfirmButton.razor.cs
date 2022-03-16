@@ -10,7 +10,7 @@ namespace BootstrapBlazor.Components;
 /// <summary>
 /// 
 /// </summary>
-public sealed partial class PopConfirmButton
+public partial class PopConfirmButton
 {
     /// <summary>
     /// 获得/设置 PopoverConfirm 服务实例
@@ -26,15 +26,20 @@ public sealed partial class PopConfirmButton
     private bool Submit { get; set; }
 
     /// <summary>
-    /// OnInitialized 方法
+    /// OnParametersSet 方法
     /// </summary>
-    protected override void OnInitialized()
+    protected override void OnParametersSet()
     {
-        base.OnInitialized();
+        base.OnParametersSet();
 
         ConfirmButtonText ??= Localizer[nameof(ConfirmButtonText)];
         CloseButtonText ??= Localizer[nameof(CloseButtonText)];
         Content ??= Localizer[nameof(Content)];
+
+        if (IsLink)
+        {
+            Color = Color.None;
+        }
     }
 
     /// <summary>
@@ -74,11 +79,7 @@ public sealed partial class PopConfirmButton
                 Icon = ConfirmIcon,
                 OnConfirm = Confirm,
                 OnClose = OnClose,
-                Callback = async () =>
-                {
-                        // 调用 JS 进行弹窗 等待 弹窗点击确认回调
-                        await JSRuntime.InvokeVoidAsync(Id, "bb_confirm");
-                }
+                Callback = async () => await JSRuntime.InvokeVoidAsync(Id, "bb_confirm")
             });
         }
     }

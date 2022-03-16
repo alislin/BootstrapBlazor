@@ -130,6 +130,11 @@ public partial class Dialog : IDisposable
     {
         builder.OpenComponent<ModalDialog>(0);
         builder.AddMultipleAttributes(1, parameter);
+        builder.AddComponentReferenceCapture(2, dialog =>
+        {
+            var modal = (ModalDialog)dialog;
+            ModalContainer.ShowDialog(modal);
+        });
         builder.CloseComponent();
     };
 

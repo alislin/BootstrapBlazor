@@ -47,23 +47,13 @@ public partial class SearchDialog<TModel>
     private IStringLocalizer<SearchDialog<TModel>>? Localizer { get; set; }
 
     /// <summary>
-    /// OnInitialized 方法
+    /// OnParametersSet 方法
     /// </summary>
-    protected override void OnInitialized()
+    protected override void OnParametersSet()
     {
-        base.OnInitialized();
+        base.OnParametersSet();
 
         ResetButtonText ??= Localizer[nameof(ResetButtonText)];
         QueryButtonText ??= Localizer[nameof(QueryButtonText)];
-
-        if (OnSearchClick == null)
-        {
-            OnSearchClick = () => Task.CompletedTask;
-        }
-
-        if (OnResetSearchClick == null)
-        {
-            OnResetSearchClick = () => Task.CompletedTask;
-        }
     }
 }

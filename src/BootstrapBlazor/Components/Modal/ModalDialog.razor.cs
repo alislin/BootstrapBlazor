@@ -18,14 +18,17 @@ public partial class ModalDialog : IDisposable
     [NotNull]
     private JSInterop<ModalDialog>? Interop { get; set; }
 
+    private string MaximizeAriaLabel => MaximizeStatus ? "maximize" : "restore";
+
     /// <summary>
     /// 获得 弹窗组件样式
     /// </summary>
     private string? ClassName => CssBuilder.Default("modal-dialog")
-        .AddClass("modal-dialog-centered", IsCentered)
-        .AddClass($"modal-{Size.ToDescriptionString()}", Size != Size.None)
-        .AddClass($"modal-{FullScreenSize.ToDescriptionString()}", FullScreenSize != FullScreenSize.None)
+        .AddClass("modal-dialog-centered", IsCentered && !IsDraggable)
+        .AddClass($"modal-{Size.ToDescriptionString()}", Size != Size.None && FullScreenSize != FullScreenSize.Always && !MaximizeStatus)
+        .AddClass($"modal-{FullScreenSize.ToDescriptionString()}", FullScreenSize != FullScreenSize.None && !MaximizeStatus)
         .AddClass("modal-dialog-scrollable", IsScrolling)
+        .AddClass("modal-fullscreen", MaximizeStatus)
         .AddClass("is-draggable", IsDraggable)
         .AddClass("d-none", !IsShown)
         .AddClass(Class, !string.IsNullOrEmpty(Class))
@@ -52,7 +55,7 @@ public partial class ModalDialog : IDisposable
     /// 获得/设置 弹窗大小
     /// </summary>
     [Parameter]
-    public Size Size { get; set; } = Size.Large;
+    public Size Size { get; set; } = Size.ExtraExtraLarge;
 
     /// <summary>
     /// 获得/设置 弹窗大小
@@ -77,6 +80,12 @@ public partial class ModalDialog : IDisposable
     /// </summary>
     [Parameter]
     public bool IsDraggable { get; set; }
+
+    /// <summary>
+    /// 获得/设置 是否显示最大化按钮
+    /// </summary>
+    [Parameter]
+    public bool ShowMaximizeButton { get; set; }
 
     /// <summary>
     /// 获得/设置 是否显示关闭按钮 默认为 true 显示
@@ -148,14 +157,12 @@ public partial class ModalDialog : IDisposable
     /// 获得/设置 关闭弹窗回调委托
     /// </summary>
     [Parameter]
-    [NotNull]
     public Func<Task>? OnClose { get; set; }
 
     /// <summary>
     /// 获得/设置 保存按钮回调委托
     /// </summary>
     [Parameter]
-    [NotNull]
     public Func<Task<bool>>? OnSaveAsync { get; set; }
 
     /// <summary>
@@ -234,9 +241,23 @@ public partial class ModalDialog : IDisposable
         }
     }
 
+    private bool MaximizeStatus { get; set; }
+
+    private string MaximizeIcon { get; set; } = "fa fa-window-maximize";
+
+    private void OnToggleMaximize()
+    {
+        MaximizeStatus = !MaximizeStatus;
+        MaximizeIcon = MaximizeStatus ? "fa fa-window-restore" : "fa fa-window-maximize";
+    }
+
     private async Task OnClickSave()
     {
-        var ret = await OnSaveAsync();
+        var ret = true;
+        if (OnSaveAsync != null)
+        {
+            await OnSaveAsync();
+        }
         if (IsAutoCloseAfterSave && ret)
         {
             await OnClickClose();

@@ -52,20 +52,12 @@ public class ValidateTest : BootstrapBlazorTestBase
             builder.Add(a => a.Model, model);
             builder.Add(a => a.ShowLabel, showLabel);
             builder.Add(a => a.AutoGenerateAllItem, false);
-#if NET5_0
-                builder.Add<EditorItem<string>, Foo>(a => a.FieldItems, f => p =>
-#elif NET6_0_OR_GREATER
-                builder.Add<EditorItem<Foo, string>, Foo>(a => a.FieldItems, f => p =>
-#endif
-                {
+            builder.Add<EditorItem<Foo, string>, Foo>(a => a.FieldItems, f => p =>
+            {
                 p.Add(p => p.Field, f.Name);
                 p.Add(p => p.FieldExpression, f.GenerateValueExpression());
-#if NET5_0
-                    p.Add<BootstrapInput<string>, object>(e => e.EditTemplate, f => p =>
-#elif NET6_0_OR_GREATER
-                    p.Add<BootstrapInput<string>, Foo>(e => e.EditTemplate, f => p =>
-#endif
-                    {
+                p.Add<BootstrapInput<string>, Foo>(e => e.EditTemplate, f => p =>
+                {
                     p.Add(a => a.ShowLabel, null);
                     p.Add(a => a.Value, model.Name);
                     p.Add(a => a.ValueExpression, model.GenerateValueExpression());
@@ -237,14 +229,14 @@ public class ValidateTest : BootstrapBlazorTestBase
     }
 
     [Fact]
-    public void SetDisable_Ok()
+    public async Task SetDisable_Ok()
     {
         var cut = Context.RenderComponent<BootstrapInput<string>>(builder =>
         {
             builder.Add(a => a.IsDisabled, false);
         });
         Assert.False(cut.Instance.IsDisabled);
-        cut.InvokeAsync(() => cut.Instance.SetDisable(true));
+        await cut.InvokeAsync(() => cut.Instance.SetDisable(true));
         Assert.True(cut.Instance.IsDisabled);
     }
 
@@ -284,7 +276,7 @@ public class ValidateTest : BootstrapBlazorTestBase
     }
 
     [Fact]
-    public void ValidateRules_Ok()
+    public async Task ValidateRules_Ok()
     {
         var model = new Foo() { Name = "test" };
         var invalid = false;
@@ -309,39 +301,48 @@ public class ValidateTest : BootstrapBlazorTestBase
         });
 
         var form = cut.Find("form");
-        form.Submit();
+        await cut.InvokeAsync(() => form.Submit());
         // 提交表单验证通过
         Assert.False(invalid);
 
         // 设置 Name="" 验证不通过
         var input = cut.FindComponent<BootstrapInput<string>>();
         var c = input.Find("input");
-        c.Change("");
-        form.Submit();
+        await cut.InvokeAsync(() =>
+        {
+            c.Change("");
+            form.Submit();
+        });
         Assert.True(invalid);
 
         // 增加邮箱验证规则
         var rules = new List<IValidator>
-            {
-                new FormItemValidator(new EmailAddressAttribute())
-            };
+        {
+            new FormItemValidator(new EmailAddressAttribute())
+        };
         input.SetParametersAndRender(pb =>
         {
             pb.Add(v => v.ValidateRules, rules);
         });
         invalid = false;
-        c.Change("argo@163.com");
-        form.Submit();
+        await cut.InvokeAsync(() =>
+        {
+            c.Change("argo@163.com");
+            form.Submit();
+        });
         Assert.False(invalid);
 
         // 更改值不符合邮箱规则验证不通过
-        c.Change("argo");
-        form.Submit();
+        await cut.InvokeAsync(() =>
+        {
+            c.Change("argo");
+            form.Submit();
+        });
         Assert.True(invalid);
     }
 
     [Fact]
-    public void ValidateProperty_Ok()
+    public async Task ValidateProperty_Ok()
     {
         var model = new Foo() { Hobby = new string[0] };
         var invalid = false;
@@ -370,9 +371,9 @@ public class ValidateTest : BootstrapBlazorTestBase
             });
         });
 
-        var form = cut.Find("form");
-        form.Submit();
         // 提交表单验证不通过
+        var form = cut.Find("form");
+        await cut.InvokeAsync(() => form.Submit());
         Assert.True(invalid);
 
         // 更新选中值
@@ -383,7 +384,7 @@ public class ValidateTest : BootstrapBlazorTestBase
         {
             pb.Add(v => v.Value, model.Hobby);
         });
-        form.Submit();
+        await cut.InvokeAsync(() => form.Submit());
         Assert.False(invalid);
     }
 

@@ -30,12 +30,17 @@ public class DialogOption
     /// <summary>
     /// 获得/设置 弹窗大小
     /// </summary>
-    public Size Size { get; set; } = Size.Large;
+    public Size Size { get; set; } = Size.ExtraExtraLarge;
 
     /// <summary>
     /// 获得/设置 全屏弹窗 默认 None
     /// </summary>
     public FullScreenSize FullScreenSize { get; set; } = FullScreenSize.None;
+
+    /// <summary>
+    /// 获得/设置 是否显示最大化按钮 默认 false 不显示
+    /// </summary>
+    public bool ShowMaximizeButton { get; set; }
 
     /// <summary>
     /// 获得/设置 是否垂直居中 默认为 true
@@ -162,7 +167,8 @@ public class DialogOption
             [nameof(ShowPrintButtonInHeader)] = ShowPrintButtonInHeader,
             [nameof(IsKeyboard)] = IsKeyboard,
             [nameof(IsAutoCloseAfterSave)] = IsAutoCloseAfterSave,
-            [nameof(IsDraggable)] = IsDraggable
+            [nameof(IsDraggable)] = IsDraggable,
+            [nameof(ShowMaximizeButton)] = ShowMaximizeButton
         };
         if (!string.IsNullOrEmpty(PrintButtonText))
         {

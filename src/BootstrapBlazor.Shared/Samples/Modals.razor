@@ -75,6 +75,16 @@
                 </ModalDialog>
             </Modal>
         </div>
+        <div class="col-12 col-sm-4 col-lg-auto">
+            <Button OnClick="@(async e => await ExtraExtraLargeModal.Toggle())">超超大弹窗</Button>
+            <Modal @ref="ExtraExtraLargeModal">
+                <ModalDialog Size="Size.ExtraExtraLarge" Title="超超大弹窗">
+                    <BodyTemplate>
+                        <div>我是弹窗内正文</div>
+                    </BodyTemplate>
+                </ModalDialog>
+            </Modal>
+        </div>
     </div>
 </DemoBlock>
 
@@ -91,7 +101,7 @@
             </Modal>
         </div>
         <div class="col-12 col-sm-4 col-lg-auto">
-            <Button OnClick="@(async e => await LargeFullScreenModal.Toggle())">全屏弹窗(&lt;1200px)</Button>
+            <Button OnClick="@(async e => await LargeFullScreenModal.Toggle())">全屏弹窗(&lt;992px)</Button>
             <Modal @ref="LargeFullScreenModal">
                 <ModalDialog FullScreenSize="FullScreenSize.Large" Title="大全屏弹窗">
                     <BodyTemplate>
@@ -101,9 +111,19 @@
             </Modal>
         </div>
         <div class="col-12 col-sm-4 col-lg-auto">
-            <Button OnClick="@(async e => await ExtraLargeFullScreenModal.Toggle())">全屏弹窗(&lt;1400px)</Button>
+            <Button OnClick="@(async e => await ExtraLargeFullScreenModal.Toggle())">全屏弹窗(&lt;1200px)</Button>
             <Modal @ref="ExtraLargeFullScreenModal">
                 <ModalDialog FullScreenSize="FullScreenSize.ExtraLarge" Title="超大全屏弹窗">
+                    <BodyTemplate>
+                        <div>我是弹窗内正文</div>
+                    </BodyTemplate>
+                </ModalDialog>
+            </Modal>
+        </div>
+        <div class="col-12 col-sm-4 col-lg-auto">
+            <Button OnClick="@(async e => await ExtraExtraLargeFullScreenModal.Toggle())">全屏弹窗(&lt;1400px)</Button>
+            <Modal @ref="ExtraExtraLargeFullScreenModal">
+                <ModalDialog FullScreenSize="FullScreenSize.ExtraExtraLarge" Title="超超大全屏弹窗">
                     <BodyTemplate>
                         <div>我是弹窗内正文</div>
                     </BodyTemplate>
@@ -187,6 +207,17 @@
     <Button OnClick="@(async e => await DragModal.Toggle())">弹窗</Button>
     <Modal @ref="DragModal">
         <ModalDialog Title="默认弹窗" IsDraggable="true">
+            <BodyTemplate>
+                <div>我是弹窗内正文</div>
+            </BodyTemplate>
+        </ModalDialog>
+    </Modal>
+</DemoBlock>
+
+<DemoBlock Title="最大化按钮" Introduction="通过设置 <code>ShowMaximinzeButton</code> 弹窗显示最大化按钮" Name="Maximize">
+    <Button OnClick="@(async e => await MaximizeModal.Toggle())">弹窗</Button>
+    <Modal @ref="MaximizeModal">
+        <ModalDialog Title="可最大化弹窗" ShowMaximizeButton="true">
             <BodyTemplate>
                 <div>我是弹窗内正文</div>
             </BodyTemplate>

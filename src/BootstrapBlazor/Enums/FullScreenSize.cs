@@ -25,7 +25,7 @@ public enum FullScreenSize
     /// <summary>
     /// sm 小设置小于 576px
     /// </summary>
-    [Description("ssm-down")]
+    [Description("fullscreen-sm-down")]
     Small,
 
     /// <summary>
@@ -47,7 +47,7 @@ public enum FullScreenSize
     ExtraLarge,
 
     /// <summary>
-    /// xl 超大设置小于 1400px
+    /// xxl 超大设置小于 1400px
     /// </summary>
     [Description("fullscreen-xxl-down")]
     ExtraExtraLarge

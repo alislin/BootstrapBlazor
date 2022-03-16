@@ -44,7 +44,7 @@
 </DemoBlock>
 
 <DemoBlock Title="自动生成搜索功能的表格" Introduction="当设置了 <code>ShowSearch</code> 时，如果未设置 <code>SearchTemplate</code> 编辑模板时，组件会尝试自动生成搜索条件 UI" Name="AutoGenerateSearch">
-    <p>列信息绑定时通过设置 <code>Searchable</code> 属性，设置搜索条件自动构建 UI</p>
+    <p>列信息绑定时通过设置 <code>Searchable</code> 属性，设置搜索条件自动构建 UI，可通过设置 <code>SearchDialogShowMaximizeButton</code> 使搜索弹窗显示 <b>最大化</b> 按钮</p>
     <Tips>
         <p>自动构建搜索弹窗时，由于各列设置 <code>Searchable</code> 此时组件会通过 <code>SearchText</code> 与设置 <code>Searchable</code> 值为 <code>true</code> 的各列自动构建搜索拉姆达表达式，通过 <code>QueryPageOptions</code> 的属性 <code>Searchs</code> 获得</p>
 
@@ -71,7 +71,7 @@
         </div>
     </GroupBox>
     <Table TItem="Foo"
-           IsPagination="true" PageItemsSource="@PageItemsSource"
+           IsPagination="true" PageItemsSource="@PageItemsSource" SearchDialogShowMaximizeButton="true"
            IsStriped="true" IsBordered="true" SearchModel="@SearchModel" ShowSearch="true"
            SearchMode="SearchModeValue" ShowResetButton="ShowResetButton" ShowSearchButton="ShowSearchButton"
            ShowToolbar="true" IsMultipleSelect="true" ShowExtendButtons="true" ShowSearchText="ShowSearchText"
@@ -91,11 +91,12 @@
     <p>由于是搜索条件，本例中姓名搜索列下拉框增加了 请选择... 项</p>
     <p>生成列搜索模板是查找顺序为 SearchTemplate -> AutoGenerate 优先查找是否设置了搜索模板，然后根据绑定字段类型自动生成</p>
     <p>通过设置 <code>ShowSearch="true"</code> <code>ShowSearchText="false"</code> 设置搜索栏仅显示 <b>高级搜索</b></p>
+    <p>通过设置 <code>SearchDialogDraggable="true"</code> 使搜索弹出框可拖拽</p>
     <Table TItem="Foo"
            IsPagination="true" PageItemsSource="@PageItemsSource"
            IsStriped="true" IsBordered="true" SearchModel="@SearchModel" ShowSearch="true" ShowSearchText="false"
-           ShowToolbar="true" IsMultipleSelect="true" ShowExtendButtons="true"
-           AddModalTitle="增加测试数据窗口" EditModalTitle="编辑测试数据窗口"
+           ShowToolbar="true" IsMultipleSelect="true" ShowExtendButtons="true" SearchDialogIsDraggable="true"
+           AddModalTitle="增加测试数据窗口" EditModalTitle="编辑测试数据窗口" SearchDialogShowMaximizeButton="true"
            OnQueryAsync="@OnQueryAsync" OnAddAsync="@OnAddAsync" OnSaveAsync="@OnSaveAsync" OnDeleteAsync="@OnDeleteAsync">
         <TableColumns>
             <TableColumn @bind-Field="@context.DateTime" Width="180" Filterable="true" />
@@ -121,7 +122,7 @@
 </DemoBlock>
 
 <DemoBlock Title="自定义搜索模型" Introduction="设置了 <code>CustomerSearchModel</code> 与 <code>CustomerSearchTemplate</code>，完全自主控制搜索条件 UI" Name="CustomerSearchModel">
-    <p>由于某种应用场景我们的表格实体类 <code>TItem</code> 来充当搜索模型时并不理想，比如我们有一个属性是 <code>int</code> 或者 <code>enum</code> 时，我们作为搜索条件时需要有一个 <b>全部</b> 或者 <b>请选择 ...</b> 的空白条件项。此时使用默认模型时非常难用，就可以使用自定义搜索模型 <code>CustomerModel</code> 与 <code>CustomerSearchTemplate</code> 来自定义控制搜索界面</p>
+    <p>由于某种应用场景我们的表格实体类 <code>TItem</code> 来充当搜索模型时并不理想，比如我们有一个属性是 <code>int</code> 或者 <code>enum</code> 时，我们作为搜索条件时需要有一个 <b>全部</b> 或者 <b>请选择 ...</b> 的空白条件项。此时使用默认模型时非常难用，就可以使用自定义搜索模型 <code>CustomerSearchModel</code> 与 <code>CustomerSearchTemplate</code> 来自定义控制搜索界面</p>
     <Table TItem="Foo"
            IsPagination="true" PageItemsSource="@PageItemsSource" SearchMode="SearchMode.Top"
            IsStriped="true" IsBordered="true" CustomerSearchModel="@CustomerSearchModel" ShowSearch="true" ShowSearchText="true"

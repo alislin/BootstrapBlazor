@@ -35,25 +35,25 @@ public partial class Table<TItem>
     public bool ShowAddButton { get; set; } = true;
 
     /// <summary>
-    /// 获得/设置 是否显示编辑按钮 默认为 true 显示 <see cref="ShowEditButtonCallback" />
+    /// 获得/设置 是否显示编辑按钮 默认为 true 行内是否显示请使用 <see cref="ShowEditButtonCallback" />
     /// </summary>
     [Parameter]
     public bool ShowEditButton { get; set; } = true;
 
     /// <summary>
-    /// 获得/设置 是否显示编辑按钮 设置此参数时 <see cref="ShowEditButton" /> 参数不起作用 默认为 null 
+    /// 获得/设置 是否显示行内编辑按钮 默认为 null 未设置时使用 <see cref="ShowEditButton"/> 值
     /// </summary>
     [Parameter]
     public Func<TItem, bool>? ShowEditButtonCallback { get; set; }
 
     /// <summary>
-    /// 获得/设置 是否显示删除按钮 默认为 true 显示 <see cref="ShowDeleteButtonCallback" />
+    /// 获得/设置 是否显示删除按钮 默认为 true 行内是否显示请使用 <see cref="ShowDeleteButtonCallback" />
     /// </summary>
     [Parameter]
     public bool ShowDeleteButton { get; set; } = true;
 
     /// <summary>
-    /// 获得/设置 是否显示删除按钮  设置此参数时 <see cref="ShowDeleteButton" /> 参数不起作用 默认为 null 
+    /// 获得/设置 是否显示行内删除按钮 默认为 null 未设置时使用 <see cref="ShowDeleteButton"/> 值
     /// </summary>
     [Parameter]
     public Func<TItem, bool>? ShowDeleteButtonCallback { get; set; }
@@ -487,6 +487,18 @@ public partial class Table<TItem>
     public Size EditDialogSize { get; set; } = Size.Large;
 
     /// <summary>
+    /// 获得/设置 编辑框是否可以拖拽 默认 false 不可以拖拽
+    /// </summary>
+    [Parameter]
+    public bool EditDialogIsDraggable { get; set; }
+
+    /// <summary>
+    /// 获得/设置 编辑框是否显示最大化按钮 默认 false 不显示
+    /// </summary>
+    [Parameter]
+    public bool EditDialogShowMaximizeButton { get; set; }
+
+    /// <summary>
     /// 弹出编辑对话框方法
     /// </summary>
     protected async Task ShowEditDialog(ItemChangedType changedType)
@@ -508,6 +520,8 @@ public partial class Table<TItem>
             LabelAlign = EditDialogLabelAlign,
             ItemChangedType = changedType,
             Size = EditDialogSize,
+            IsDraggable = EditDialogIsDraggable,
+            ShowMaximizeButton = EditDialogShowMaximizeButton,
             OnCloseAsync = async () =>
             {
                 var d = DataService ?? InjectDataService;
@@ -667,7 +681,6 @@ public partial class Table<TItem>
             Columns.Clear();
             Columns.AddRange(cols);
 
-            SelectedRows.Clear();
             QueryItems = DynamicContext.GetItems().Cast<TItem>();
             RowItemsCache = null;
         }
@@ -748,11 +761,11 @@ public partial class Table<TItem>
     /// 是否显示行内编辑按钮
     /// </summary>
     /// <returns></returns>
-    protected bool GetShowEditButton(TItem item) => ShowToolbar && ShowDefaultButtons && (ShowEditButtonCallback == null ? ShowEditButton : ShowEditButtonCallback(item));
+    protected bool GetShowEditButton(TItem item) => ShowEditButtonCallback?.Invoke(item) ?? (ShowDefaultButtons && ShowEditButton);
 
     /// <summary>
     /// 是否显示行内删除按钮
     /// </summary>
     /// <returns></returns>
-    protected bool GetShowDeleteButton(TItem item) => ShowToolbar && ShowDefaultButtons && (ShowDeleteButtonCallback == null ? ShowDeleteButton : ShowDeleteButtonCallback(item));
+    protected bool GetShowDeleteButton(TItem item) => ShowDeleteButtonCallback?.Invoke(item) ?? (ShowDefaultButtons && ShowDeleteButton);
 }

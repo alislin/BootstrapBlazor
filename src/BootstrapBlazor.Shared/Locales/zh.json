@@ -131,8 +131,7 @@
     "P1": "组件引用有多种方法，可以参阅 <a href='install'>类库安装</a>",
     "H2": "CSS 文件",
     "P2": "将 Bootstrap 的 CSS 文件以 <code>&lt;link&gt;</code> 标签的形式添加到 <code>{0}</code> 文件 <code>&lt;head&gt;</code> 标签中，并放置在所有其它样式表之前。",
-    "Tips": "本套组件 <b>5.0.32</b> 版本后移除内置 <code>font-awesome</code> 图标，请自行下载或者使用 <b>CDN</b> 加速服务",
-    "Tips2": "如果是使用 <code>Blazor App</code> 模板创建的工程请移除默认的 <code>Bootstrap</code> 样式链接 <code>&lt;link rel='stylesheet' href='css/bootstrap/bootstrap.min.css' /&gt;</code>",
+    "Tips2": "如果是使用 <code>Blazor App</code> 模板创建的工程请移除默认的 <code>Bootstrap</code> 样式链接 <code>&lt;link rel='stylesheet' href='css/bootstrap/bootstrap.min.css' /&gt;</code>; 本项目图标使用 <code>FontAwesome</code> 图标库，请自行引用 <b>4.7.0</b> 以上版本或者引用 <code>BootstrapBlazor.FontAwesome</code> 包",
     "H3": "JS 文件",
     "P3": "Bootstrap 所提供的许多组件都依赖 JavaScript 才能运行。具体来说，这些组件都依赖 jQuery、Popper.js 以及我们自己的 JavaScript 插件。将以下 <code>&lt;script&gt;</code> 标签放到 <code>{0}</code> 文件尾部且在 <code>&lt;/body&gt;</code> 标签之前即可起作用。",
     "H4": "添加命名空间到 <code>_Imports.razor</code> 文件",
@@ -307,7 +306,9 @@
     "Block3Title": "表单骨架屏",
     "Block3Intro": "适用于编辑表单加载时显示",
     "Block4Title": "表格骨架屏",
-    "Block4Intro": "适用于编辑表格加载时显示"
+    "Block4Intro": "适用于编辑表格加载时显示",
+    "BlockTreeTitle": "树骨架屏",
+    "BlockTreeIntro": "适用于树组件加载时显示"
   },
   "BootstrapBlazor.Shared.Pages.Coms": {
     "Search": "搜索想要的组件",
@@ -419,7 +420,8 @@
     "ChartDoughnutText": "圆环图",
     "ChartBubbleText": "气泡图",
     "DispatchText": "消息分发 Dispatch",
-    "GeolocationText": "地理定位组件 Geolocation"
+    "GeolocationText": "地理定位组件 Geolocation",
+    "NotificationsText": "浏览器通知 Notification"
   },
   "BootstrapBlazor.Shared.Samples.GlobalException": {
     "Title": "全局异常",
@@ -830,6 +832,7 @@
     "Button13Text": "中等按钮",
     "Button14Text": "大按钮",
     "Button15Text": "超大按钮",
+    "ButtonExtraExtraLargeText": "超超大按钮",
     "Button16Text": "Block 按钮",
     "Block1Title": "基础用法",
     "Block1Intro": "基础的按钮用法。",
@@ -1418,6 +1421,7 @@
     "Att4": "是否垂直分布",
     "Att5": "绑定可为空枚举类型时是否自动添加空值",
     "Att6": "绑定数据源",
+    "GroupName": "分组名称",
     "Event1": "复选框状态改变时回调此方法",
     "Log1": "组件选中值:",
     "Log2": "显示值:",
@@ -1499,6 +1503,7 @@
     "SwalFooter": "点击确认改变选项值，选择取消后值不变",
     "ShowLabel": "是否显示前置标签",
     "ShowSearch": "是否显示搜索框",
+    "AutoClearSearchTextIntro": "默认情况下组件会保持 SearchText 内容，可以通过设置 <code>AutoClearSearchText</code> 参数来控制选中候选项时自动清空搜索内容",
     "DisplayText": "前置标签显示文本",
     "Class": "样式",
     "Color": "颜色",
@@ -1723,6 +1728,8 @@
     "PreCardStyleP2": "设置 <code>IsSingle</code> 时，仅可以上传一张图片或者文件",
     "FileIconTitle": "文件图标",
     "FileIconIntro": "不同文件格式显示的图标不同",
+    "Base64FormatTitle": "Base64 格式文件",
+    "Base64FormatIntro": "使用 <code>data:image/xxx;base64,XXXXX</code> 格式图片内容字符串作为预览文件路径",
     "ShowDeleteButton": "是否显示删除按钮",
     "IsDisabled": "是否禁用",
     "PlaceHolder": "占位字符串",
@@ -2019,7 +2026,14 @@
     "OnInit": "初始化摄像头回调方法",
     "OnStart": "开始扫码回调方法",
     "OnClose": "关闭扫码回调方法",
-    "OnCapture": "扫码成功回调方法"
+    "OnCapture": "扫码成功回调方法",
+    "VideoWidth": "视频窗口宽度",
+    "VideoHeight": "视频窗口高度",
+    "TraceOnInit": "初始化摄像头完成",
+    "TraceOnError": "发生错误",
+    "TraceOnStar": "打开摄像头",
+    "TraceOnClose": "关闭摄像头",
+    "TraceOnCapture": "拍照完成"
   },
   "BootstrapBlazor.Shared.Samples.Captchas": {
     "Title": "Captchas 滑块验证码",
@@ -2296,7 +2310,6 @@
     "SubTitle": "用于打印文档或者局部视图",
     "Tips1": "设置 <code style='margin-left: 14px;'>PreviewUrl</code> 时，单开一个新网页进行打印预览，点击此页面的打印按钮进行网页打印",
     "Tips2": "不设置 <code>PreviewUrl</code> 时，如果是 <code>Dialog</code> 组件中的打印按钮，则打印弹窗内容",
-    "Tips": "<b>打印弹窗</b>时由于仅打印弹窗内容，所以对 <code>_Host.cshtml/index.html</code> 页面有所要求，代码如下；<code>blazor</code> 生成的代码使用 <code>app</code> 进行包裹方便打印时隐藏这部分",
     "PreButtonText": "打印",
     "PrintButtonTitle": "普通用法",
     "PrintButtonIntro": "通过点击打印按钮将页面进行打印",
@@ -2400,6 +2413,26 @@
     "ShowClearButton": "是否显示清除按钮",
     "OnSearch": "点击搜索时回调此委托",
     "OnClear": "点击清空时回调此委托"
+  },
+  "BootstrapBlazor.Shared.Samples.Titles": {
+    "Title": "Title 网站标题",
+    "SubTitle": "用于设置网页页面标题",
+    "Tips": "<p><code>NET6.0</code> 可使用微软 <code>PageTitle</code> 组件，用于设置网页标题，本组建额外提供了以服务的形式设置当前网页标题</p>",
+    "BasicUsageTitle": "基本用法",
+    "BasicUsageIntro": "网页中添加 <code>Title</code> 组件并设置 <code>Text</code> 属性即可",
+    "BasicUsageTips": "<code>Title</code> 组件设置 <code>Text</code> 后为普通组件使用，未设置 <code>Text</code> 属性时供服务调用",
+    "BasicUsageP": "<b>设置 <code>Text</code> 属性</b>",
+    "BasicUsageTitleText": "我是标题",
+    "BasicUsageP1": "测试网页",
+    "AdvanceTitle": "高级用法",
+    "AdvanceIntro": "网页中无需添加 <code>Title</code> 组件，调用注入服务 <code>TitleService</code>",
+    "AdvanceB": "特别注意：",
+    "AdvanceP": "使用此种方法时请在 <code>App</code> 或者 <code>MainLayout</code> 或者 <code>Page</code> 中添加 <b>未设置 <code>Text</code> 属性</b> 的 <code>Title</code> 组件",
+    "FuncationParmeter": "我是标题",
+    "StaticTitle": "静态方法",
+    "StaticIntro": "直接调用 <code>TitleService</code> 静态方法",
+    "StaticB": "特别注意：",
+    "StaticDiv": "使用此种方法时请在 <code>App</code> 或者 <code>MainLayout</code> 或者 <code>Page</code> 中添加 <b>未设置 <code>Text</code> 属性</b> 的 <code>Title</code> 组件"
   },
   "BootstrapBlazor.Shared.Components.DemoBlock": {
     "Title": "未设置",
@@ -2697,7 +2730,8 @@
     "ChartDoughnut": "圆环图",
     "ChartBubble": "气泡图",
     "Transition": "过渡效果 Transition",
-    "Geolocation": "地理定位组件 Geolocation"
+    "Geolocation": "地理定位组件 Geolocation",
+    "Notification": "浏览器通知 Notification"
   },
   "BootstrapBlazor.Shared.Samples.Table.TablesFooter": {
     "Left": "左对齐",
@@ -2770,7 +2804,7 @@
   "BootstrapBlazor.Shared.Samples.Geolocations": {
     "Title": "地理定位/移动距离追踪",
     "BaseUsageText": "基础用法",
-    "IntroText1": "通过浏览器API获取定位信息。",
+    "IntroText1": "通过浏览器 API 获取定位信息。",
     "IntroText2": "单击按钮以获取地理位置坐标。",
     "IntroText3": "注意: 出于安全考虑，当网页请求获取用户位置信息时，用户会被提示进行授权。注意不同浏览器在请求权限时有不同的策略和方式。Windows10 在未开启定位的情况下无法获取位置。",
     "GetLocationButtonText": "获取位置",
@@ -2788,5 +2822,29 @@
     "LastUpdateTime": "时间戳",
     "CurrentDistance": "移动距离",
     "TotalDistance": "总移动距离"
+  },
+  "BootstrapBlazor.Shared.Samples.Notifications": {
+    "Title": "通知",
+    "BaseUsageText": "基础用法",
+    "IntroText1": "通过浏览器API发送通知信息",
+    "IntroText2": "单击按钮以发送通知",
+    "IntroText3": "注意: 出于安全考虑，当网页请求发送通知时，用户会被提示进行授权",
+    "NotificationButtonText": "显示通知",
+    "NotificationSilentButtonText": "显示静默通知",
+    "CheckPermissionText": "检查权限",
+    "PermissionText": "允许通知",
+    "SilentText": "静默",
+    "TitleText": "标题",
+    "MessageText": "信息",
+    "IconText": "图标",
+    "SoundText": "通知触发时要播放的音频文件的 URL",
+    "CheckPermissionResultSuccess": "获取权限成功",
+    "NotificationResultSuccess": "调用通知成功",
+    "BasicUsageTips": "使用 <code>BrowserNotification</code> 静态方法直接调用 <code>Dispatch</code> 方法",
+    "ShowNotificationCallbackText": "发送结果回调",
+    "GetPermissionCallbackText": "检查通知权限结果回调",
+    "OnClickText": "通知点击后的回调方法名称",
+    "TitleSampleText": "你有新的物流通知",
+    "MessageSampleText": "您的包裹已到达亮马河南路,距离分发只剩3站."
   }
 }

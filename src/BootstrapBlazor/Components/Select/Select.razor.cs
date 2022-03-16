@@ -82,6 +82,12 @@ public partial class Select<TValue> : ISelect
     public bool ShowSearch { get; set; }
 
     /// <summary>
+    /// 获得/设置 选中候选项后是否自动清空搜索框内容 默认 false 不清空
+    /// </summary>
+    [Parameter]
+    public bool AutoClearSearchText { get; set; }
+
+    /// <summary>
     /// 获得 PlaceHolder 属性
     /// </summary>
     [Parameter]
@@ -165,6 +171,13 @@ public partial class Select<TValue> : ISelect
         SelectedItem = DataSource.FirstOrDefault(i => i.Value.Equals(CurrentValueAsString, StringComparison.OrdinalIgnoreCase))
             ?? DataSource.FirstOrDefault(i => i.Active)
             ?? DataSource.FirstOrDefault();
+
+        // 检查 Value 值是否在候选项中存在
+        // Value 不等于 选中值即不存在
+        if (!string.IsNullOrEmpty(SelectedItem?.Value) && CurrentValueAsString != SelectedItem.Value)
+        {
+            CurrentValueAsString = SelectedItem.Value;
+        }
     }
 
     /// <summary>
@@ -224,8 +237,7 @@ public partial class Select<TValue> : ISelect
                 {
                     Category = SwalCategory,
                     Title = SwalTitle,
-                    Content = SwalContent,
-                    IsConfirm = true
+                    Content = SwalContent
                 };
                 if (!string.IsNullOrEmpty(SwalFooter))
                 {
@@ -260,6 +272,11 @@ public partial class Select<TValue> : ISelect
         if (OnSelectedItemChanged != null)
         {
             await OnSelectedItemChanged.Invoke(SelectedItem);
+        }
+
+        if (AutoClearSearchText)
+        {
+            SearchText = string.Empty;
         }
     }
 

@@ -4,7 +4,7 @@
 
 @if (BodyTemplate != null)
 {
-    @BodyTemplate?.Invoke(Model)
+    @BodyTemplate.Invoke(Model)
     <div class="row mt-3">
         <div class="col-12">
             @RenderFooter
@@ -14,7 +14,7 @@
 else
 {
     <CascadingValue Value="true" IsFixed="true" Name="IsSearch">
-        <EditorForm TModel="TModel" Model="Model" Items="Items" RowType="RowType" ItemsPerRow="ItemsPerRow" LabelAlign="LabelAlign">
+        <EditorForm TModel="TModel" Model="Model" Items="Items" RowType="RowType" ItemsPerRow="ItemsPerRow" LabelAlign="LabelAlign" ShowLabel="ShowLabel">
             <Buttons>
                 @RenderFooter
             </Buttons>

@@ -5,7 +5,9 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web.Virtualization;
 using Microsoft.Extensions.Options;
+using System.ComponentModel.DataAnnotations;
 using System.Globalization;
+using System.Reflection;
 
 namespace BootstrapBlazor.Components;
 
@@ -261,6 +263,10 @@ public partial class Table<TItem> : BootstrapComponentBase, IDisposable, ITable 
     [NotNull]
     private IOptions<BootstrapBlazorOptions>? Options { get; set; }
 
+    [Inject]
+    [NotNull]
+    private ILookUpService? LookUpService { get; set; }
+
     [NotNull]
     private string? NotSetOnTreeExpandErrorMessage { get; set; }
 
@@ -477,7 +483,7 @@ public partial class Table<TItem> : BootstrapComponentBase, IDisposable, ITable 
     public RenderFragment<IEnumerable<TItem>>? FooterTemplate { get; set; }
 
     /// <summary>
-    /// 获得/设置 数据集合，适用于无功能时仅做数据展示使用，高级功能时请使用 <see cref="OnQueryAsync"/> 回调委托
+    /// 获得/设置 数据集合，适用于无功能仅做数据展示使用，高级功能时请使用 <see cref="OnQueryAsync"/> 回调委托
     /// </summary>
     [Parameter]
     public IEnumerable<TItem>? Items { get; set; }
@@ -523,6 +529,12 @@ public partial class Table<TItem> : BootstrapComponentBase, IDisposable, ITable 
     /// </summary>
     [Parameter]
     public bool ShowFilterHeader { get; set; }
+
+    /// <summary>
+    /// 获得/设置 是否显示过滤表头 默认 false 不显示
+    /// </summary>
+    [Parameter]
+    public bool ShowMultiFilterHeader { get; set; }
 
     /// <summary>
     /// 获得/设置 是否显示表脚 默认为 false
@@ -641,6 +653,11 @@ public partial class Table<TItem> : BootstrapComponentBase, IDisposable, ITable 
     private bool OnAfterRenderIsTriggered { get; set; }
 
     /// <summary>
+    /// 获得/设置 模型是否有 [KeyAttribute] 标签
+    /// </summary>
+    protected bool HasKeyAttribute { get; set; }
+
+    /// <summary>
     /// OnInitialized 方法
     /// </summary>
     protected override void OnInitialized()
@@ -672,6 +689,8 @@ public partial class Table<TItem> : BootstrapComponentBase, IDisposable, ITable 
             PageIndex = 1;
             await QueryAsync();
         };
+
+        HasKeyAttribute = typeof(TItem).GetRuntimeProperties().Any(p => p.IsDefined(typeof(KeyAttribute)));
 
         if (IsTree)
         {
@@ -725,10 +744,9 @@ public partial class Table<TItem> : BootstrapComponentBase, IDisposable, ITable 
     {
         base.OnParametersSet();
 
-        // 初始化每页显示数量
-        PageItemsSource ??= new int[] { 20, 50, 100, 200, 500, 1000 };
-        if (IsPagination)
+        if (IsPagination && PageItemsSourceChanged)
         {
+            PageItemsSourceChanged = false;
             PageItems = PageItemsSource.FirstOrDefault();
         }
 
@@ -933,6 +951,13 @@ public partial class Table<TItem> : BootstrapComponentBase, IDisposable, ITable 
             var content = "";
             var val = GetItemValue(col.GetFieldName(), item);
 
+            if (col.Lookup == null && !string.IsNullOrEmpty(col.LookUpServiceKey))
+            {
+                // 未设置 Lookup
+                // 设置 LookupService 键值
+                col.Lookup = LookUpService.GetItemsByKey(col.LookUpServiceKey);
+            }
+
             if (col.Lookup == null && val is bool v1)
             {
                 // 自动化处理 bool 值
@@ -1011,12 +1036,12 @@ public partial class Table<TItem> : BootstrapComponentBase, IDisposable, ITable 
     }
     #endregion
 
-    private RenderFragment RenderCell(ITableColumn col, TItem item, ItemChangedType changedType) => col.IsEditable(changedType)
+    private RenderFragment RenderCell(ITableColumn col, TItem item, ItemChangedType changedType) => col.CanWrite(typeof(TItem)) && col.IsEditable(changedType)
         ? (col.EditTemplate == null
-            ? builder => builder.CreateComponentByFieldType(this, col, item, false, changedType)
+            ? builder => builder.CreateComponentByFieldType(this, col, item, false, changedType, false, LookUpService)
             : col.EditTemplate(item))
         : (col.Template == null
-            ? builder => builder.CreateDisplayByFieldType(this, col, item, false)
+            ? builder => builder.CreateDisplayByFieldType(col, item, false, LookUpService)
             : col.Template(item));
 
     private RenderFragment RenderExcelCell(ITableColumn col, TItem item, ItemChangedType changedType)
@@ -1049,7 +1074,7 @@ public partial class Table<TItem> : BootstrapComponentBase, IDisposable, ITable 
                     parameters.Add(new(nameof(ValidateBase<string>.OnValueChanged), onValueChanged.Invoke(d, col, (model, column, val) => DynamicContext.OnValueChanged(model, column, val))));
                     col.ComponentParameters = parameters;
                 }
-                builder.CreateComponentByFieldType(this, col, row, false, changedType);
+                builder.CreateComponentByFieldType(this, col, row, false, changedType, false, LookUpService);
             };
         }
 
@@ -1148,6 +1173,16 @@ public partial class Table<TItem> : BootstrapComponentBase, IDisposable, ITable 
         }
 
         return colspan;
+    }
+
+    private bool GetShowHeader()
+    {
+        var ret = true;
+        if (MultiHeaderTemplate != null)
+        {
+            ret = ShowMultiFilterHeader;
+        }
+        return ret;
     }
 
     #region Dispose

@@ -342,6 +342,12 @@ public class TableColumn<TItem, TType> : BootstrapComponentBase, ITableColumn
     public IEnumerable<SelectedItem>? Lookup { get; set; }
 
     /// <summary>
+    /// 获得/设置 字典数据源服务的类别 常用于外键自动转换为名称操作
+    /// </summary>
+    [Parameter]
+    public string? LookUpServiceKey { get; set; }
+
+    /// <summary>
     /// 获得/设置 单元格回调方法
     /// </summary>
     [Parameter]
@@ -378,10 +384,48 @@ public class TableColumn<TItem, TType> : BootstrapComponentBase, ITableColumn
     /// <summary>
     /// 获取绑定字段显示名称方法
     /// </summary>
-    public string GetDisplayName() => Text ?? _fieldIdentifier?.GetDisplayName() ?? "";
+    public string GetDisplayName() => Text ?? _fieldIdentifier?.GetDisplayName() ?? FieldName ?? "";
+
+    /// <summary>
+    /// 获得/设置 绑定类字段名称
+    /// </summary>
+    [Parameter]
+    public string? FieldName { get; set; }
 
     /// <summary>
     /// 获取绑定字段信息方法
     /// </summary>
-    public string GetFieldName() => _fieldIdentifier?.FieldName ?? "";
+    public string GetFieldName()
+    {
+        if (string.IsNullOrEmpty(FieldName))
+        {
+            var fields = new List<string>();
+            Expression? express = FieldExpression;
+
+            while (express is LambdaExpression lambda)
+            {
+                express = lambda.Body;
+            }
+
+            while (express is MemberExpression member)
+            {
+                if (member.Expression is MemberExpression)
+                {
+                    fields.Add(member.Member.Name);
+                }
+                express = member.Expression;
+            }
+
+            if (fields.Any())
+            {
+                fields.Reverse();
+                FieldName = string.Join(".", fields);
+            }
+            else
+            {
+                FieldName = _fieldIdentifier?.FieldName;
+            }
+        }
+        return FieldName ?? "";
+    }
 }

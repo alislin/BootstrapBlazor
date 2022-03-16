@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Components;
 namespace BootstrapBlazor.Components;
 
 /// <summary>
-/// 
+/// 表格骨架屏组件
 /// </summary>
 public partial class SkeletonTable
 {
@@ -28,4 +28,8 @@ public partial class SkeletonTable
     /// </summary>
     [Parameter]
     public bool ShowToolbar { get; set; } = true;
+
+    private string? TableClassString => CssBuilder.Default("skeleton")
+        .AddClassFromAttributes(AdditionalAttributes)
+        .Build();
 }

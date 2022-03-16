@@ -4,6 +4,7 @@
 
 using Microsoft.AspNetCore.Components;
 using System.Globalization;
+using System.Reflection;
 
 namespace BootstrapBlazor.Components;
 
@@ -190,4 +191,39 @@ public static class ObjectExtensions
             ItemChangedType.Add => !item.IsReadonlyWhenAdd,
             _ => !item.IsReadonlyWhenEdit
         } || search;
+
+    /// <summary>
+    /// 判断模型是否可写
+    /// </summary>
+    /// <param name="col"></param>
+    /// <param name="modelType"></param>
+    /// <returns></returns>
+    public static bool CanWrite(this IEditorItem col, Type modelType)
+    {
+        var fieldName = col.GetFieldName();
+        return fieldName.Contains('.')
+            ? modelType.GetPropertyByName(fieldName)?.CanWrite ?? false
+            : ComplexCanWrite();
+
+        bool ComplexCanWrite()
+        {
+            var propertyNames = fieldName.Split('.');
+            PropertyInfo? propertyInfo = null;
+            Type? propertyType = null;
+            foreach (var name in propertyNames)
+            {
+                if (propertyType == null)
+                {
+                    propertyInfo = modelType.GetPropertyByName(name) ?? throw new InvalidOperationException();
+                    propertyType = propertyInfo.PropertyType;
+                }
+                else
+                {
+                    propertyInfo = propertyType.GetPropertyByName(name) ?? throw new InvalidOperationException();
+                    propertyType = propertyInfo.PropertyType;
+                }
+            }
+            return propertyInfo?.CanWrite ?? false;
+        }
+    }
 }

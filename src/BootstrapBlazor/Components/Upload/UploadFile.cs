@@ -17,7 +17,7 @@ public class UploadFile
     public string? FileName { get; set; }
 
     /// <summary>
-    /// 获得/设置 原始文件名
+    /// 获得/设置 原始文件名(上传时 IBrowserFile.Name 实例赋值)
     /// </summary>
     public string? OriginFileName { get; internal set; }
 
@@ -79,7 +79,7 @@ public class UploadFile
     /// <param name="maxHeight"></param>
     /// <param name="maxAllowedSize"></param>
     /// <param name="token"></param>
-    /// <returns></returns>
+    [ExcludeFromCodeCoverage]
     public async Task RequestBase64ImageFileAsync(string format, int maxWidth, int maxHeight, long maxAllowedSize = 512000, CancellationToken token = default)
     {
         if (File != null)
@@ -109,6 +109,7 @@ public class UploadFile
     /// <param name="maxAllowedSize"></param>
     /// <param name="token"></param>
     /// <returns></returns>
+    [ExcludeFromCodeCoverage]
     public async Task<bool> SaveToFile(string fileName, long maxAllowedSize = 512000, CancellationToken token = default)
     {
         var ret = false;

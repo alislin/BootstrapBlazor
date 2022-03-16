@@ -3,6 +3,7 @@
 // Website: https://www.blazor.zone or https://argozhang.github.io/
 
 using BootstrapBlazor.Components;
+using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -134,12 +135,19 @@ public static class LambdaExtensions
     public static Expression<Func<TItem, bool>> GetFilterLambda<TItem>(this FilterKeyValueAction filter)
     {
         Expression<Func<TItem, bool>> ret = t => true;
+        var type = typeof(TItem);
         if (!string.IsNullOrEmpty(filter.FieldKey) && filter.FieldValue != null)
+        {
+            ret = filter.FieldKey.Contains(".") ? GetComplexFilterExpression() : GetSimpleFilterExpression();
+        }
+        return ret;
+
+        Expression<Func<TItem, bool>> GetSimpleFilterExpression()
         {
             var prop = typeof(TItem).GetPropertyByName(filter.FieldKey);
             if (prop != null)
             {
-                var p = Expression.Parameter(typeof(TItem));
+                var p = Expression.Parameter(type);
                 var fieldExpression = Expression.Property(p, prop);
 
                 Expression eq = fieldExpression;
@@ -157,8 +165,46 @@ public static class LambdaExtensions
                 eq = filter.GetExpression(eq);
                 ret = Expression.Lambda<Func<TItem, bool>>(eq, p);
             }
+            return ret;
         }
-        return ret;
+
+        Expression<Func<TItem, bool>> GetComplexFilterExpression()
+        {
+            var p = Expression.Parameter(type);
+            var propertyNames = filter.FieldKey.Split('.');
+            PropertyInfo? pInfo = null;
+            Expression? fieldExpression = null;
+            foreach (var name in propertyNames)
+            {
+                if (pInfo == null)
+                {
+                    pInfo = typeof(TItem).GetPropertyByName(name) ?? throw new InvalidOperationException($"the model {type.Name} not found the property {name}");
+                    fieldExpression = Expression.Property(p, pInfo);
+                }
+                else
+                {
+                    pInfo = pInfo.PropertyType.GetPropertyByName(name) ?? throw new InvalidOperationException($"the model {pInfo.PropertyType.Name} not found the property {name}");
+                    fieldExpression = Expression.Property(fieldExpression, pInfo);
+                }
+            }
+
+            if (fieldExpression == null)
+            {
+                throw new InvalidOperationException();
+            }
+
+            // 可为空类型转化为具体类型
+            if (pInfo!.PropertyType.IsGenericType && pInfo.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
+            {
+                fieldExpression = Expression.Convert(fieldExpression, pInfo.PropertyType.GenericTypeArguments[0]);
+            }
+            else if (pInfo.PropertyType.IsEnum && filter.FieldValue is string)
+            {
+                fieldExpression = Expression.Call(fieldExpression, pInfo.PropertyType.GetMethod("ToString", Array.Empty<Type>())!);
+            }
+            fieldExpression = filter.GetExpression(fieldExpression);
+            return Expression.Lambda<Func<TItem, bool>>(fieldExpression, p);
+        }
     }
 
     /// <summary>
@@ -334,67 +380,195 @@ public static class LambdaExtensions
 
     private static IEnumerable<TItem> EnumerableOrderBy<TItem>(IEnumerable<TItem> query, string propertyName, SortOrder sortOrder)
     {
-        IEnumerable<TItem>? ret = null;
-        var methodName = sortOrder == SortOrder.Desc ? nameof(OrderByDescendingInternal) : nameof(OrderByInternal);
+        return propertyName.Contains('.') ? EnumerableOrderByComplex() : EnumerableOrderBySimple();
 
-        var pi = typeof(TItem).GetPropertyByName(propertyName);
-        if (pi != null)
+        IEnumerable<TItem> EnumerableOrderBySimple()
         {
-            var mi = typeof(LambdaExtensions)
-                .GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Static)?
-                .MakeGenericMethod(typeof(TItem), pi.PropertyType);
-            ret = mi?.Invoke(null, new object[] { query.AsQueryable(), pi }) as IOrderedQueryable<TItem>;
+            IEnumerable<TItem>? ret = null;
+            var pi = typeof(TItem).GetPropertyByName(propertyName);
+            if (pi != null)
+            {
+                var methodName = sortOrder == SortOrder.Desc ? nameof(OrderByDescendingInternal) : nameof(OrderByInternal);
+                var mi = typeof(LambdaExtensions)
+                    .GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Static)?
+                    .MakeGenericMethod(typeof(TItem), pi.PropertyType);
+                ret = mi?.Invoke(null, new object[] { query.AsQueryable(), pi }) as IOrderedQueryable<TItem>;
+            }
+            return ret ?? query;
         }
-        return ret ?? query;
+
+        IEnumerable<TItem> EnumerableOrderByComplex()
+        {
+            IEnumerable<TItem>? ret = null;
+            PropertyInfo? pi = null;
+            foreach (var name in propertyName.Split('.'))
+            {
+                if (pi == null)
+                {
+                    pi = typeof(TItem).GetPropertyByName(name);
+                }
+                else
+                {
+                    pi = pi.PropertyType.GetPropertyByName(name);
+                }
+            }
+            if (pi != null)
+            {
+                var methodName = sortOrder == SortOrder.Desc ? nameof(OrderByDescendingInternalByName) : nameof(OrderByInternalByName);
+                var mi = typeof(LambdaExtensions)
+                    .GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Static)?
+                    .MakeGenericMethod(typeof(TItem), pi.PropertyType);
+                ret = mi?.Invoke(null, new object[] { query.AsQueryable(), propertyName }) as IOrderedQueryable<TItem>;
+            }
+            return ret ?? query;
+        }
     }
 
     private static IEnumerable<TItem> EnumerableThenBy<TItem>(IEnumerable<TItem> query, string propertyName, SortOrder sortOrder)
     {
-        IEnumerable<TItem>? ret = null;
-        var methodName = sortOrder == SortOrder.Desc ? nameof(ThenByDescendingInternal) : nameof(ThenByInternal);
+        return propertyName.Contains('.') ? EnumerableThenByComplex() : EnumerableThenBySimple();
 
-        var pi = typeof(TItem).GetPropertyByName(propertyName);
-        if (pi != null)
+        IEnumerable<TItem> EnumerableThenBySimple()
         {
-            var mi = typeof(LambdaExtensions)
-                .GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Static)?
-                .MakeGenericMethod(typeof(TItem), pi.PropertyType);
-            ret = mi?.Invoke(null, new object[] { query.AsQueryable(), pi }) as IOrderedQueryable<TItem>;
+            var methodName = sortOrder == SortOrder.Desc ? nameof(ThenByDescendingInternal) : nameof(ThenByInternal);
+            IEnumerable<TItem>? ret = null;
+            var pi = typeof(TItem).GetPropertyByName(propertyName);
+            if (pi != null)
+            {
+                var mi = typeof(LambdaExtensions)
+                    .GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Static)?
+                    .MakeGenericMethod(typeof(TItem), pi.PropertyType);
+                ret = mi?.Invoke(null, new object[] { query.AsQueryable(), pi }) as IOrderedQueryable<TItem>;
+            }
+            return ret ?? query;
         }
-        return ret ?? query;
+
+        IEnumerable<TItem> EnumerableThenByComplex()
+        {
+            var methodName = sortOrder == SortOrder.Desc ? nameof(ThenByDescendingInternalByName) : nameof(ThenByInternalByName);
+            IEnumerable<TItem>? ret = null;
+            PropertyInfo? pi = null;
+            foreach (var name in propertyName.Split('.'))
+            {
+                if (pi == null)
+                {
+                    pi = typeof(TItem).GetPropertyByName(name);
+                }
+                else
+                {
+                    pi = pi.PropertyType.GetPropertyByName(name);
+                }
+            }
+            if (pi != null)
+            {
+                var mi = typeof(LambdaExtensions)
+                    .GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Static)?
+                    .MakeGenericMethod(typeof(TItem), pi.PropertyType);
+                ret = mi?.Invoke(null, new object[] { query.AsQueryable(), propertyName }) as IOrderedQueryable<TItem>;
+            }
+            return ret ?? query;
+        }
     }
 
     private static IQueryable<TItem> QueryableOrderBy<TItem>(IQueryable<TItem> query, string propertyName, SortOrder sortOrder)
     {
-        IQueryable<TItem>? ret = null;
-        var methodName = sortOrder == SortOrder.Desc ? nameof(OrderByDescendingInternal) : nameof(OrderByInternal);
+        return propertyName.Contains('.') ? QueryableOrderByComplex() : QueryableOrderBySimple();
 
-        var pi = typeof(TItem).GetPropertyByName(propertyName);
-        if (pi != null)
+        IQueryable<TItem> QueryableOrderBySimple()
         {
-            var mi = typeof(LambdaExtensions)
-                .GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Static)?
-                .MakeGenericMethod(typeof(TItem), pi.PropertyType);
-            ret = mi?.Invoke(null, new object[] { query, pi }) as IOrderedQueryable<TItem>;
+            var methodName = sortOrder == SortOrder.Desc ? nameof(OrderByDescendingInternal) : nameof(OrderByInternal);
+            IQueryable<TItem>? ret = null;
+            var pi = typeof(TItem).GetPropertyByName(propertyName);
+            if (pi != null)
+            {
+                var mi = typeof(LambdaExtensions)
+                    .GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Static)?
+                    .MakeGenericMethod(typeof(TItem), pi.PropertyType);
+                ret = mi?.Invoke(null, new object[] { query, pi }) as IOrderedQueryable<TItem>;
+            }
+            return ret ?? query;
         }
-        return ret ?? query;
+
+        IQueryable<TItem> QueryableOrderByComplex()
+        {
+            IQueryable<TItem>? ret = null;
+            PropertyInfo? pi = null;
+            foreach (var name in propertyName.Split('.'))
+            {
+                if (pi == null)
+                {
+                    pi = typeof(TItem).GetPropertyByName(name);
+                }
+                else
+                {
+                    pi = pi?.PropertyType.GetPropertyByName(name);
+                }
+            }
+            if (pi != null)
+            {
+                var methodName = sortOrder == SortOrder.Desc ? nameof(OrderByDescendingInternalByName) : nameof(OrderByInternalByName);
+                var mi = typeof(LambdaExtensions)
+                    .GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Static)?
+                    .MakeGenericMethod(typeof(TItem), pi.PropertyType);
+                ret = mi?.Invoke(null, new object[] { query, propertyName }) as IOrderedQueryable<TItem>;
+            }
+            return ret ?? query;
+        }
     }
 
     private static IQueryable<TItem> QueryableThenBy<TItem>(IQueryable<TItem> query, string propertyName, SortOrder sortOrder)
     {
-        IQueryable<TItem>? ret = null;
-        var methodName = sortOrder == SortOrder.Desc ? nameof(ThenByDescendingInternal) : nameof(ThenByInternal);
+        return propertyName.Contains('.') ? QueryableThenByComplex() : QueryableThenBySimple();
 
-        var pi = typeof(TItem).GetPropertyByName(propertyName);
-        if (pi != null)
+        IQueryable<TItem> QueryableThenBySimple()
         {
-            var mi = typeof(LambdaExtensions)
-                .GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Static)?
-                .MakeGenericMethod(typeof(TItem), pi.PropertyType);
-            ret = mi?.Invoke(null, new object[] { query, pi }) as IOrderedQueryable<TItem>;
+            var methodName = sortOrder == SortOrder.Desc ? nameof(ThenByDescendingInternal) : nameof(ThenByInternal);
+            IQueryable<TItem>? ret = null;
+            var pi = typeof(TItem).GetPropertyByName(propertyName);
+            if (pi != null)
+            {
+                var mi = typeof(LambdaExtensions)
+                    .GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Static)?
+                    .MakeGenericMethod(typeof(TItem), pi.PropertyType);
+                ret = mi?.Invoke(null, new object[] { query, pi }) as IOrderedQueryable<TItem>;
+            }
+            return ret ?? query;
         }
-        return ret ?? query;
+
+        IQueryable<TItem> QueryableThenByComplex()
+        {
+            IQueryable<TItem>? ret = null;
+            PropertyInfo? pi = null;
+            foreach (var name in propertyName.Split('.'))
+            {
+                if (pi == null)
+                {
+                    pi = typeof(TItem).GetPropertyByName(name);
+                }
+                else
+                {
+                    pi = pi.PropertyType.GetPropertyByName(name);
+                }
+            }
+            if (pi != null)
+            {
+                var methodName = sortOrder == SortOrder.Desc ? nameof(ThenByDescendingInternalByName) : nameof(ThenByInternalByName);
+                var mi = typeof(LambdaExtensions)
+                    .GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Static)?
+                    .MakeGenericMethod(typeof(TItem), pi.PropertyType);
+                ret = mi?.Invoke(null, new object[] { query, propertyName }) as IOrderedQueryable<TItem>;
+            }
+            return ret ?? query;
+        }
     }
+
+    private static IOrderedQueryable<TItem> OrderByInternalByName<TItem, TKey>(IQueryable<TItem> query, string propertyName) => query.OrderBy(GetPropertyLambdaByName<TItem, TKey>(propertyName));
+
+    private static IOrderedQueryable<TItem> OrderByDescendingInternalByName<TItem, TKey>(IQueryable<TItem> query, string propertyName) => query.OrderByDescending(GetPropertyLambdaByName<TItem, TKey>(propertyName));
+
+    private static IOrderedQueryable<TItem> ThenByInternalByName<TItem, TKey>(IOrderedQueryable<TItem> query, string propertyName) => query.ThenBy(GetPropertyLambdaByName<TItem, TKey>(propertyName));
+
+    private static IOrderedQueryable<TItem> ThenByDescendingInternalByName<TItem, TKey>(IOrderedQueryable<TItem> query, string propertyName) => query.ThenByDescending(GetPropertyLambdaByName<TItem, TKey>(propertyName));
 
     private static IOrderedQueryable<TItem> OrderByInternal<TItem, TKey>(IQueryable<TItem> query, System.Reflection.PropertyInfo memberProperty) => query.OrderBy(GetPropertyLambda<TItem, TKey>(memberProperty));
 
@@ -413,6 +587,27 @@ public static class LambdaExtensions
 
         var exp_p1 = Expression.Parameter(typeof(TItem));
         return Expression.Lambda<Func<TItem, TKey>>(Expression.Property(exp_p1, pi), exp_p1);
+    }
+
+    private static Expression<Func<TItem, TKey>> GetPropertyLambdaByName<TItem, TKey>(string propertyName)
+    {
+        var exp_p1 = Expression.Parameter(typeof(TItem));
+        PropertyInfo? pi = null;
+        Expression? expression = null;
+        foreach (var name in propertyName.Split('.'))
+        {
+            if (pi == null)
+            {
+                pi = typeof(TItem).GetPropertyByName(name);
+                expression = Expression.PropertyOrField(exp_p1, name);
+            }
+            else
+            {
+                pi = pi.PropertyType.GetPropertyByName(name);
+                expression = Expression.PropertyOrField(expression!, name);
+            }
+        }
+        return Expression.Lambda<Func<TItem, TKey>>(expression!, exp_p1);
     }
     #endregion
 
@@ -452,25 +647,55 @@ public static class LambdaExtensions
     /// </summary>
     /// <typeparam name="TModel"></typeparam>
     /// <typeparam name="TResult"></typeparam>
-    /// <param name="item"></param>
+    /// <param name="model"></param>
     /// <param name="propertyName"></param>
     /// <returns></returns>
-    public static Expression<Func<TModel, TResult>> GetPropertyValueLambda<TModel, TResult>(TModel item, string propertyName)
+    public static Expression<Func<TModel, TResult>> GetPropertyValueLambda<TModel, TResult>(TModel model, string propertyName)
     {
-        if (item == null)
+        if (model == null)
         {
-            throw new ArgumentNullException(nameof(item));
+            throw new ArgumentNullException(nameof(model));
         }
-
-        var p = item.GetType().GetPropertyByName(propertyName);
-        if (p == null)
-        {
-            throw new InvalidOperationException($"类型 {item.GetType().Name} 未找到 {propertyName} 属性，无法获取其值");
-        }
-
+        var type = model.GetType();
         var param_p1 = Expression.Parameter(typeof(TModel));
-        var body = Expression.Property(Expression.Convert(param_p1, item.GetType()), p);
-        return Expression.Lambda<Func<TModel, TResult>>(Expression.Convert(body, typeof(TResult)), param_p1);
+        return propertyName.Contains(".") ? GetComplexPropertyExpression() : GetSimplePropertyExpression();
+
+        Expression<Func<TModel, TResult>> GetSimplePropertyExpression()
+        {
+            var p = type.GetPropertyByName(propertyName);
+            if (p == null)
+            {
+                throw new InvalidOperationException($"类型 {type.Name} 未找到 {propertyName} 属性，无法获取其值");
+            }
+            var body = Expression.Property(Expression.Convert(param_p1, type), p);
+            return Expression.Lambda<Func<TModel, TResult>>(Expression.Convert(body, typeof(TResult)), param_p1);
+        }
+
+        Expression<Func<TModel, TResult>> GetComplexPropertyExpression()
+        {
+            var propertyNames = propertyName.Split(".");
+            Expression? body = null;
+            Type t = type;
+            object? propertyInstance = model;
+            foreach (var name in propertyNames)
+            {
+                var p = t.GetPropertyByName(name) ?? throw new InvalidOperationException($"类型 {type.Name} 未找到 {name} 属性，无法获取其值");
+                propertyInstance = p.GetValue(propertyInstance);
+                if (propertyInstance != null)
+                {
+                    t = propertyInstance.GetType();
+                }
+                if (body == null)
+                {
+                    body = Expression.Property(Expression.Convert(param_p1, type), p);
+                }
+                else
+                {
+                    body = Expression.Property(body, p);
+                }
+            }
+            return Expression.Lambda<Func<TModel, TResult>>(Expression.Convert(body!, typeof(TResult)), param_p1);
+        }
     }
 
     /// <summary>
@@ -488,19 +713,47 @@ public static class LambdaExtensions
             throw new ArgumentNullException(nameof(model));
         }
 
-        var p = model.GetType().GetPropertyByName(propertyName);
-        if (p == null)
-        {
-            throw new InvalidOperationException($"类型 {typeof(TModel).Name} 未找到 {propertyName} 属性，无法设置其值");
-        }
-
+        var type = model.GetType();
         var param_p1 = Expression.Parameter(typeof(TModel));
         var param_p2 = Expression.Parameter(typeof(TValue));
+        return propertyName.Contains('.') ? SetComplexPropertyExpression() : SetSimplePropertyExpression();
 
-        //获取设置属性的值的方法
-        var mi = p.GetSetMethod(true);
-        var body = Expression.Call(Expression.Convert(param_p1, model.GetType()), mi!, Expression.Convert(param_p2, p.PropertyType));
-        return Expression.Lambda<Action<TModel, TValue>>(body, param_p1, param_p2);
+        Expression<Action<TModel, TValue>> SetSimplePropertyExpression()
+        {
+            var p = type.GetPropertyByName(propertyName) ?? throw new InvalidOperationException($"类型 {type.Name} 未找到 {propertyName} 属性，无法设置其值");
+
+            //获取设置属性的值的方法
+            var mi = p.GetSetMethod(true);
+            var body = Expression.Call(Expression.Convert(param_p1, model.GetType()), mi!, Expression.Convert(param_p2, p.PropertyType));
+            return Expression.Lambda<Action<TModel, TValue>>(body, param_p1, param_p2);
+        }
+
+        Expression<Action<TModel, TValue>> SetComplexPropertyExpression()
+        {
+            var propertyNames = propertyName.Split(".");
+            Expression? body = null;
+            Type t = type;
+            object? propertyInstance = model;
+            foreach (var name in propertyNames)
+            {
+                var p = t.GetPropertyByName(name) ?? throw new InvalidOperationException($"类型 {type.Name} 未找到 {name} 属性，无法获取其值");
+                propertyInstance = p.GetValue(propertyInstance);
+                if (propertyInstance != null)
+                {
+                    t = propertyInstance.GetType();
+                }
+                if (body == null)
+                {
+                    body = Expression.Property(Expression.Convert(param_p1, type), p);
+                }
+                else
+                {
+                    body = Expression.Property(body, p);
+                }
+            }
+            body = Expression.Assign(body!, param_p2);
+            return Expression.Lambda<Action<TModel, TValue>>(body, param_p1, param_p2);
+        }
     }
 
     #region TryParse
@@ -536,4 +789,24 @@ public static class LambdaExtensions
         return false;
     }
     #endregion
+
+    /// <summary>
+    /// 获得 指定模型标记 <see cref="KeyAttribute"/> 的属性值
+    /// </summary>
+    /// <typeparam name="TModel"></typeparam>
+    /// <typeparam name="TValue"></typeparam>
+    /// <returns></returns>
+    public static Expression<Func<TModel, TValue>> GetKeyValue<TModel, TValue>(TModel model)
+    {
+        var type = model is not null ? model.GetType() : typeof(TModel);
+        Expression<Func<TModel, TValue>> ret = _ => default!;
+        var property = type.GetRuntimeProperties().FirstOrDefault(p => p.IsDefined(typeof(KeyAttribute)));
+        if (property != null)
+        {
+            var param = Expression.Parameter(typeof(TModel));
+            var body = Expression.Property(Expression.Convert(param, type), property);
+            ret = Expression.Lambda<Func<TModel, TValue>>(Expression.Convert(body, typeof(TValue)), param);
+        }
+        return ret;
+    }
 }

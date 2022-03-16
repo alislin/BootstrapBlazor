@@ -1151,9 +1151,13 @@ section {
     }
 }
 
-.ul-demo li {
-    margin-bottom: 0.25rem;
+.ul-demo {
+    margin-bottom: 0;
 }
+
+    .ul-demo li:not(:last-child) {
+        margin-bottom: 0.25rem;
+    }
 
 .footer-demo tfoot tr,
 .footer-demo .table-row.table-footer .table-cell {
@@ -1821,3 +1825,17 @@ header .bb-fs {
     font-size: 86%;
     color: #c0c4cc;
 }
+
+.table-header-group-th1 {
+    border-bottom-width: 2px !important;
+    border-bottom-color: var(--bs-secondary);
+}
+
+    .table-header-group-th1 .table-cell {
+        height: 58px;
+    }
+
+    .table-header-group-th1 .table-cell,
+    .table-header-group-th2 .table-cell {
+        justify-content: center !important;
+    }

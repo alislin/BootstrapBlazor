@@ -16,13 +16,13 @@
 <p>@((MarkupString)Localizer["P4"].Value)</p>
 
 <div class="code-label">.NET CLI</div>
-<Pre class="no-highlight">dotnet add package BootstrapBlazor.Chart --version @Version</Pre>
+<Pre class="no-highlight">dotnet add package BootstrapBlazor.Markdown --version @Version</Pre>
 
 <div class="code-label">PackageReference</div>
-<Pre class="no-highlight">&lt;PackageReference Include="BootstrapBlazor.Chart" Version="@Version" /&gt;</Pre>
+<Pre class="no-highlight">&lt;PackageReference Include="BootstrapBlazor.Markdown" Version="@Version" /&gt;</Pre>
 
 <div class="code-label">Package Manager</div>
-<Pre class="no-highlight">Install-Package BootstrapBlazor.Chart -Version @Version</Pre>
+<Pre class="no-highlight">Install-Package BootstrapBlazor.Markdown -Version @Version</Pre>
 
 <h4>@Localizer["H2"]</h4>
 
@@ -66,6 +66,24 @@
 <DemoBlock Title="@Localizer["Block4Title"]" Introduction="@Localizer["Block4Intro"]" Name="Browser">
     <p>@((MarkupString)Localizer["P7"].Value)</p>
     <Markdown IsViewer="true" Value="# Viewer Mode"></Markdown>
+</DemoBlock>
+
+<DemoBlock Title="暗黑模式" Introduction="启用暗黑模式" Name="Browser">
+    <Markdown IsDark="true" Value="# Dark Mode"></Markdown>
+</DemoBlock>
+
+<h3>启用插件</h3>
+<p>启用插件需要引入插件对应的css和js文件</p>
+
+<p>代码高亮插件：</p>
+<p>引入</p>
+
+<Pre>&lt;link rel="stylesheet" href="_content/BootstrapBlazor.Markdown/css/bootstrap.blazor.markdown.highlight.min.css" /&gt;</Pre>
+
+<Pre>&lt;script src="_content/BootstrapBlazor.Markdown/js/bootstrap.blazor.markdown.highlight.min.js"&gt;&lt;/script&gt;</Pre>
+
+<DemoBlock Title="启用代码高亮插件" Introduction="使用<code>EnableHighlight=true</code>启用插件，使用```后加代码格式的方式使用高亮，如```js 则使用js高亮语法" Name="Browser">
+    <Markdown EnableHighlight="true" Value="@JsString"></Markdown>
 </DemoBlock>
 
 <AttributeTable Items="GetAttributes()"></AttributeTable>
