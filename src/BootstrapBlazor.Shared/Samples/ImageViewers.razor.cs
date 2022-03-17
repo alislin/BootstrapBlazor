@@ -19,9 +19,11 @@ public partial class ImageViewers
     /// </summary>
     protected override void OnInitialized()
     {
-        for (int i = 1; i < 9; i++)
+        for (int i = 1; i <= 9; i++)
         {
-            Images.Add("_content/images/Pic{i}.jpg");
+            //Images.Add($"./_content/BootstrapBlazor.Shared/images/Pic{i}.jpg");
+            Images.Add($"https://fengyuanchen.github.io/viewerjs/images/thumbnails/tibet-{i}.jpg");
+
         }
     }
 }

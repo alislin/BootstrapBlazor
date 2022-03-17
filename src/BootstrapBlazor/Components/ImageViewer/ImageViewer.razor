@@ -1,6 +1,5 @@
-﻿@implements IAsyncDisposable
-@inject IJSRuntime JS
-@namespace BootstrapBlazor.Components
+﻿@namespace BootstrapBlazor.Components
+@inherits BootstrapComponentBase
 
 @if (UseBuiltinImageDiv)
 {
@@ -17,9 +16,8 @@
             }
         </ul>
     </div>
-} 
+}
 
-<link href="/_content/BootstrapBlazor/lib/viewerjs/css/viewer.min.css" rel="stylesheet" />
 
 <style>
     .docs-galley {

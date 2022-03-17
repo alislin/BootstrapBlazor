@@ -62,7 +62,9 @@ partial class ImageViewer : IDisposable
     /// </summary>
     [Parameter] public string? ID { get; set; }
 
-    private IJSObjectReference? module;
+    [NotNull]
+    private JSInterop<ImageViewer>? Interop { get; set; }
+    private ElementReference ImageViewerElement { get; set; }
 
     /// <summary>
     /// 
@@ -91,10 +93,12 @@ partial class ImageViewer : IDisposable
     /// <returns></returns>
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        await base.OnAfterRenderAsync(firstRender);
+
         if (firstRender)
         {
-            module = await JS.InvokeAsync<IJSObjectReference>("import", "./_content/BootstrapBlazor/lib/viewerjs/js/viewerjs.js");
-            Options.viewer= await module!.InvokeAsync<object>("initOptions", Options);
+            Interop ??= new JSInterop<ImageViewer>(JSRuntime);
+            Options.viewer= await Interop.InvokeAsync<object>(this, ImageViewerElement, "bb_ImageViewer", Options);
         }
     }
 
@@ -103,16 +107,19 @@ partial class ImageViewer : IDisposable
     /// </summary>
     /// <param name="options"></param>
     /// <returns></returns>
-    public async Task OnOptionsChanged(ImageViewerOptions options) => await module!.InvokeVoidAsync("initOptions", options);
+    public async Task OnOptionsChanged(ImageViewerOptions options) => await Interop!.InvokeVoidAsync(this, ImageViewerElement, "bb_ImageViewer", options);
 
-    async ValueTask IAsyncDisposable.DisposeAsync()
+    /// <summary>
+    /// js对象回调
+    /// </summary>
+    /// <param name="obj"></param>
+    /// <returns></returns>
+    [JSInvokable]
+    public void OnValueChanged(object obj)
     {
-        if (module != null)
-        {
-            await module.InvokeVoidAsync("destroy", Options);
-            await module.DisposeAsync();
-        }
+        //ImageViewerElement = obj;
     }
+
     /// <summary>
     /// 
     /// </summary>
@@ -121,11 +128,11 @@ partial class ImageViewer : IDisposable
     {
         if (disposing)
         {
-            if (module != null)
+            if (Interop != null)
             {
-                if (Options.viewer != null) await module!.InvokeVoidAsync("destroy", Options);
-                //Interop.Dispose();
-                //Interop = null;
+                if (Options.viewer != null) await Interop!.InvokeVoidAsync(this, ImageViewerElement, "bb_ImageViewerDestroy", Options);
+                Interop?.Dispose();
+                Interop = null;
             }
         }
     }
