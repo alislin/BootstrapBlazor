@@ -19,9 +19,9 @@ export function initOptions(options) {
     console.log(viewer.element.id);
     return viewer
 }
-export function destroy(viewer,options) {
-    if (undefined !== viewer && null !== viewer && options.id == viewer.element.id) {
-        viewer.destroy();
-        console.log(viewer.element.id, 'destroy');
+export function destroy(options) {
+    if (undefined !== options.viewer && null !== options.viewer && options.id == options.viewer.element.id) {
+        options.viewer.destroy();
+        console.log(options.viewer.element.id, 'destroy');
     }
 }

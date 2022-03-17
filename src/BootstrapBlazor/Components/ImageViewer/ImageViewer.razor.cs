@@ -15,7 +15,7 @@ namespace BootstrapBlazor.Components;
 /// <summary>
 /// 
 /// </summary>
-partial class ImageViewer
+partial class ImageViewer : IDisposable
 {
     /// <summary>
     /// 使用内置图片DIV
@@ -94,7 +94,7 @@ partial class ImageViewer
         if (firstRender)
         {
             module = await JS.InvokeAsync<IJSObjectReference>("import", "./_content/BootstrapBlazor/lib/viewerjs/js/viewerjs.js");
-            await module!.InvokeVoidAsync("initOptions", Options);
+            Options.viewer= await module!.InvokeAsync<object>("initOptions", Options);
         }
     }
 
@@ -107,10 +107,36 @@ partial class ImageViewer
 
     async ValueTask IAsyncDisposable.DisposeAsync()
     {
-        if (module is not null)
+        if (module != null)
         {
             await module.InvokeVoidAsync("destroy", Options);
             await module.DisposeAsync();
         }
     }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="disposing"></param>
+    protected virtual async void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            if (module != null)
+            {
+                if (Options.viewer != null) await module!.InvokeVoidAsync("destroy", Options);
+                //Interop.Dispose();
+                //Interop = null;
+            }
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
 }

@@ -22,12 +22,25 @@ public class ImageViewerOptions
         this.id = id;
         this.fullscreen = fullscreen;
     }
+
+    /// <summary>
+    /// 指定渲染hteml对象ID
+    /// </summary>
     public string id { get; set; } = "images";
+
+    /// <summary>
+    /// viewer的js对象
+    /// </summary>
+    public object viewer { get; set; } 
 
     /// <summary>
     /// 简化版工具条
     /// </summary>
     public bool toolbarlite { get; set; }
+
+    /// <summary>
+    /// 
+    /// </summary>
     public string container { get; set; } = "body";
 
     /// <summary>
@@ -42,6 +55,9 @@ public class ImageViewerOptions
     [DisplayName("关闭按钮")]
     public bool button { get; set; } = true;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public bool focus { get; set; } = true;
 
     /// <summary>
