@@ -80,7 +80,7 @@ public partial class InputUpload<TValue>
 
     [Inject]
     [NotNull]
-    private IStringLocalizer<Upload<TValue>>? Localizer { get; set; }
+    private IStringLocalizer<UploadBase<TValue>>? Localizer { get; set; }
 
     /// <summary>
     /// OnInitialized 方法
@@ -113,8 +113,6 @@ public partial class InputUpload<TValue>
 
         await base.OnFileChange(args);
 
-        ValidateFile();
-
         if (OnChange != null)
         {
             await OnChange(CurrentFile);
@@ -144,13 +142,9 @@ public partial class InputUpload<TValue>
     {
         if (results.Any())
         {
-            ErrorMessage = results.FirstOrDefault()?.ErrorMessage;
-            IsValid = string.IsNullOrEmpty(ErrorMessage);
-
-            if (IsValid.HasValue && !IsValid.Value)
-            {
-                TooltipMethod = validProperty ? "show" : "enable";
-            }
+            ErrorMessage = results.First().ErrorMessage;
+            IsValid = false;
+            TooltipMethod = validProperty ? "show" : "enable";
         }
         else
         {

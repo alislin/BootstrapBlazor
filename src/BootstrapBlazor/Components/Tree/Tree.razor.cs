@@ -9,17 +9,27 @@ namespace BootstrapBlazor.Components;
 /// <summary>
 /// Tree 组件
 /// </summary>
-public sealed partial class Tree
+public partial class Tree
 {
     /// <summary>
     /// 获得/设置 Tree 组件实例引用
     /// </summary>
     private ElementReference TreeElement { get; set; }
 
+    [NotNull]
+    private string? GroupName { get; set; }
+
     /// <summary>
     /// 获得 按钮样式集合
     /// </summary>
     private string? ClassString => CssBuilder.Default("tree")
+        .AddClassFromAttributes(AdditionalAttributes)
+        .Build();
+
+    /// <summary>
+    /// 获得 Loading 样式集合
+    /// </summary>
+    private string? LoadingClassString => CssBuilder.Default("table-loading")
         .AddClassFromAttributes(AdditionalAttributes)
         .Build();
 
@@ -39,7 +49,7 @@ public sealed partial class Tree
     /// <returns></returns>
     private static string? GetCaretClassString(TreeItem item) => CssBuilder.Default("fa fa-caret-right")
         .AddClass("invisible", !item.HasChildNode && !item.Items.Any())
-        .AddClass("fa-rotate-90", item.IsExpanded)
+        .AddClass("fa-rotate-90", !item.IsCollapsed)
         .Build();
 
     /// <summary>
@@ -57,7 +67,7 @@ public sealed partial class Tree
     /// <param name="item"></param>
     /// <returns></returns>
     private static string? GetTreeNodeClassString(TreeItem item) => CssBuilder.Default("tree-ul")
-        .AddClass("show", item.IsExpanded)
+        .AddClass("show", !item.IsCollapsed)
         .Build();
 
     /// <summary>
@@ -98,6 +108,12 @@ public sealed partial class Tree
     public bool ShowCheckbox { get; set; }
 
     /// <summary>
+    /// 获得/设置 是否显示 Radio 默认 false 不显示
+    /// </summary>
+    [Parameter]
+    public bool ShowRadio { get; set; }
+
+    /// <summary>
     /// 获得/设置 是否显示 Icon 图标 默认 false 不显示
     /// </summary>
     [Parameter]
@@ -107,13 +123,13 @@ public sealed partial class Tree
     /// 获得/设置 树形控件节点点击时回调委托
     /// </summary>
     [Parameter]
-    public Func<TreeItem, Task> OnTreeItemClick { get; set; } = item => Task.CompletedTask;
+    public Func<TreeItem, Task>? OnTreeItemClick { get; set; }
 
     /// <summary>
     /// 获得/设置 树形控件节点选中时回调委托
     /// </summary>
     [Parameter]
-    public Func<List<TreeItem>, Task> OnTreeItemChecked { get; set; } = item => Task.CompletedTask;
+    public Func<List<TreeItem>, Task>? OnTreeItemChecked { get; set; }
 
     /// <summary>
     /// 获得/设置 节点展开前回调委托
@@ -122,24 +138,31 @@ public sealed partial class Tree
     public Func<TreeItem, Task>? OnExpandNode { get; set; }
 
     /// <summary>
+    /// OnInitialized 方法
+    /// </summary>
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        GroupName = this.GetHashCode().ToString();
+    }
+
+    /// <summary>
     /// OnParametersSet 方法
     /// </summary>
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
 
-        // 通过 Items 构造层次结构
-        Items ??= new();
-        ActiveItem = Items.CascadingTree();
-        if (ActiveItem != null)
-        {
-            var item = ActiveItem;
-            while (item.Parent != null)
-            {
-                item.Parent.IsExpanded = true;
-                item = item.Parent;
-            }
-        }
+        //if (ActiveItem != null)
+        //{
+        //    var item = ActiveItem;
+        //    while (item.Parent != null)
+        //    {
+        //        item.Parent.IsExpanded = true;
+        //        item = item.Parent;
+        //    }
+        //}
     }
 
     /// <summary>
@@ -183,19 +206,12 @@ public sealed partial class Tree
     {
         if (IsAccordion)
         {
-            if (Items != null && Items.Contains(item))
+            foreach (var rootNode in Items.Where(p => !p.IsCollapsed && p != item))
             {
-                foreach (var rootNode in Items.Where(p => p.IsExpanded && p != item))
-                {
-                    rootNode.IsExpanded = false;
-                }
-            }
-            else
-            {
-                item.CollapseOtherNodes();
+                rootNode.IsCollapsed = true;
             }
         }
-        item.IsExpanded = !item.IsExpanded;
+        item.IsCollapsed = !item.IsCollapsed;
         if (OnExpandNode != null)
         {
             await OnExpandNode(item);
@@ -221,7 +237,28 @@ public sealed partial class Tree
                 t.AddRange(item.GetAllSubItems());
                 return t;
             });
-            await OnTreeItemChecked(checkedItems.Where(i => i.Checked).ToList());
+            await OnTreeItemChecked(checkedItems);
         }
+    }
+
+    private async Task OnRadioClick(TreeItem item)
+    {
+        if (ActiveItem != null)
+        {
+            ActiveItem.Checked = false;
+        }
+        ActiveItem = item;
+        ActiveItem.Checked = true;
+
+        // 其他设置为 false
+        if (OnTreeItemChecked != null)
+        {
+            await OnTreeItemChecked(new List<TreeItem> { item });
+        }
+    }
+
+    private static CheckboxState CheckState(TreeItem item)
+    {
+        return item.Checked ? CheckboxState.Checked : CheckboxState.UnChecked;
     }
 }

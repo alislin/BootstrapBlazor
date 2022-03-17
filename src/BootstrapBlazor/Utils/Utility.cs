@@ -4,6 +4,7 @@
 
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -30,6 +31,15 @@ public static class Utility
     /// <param name="fieldName">字段名称</param>
     /// <returns></returns>
     public static string GetDisplayName(Type modelType, string fieldName) => CacheManager.GetDisplayName(modelType, fieldName);
+
+    /// <summary>
+    /// 获得 指定模型标记 <see cref="KeyAttribute"/> 的属性值
+    /// </summary>
+    /// <typeparam name="TModel"></typeparam>
+    /// <typeparam name="TValue"></typeparam>
+    /// <param name="model"></param>
+    /// <returns></returns>
+    public static TValue GetKeyValue<TModel, TValue>(TModel model) => CacheManager.GetKeyValue<TModel, TValue>(model);
 
     /// <summary>
     /// 
@@ -231,18 +241,17 @@ public static class Utility
     /// 
     /// </summary>
     /// <param name="builder"></param>
-    /// <param name="component"></param>
     /// <param name="item"></param>
     /// <param name="model"></param>
     /// <param name="showLabel"></param>
-    public static void CreateDisplayByFieldType(this RenderTreeBuilder builder, ComponentBase component, IEditorItem item, object model, bool? showLabel = null)
+    /// <param name="lookUpService"></param>
+    public static void CreateDisplayByFieldType(this RenderTreeBuilder builder, IEditorItem item, object model, bool? showLabel = null, ILookUpService? lookUpService = null)
     {
         var fieldType = item.PropertyType;
         var fieldName = item.GetFieldName();
         var displayName = item.GetDisplayName() ?? GetDisplayName(model, fieldName);
 
         var fieldValue = GenerateValue(model, fieldName);
-        var fieldValueChanged = GenerateValueChanged(component, model, fieldName, fieldType);
         var valueExpression = GenerateValueExpression(model, fieldName, fieldType);
 
         var type = (Nullable.GetUnderlyingType(fieldType) ?? fieldType);
@@ -251,16 +260,17 @@ public static class Utility
             builder.OpenComponent<Switch>(0);
             builder.AddAttribute(1, nameof(Switch.Value), fieldValue);
             builder.AddAttribute(2, nameof(Switch.IsDisabled), true);
+            builder.AddAttribute(3, nameof(Display<string>.DisplayText), displayName);
             builder.CloseComponent();
         }
         else
         {
             builder.OpenComponent(0, typeof(Display<>).MakeGenericType(fieldType));
-            builder.AddAttribute(1, nameof(ValidateBase<string>.DisplayText), displayName);
-            builder.AddAttribute(2, nameof(ValidateBase<string>.Value), fieldValue);
-            builder.AddAttribute(3, nameof(ValidateBase<string>.ValueChanged), fieldValueChanged);
-            builder.AddAttribute(4, nameof(ValidateBase<string>.ValueExpression), valueExpression);
-            builder.AddAttribute(5, nameof(ValidateBase<string>.ShowLabel), showLabel ?? true);
+            builder.AddAttribute(1, nameof(Display<string>.DisplayText), displayName);
+            builder.AddAttribute(2, nameof(Display<string>.Value), fieldValue);
+            builder.AddAttribute(4, nameof(Display<string>.ValueExpression), valueExpression);
+            builder.AddAttribute(5, nameof(Display<string>.ShowLabel), showLabel ?? true);
+            builder.AddAttribute(6, nameof(Display<string>.Lookup), lookUpService?.GetItemsByKey(item.LookUpServiceKey));
             builder.CloseComponent();
         }
     }
@@ -275,7 +285,8 @@ public static class Utility
     /// <param name="showLabel"></param>
     /// <param name="changedType"></param>
     /// <param name="isSearch"></param>
-    public static void CreateComponentByFieldType(this RenderTreeBuilder builder, ComponentBase component, IEditorItem item, object model, bool? showLabel = null, ItemChangedType changedType = ItemChangedType.Update, bool isSearch = false)
+    /// <param name="lookUpService"></param>
+    public static void CreateComponentByFieldType(this RenderTreeBuilder builder, ComponentBase component, IEditorItem item, object model, bool? showLabel = null, ItemChangedType changedType = ItemChangedType.Update, bool isSearch = false, ILookUpService? lookUpService = null)
     {
         var fieldType = item.PropertyType;
         var fieldName = item.GetFieldName();
@@ -284,7 +295,7 @@ public static class Utility
         var fieldValue = GenerateValue(model, fieldName);
         var fieldValueChanged = GenerateValueChanged(component, model, fieldName, fieldType);
         var valueExpression = GenerateValueExpression(model, fieldName, fieldType);
-        var lookup = item is ITableColumn col ? col.Lookup : null;
+        var lookup = item is ITableColumn col ? col.Lookup : lookUpService?.GetItemsByKey(item.LookUpServiceKey);
         var componentType = item.ComponentType ?? GenerateComponentType(fieldType, item.Rows != 0, lookup);
         builder.OpenComponent(0, componentType);
         if (componentType.IsSubclassOf(typeof(ValidateBase<>).MakeGenericType(fieldType)))
@@ -355,11 +366,44 @@ public static class Utility
     /// <returns></returns>
     public static object GenerateValueExpression(object model, string fieldName, Type fieldType)
     {
-        // ValueExpression
-        var pi = model.GetType().GetPropertyByName(fieldName) ?? throw new InvalidOperationException($"the model {model.GetType().Name} not found the property {fieldName}");
-        var body = Expression.Property(Expression.Constant(model), pi);
-        var tDelegate = typeof(Func<>).MakeGenericType(fieldType);
-        return Expression.Lambda(tDelegate, body);
+        var type = model.GetType();
+        return fieldName.Contains(".") ? ComplexPropertyValueExpression() : SimplePropertyValueExpression();
+
+        object SimplePropertyValueExpression()
+        {
+            // ValueExpression
+            var pi = type.GetPropertyByName(fieldName) ?? throw new InvalidOperationException($"the model {type.Name} not found the property {fieldName}");
+            var body = Expression.Property(Expression.Constant(model), pi);
+            var tDelegate = typeof(Func<>).MakeGenericType(fieldType);
+            return Expression.Lambda(tDelegate, body);
+        }
+
+        object ComplexPropertyValueExpression()
+        {
+            var propertyNames = fieldName.Split(".");
+            Expression? body = null;
+            Type t = type;
+            object? propertyInstance = model;
+            foreach (var name in propertyNames)
+            {
+                var p = t.GetPropertyByName(name) ?? throw new InvalidOperationException($"the model {model.GetType().Name} not found the property {fieldName}");
+                propertyInstance = p.GetValue(propertyInstance);
+                if (propertyInstance != null)
+                {
+                    t = propertyInstance.GetType();
+                }
+                if (body == null)
+                {
+                    body = Expression.Property(Expression.Convert(Expression.Constant(model), type), p);
+                }
+                else
+                {
+                    body = Expression.Property(body, p);
+                }
+            }
+            var tDelegate = typeof(Func<>).MakeGenericType(fieldType);
+            return Expression.Lambda(tDelegate, body!);
+        }
     }
 
     /// <summary>
@@ -549,25 +593,12 @@ public static class Utility
     /// 树状数据层次化方法
     /// </summary>
     /// <param name="items">数据集合</param>
-    /// <param name="parentItem">父级节点</param>
-    public static TreeItem? CascadingTree(this List<TreeItem> items, TreeItem? parentItem = null)
+    /// <param name="parentId">父级节点</param>
+    public static IEnumerable<TreeItem> CascadingTree(this IEnumerable<TreeItem> items, string? parentId = null) => items.Where(i => i.ParentId == parentId).Select(i =>
     {
-        TreeItem? activeItem = null;
-        items.ForEach(i =>
-        {
-            i.Parent = parentItem;
-            if (i.IsActive)
-            {
-                activeItem = i;
-            }
-            var item = i.Items.CascadingTree(i);
-            if (item != null)
-            {
-                activeItem = item;
-            }
-        });
-        return activeItem;
-    }
+        i.Items = CascadingTree(items, i.Id).ToList();
+        return i;
+    });
 
     /// <summary>
     /// 
@@ -600,7 +631,15 @@ public static class Utility
         return ret;
     }
 
-    internal static object? GenerateValueChanged(ComponentBase component, object model, string fieldName, Type fieldType)
+    /// <summary>
+    /// 获得 ValueChanged 回调委托
+    /// </summary>
+    /// <param name="component"></param>
+    /// <param name="model"></param>
+    /// <param name="fieldName"></param>
+    /// <param name="fieldType"></param>
+    /// <returns></returns>
+    public static object? GenerateValueChanged(ComponentBase component, object model, string fieldName, Type fieldType)
     {
         var valueChangedInvoker = CreateLambda(fieldType).Compile();
         return valueChangedInvoker(component, model, fieldName);

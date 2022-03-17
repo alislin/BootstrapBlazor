@@ -19,7 +19,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\BootstrapBlazor\BootstrapBlazor.csproj" />
+    <PackageReference Include="BootstrapBlazor" Version="6.*">
+      <ExcludeAssets>contentFiles</ExcludeAssets>
+    </PackageReference>
   </ItemGroup>
 
 </Project>

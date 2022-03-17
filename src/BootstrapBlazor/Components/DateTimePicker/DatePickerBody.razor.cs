@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Website: https://www.blazor.zone or https://argozhang.github.io/
 
+using BootstrapBlazor.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
 
@@ -19,13 +20,8 @@ public sealed partial class DatePickerBody
     {
         get
         {
-            if (CurrentDate == DateTime.MinValue)
-            {
-                CurrentDate = DateTime.Today;
-            }
-
-            var d = CurrentDate.AddDays(1 - CurrentDate.Day);
-            d = d.AddDays(0 - (int)d.DayOfWeek);
+            var d = CurrentDate.GetSafeDayDateTime(1 - CurrentDate.Day);
+            d = d.GetSafeDayDateTime(0 - (int)d.DayOfWeek);
             return d;
         }
     }
@@ -33,7 +29,7 @@ public sealed partial class DatePickerBody
     /// <summary>
     /// 获得/设置 日历框结束时间
     /// </summary>
-    private DateTime EndDate => StartDate.AddDays(42);
+    private DateTime EndDate => StartDate.GetSafeDayDateTime(42);
 
     /// <summary>
     /// 获得/设置 当前日历框月份
@@ -60,20 +56,20 @@ public sealed partial class DatePickerBody
     /// <summary>
     /// 获得/设置 日期样式
     /// </summary>
-    private string? GetDayClass(DateTime day) => CssBuilder.Default("")
+    private string? GetDayClass(DateTime day, bool overflow) => CssBuilder.Default("")
         .AddClass("prev-month", day.Month < CurrentDate.Month)
         .AddClass("next-month", day.Month > CurrentDate.Month)
-        .AddClass("current", day == OriginaValue && Ranger == null && day.Month == CurrentDate.Month)
+        .AddClass("current", day == OriginaValue && Ranger == null && day.Month == CurrentDate.Month && !overflow)
         .AddClass("start", Ranger != null && day == Ranger.SelectedValue.Start.Date)
         .AddClass("end", Ranger != null && day == Ranger.SelectedValue.End.Date)
         .AddClass("range", Ranger != null && CurrentDate.Month >= Ranger.SelectedValue.Start.Month
             && Ranger.SelectedValue.Start != DateTime.MinValue && Ranger.SelectedValue.End != DateTime.MinValue
             && day >= Ranger.SelectedValue.Start && day <= Ranger.SelectedValue.End)
         .AddClass("today", day == DateTime.Today)
-        .AddClass("disabled", IsDisabled(day))
+        .AddClass("disabled", IsDisabled(day) || overflow)
         .Build();
 
-    private bool IsDisabled(DateTime day) => (MinValue != null && MaxValue != null) && (day < MinValue || day > MaxValue);
+    private bool IsDisabled(DateTime day) => (MinValue != null && day < MinValue) || (MaxValue != null && day > MaxValue);
 
     /// <summary>
     /// 获得 年月日时分秒视图样式
@@ -384,7 +380,7 @@ public sealed partial class DatePickerBody
     private void OnClickPrevYear()
     {
         ShowTimePicker = false;
-        CurrentDate = CurrentViewModel == DatePickerViewModel.Year ? CurrentDate.AddYears(-20) : CurrentDate.AddYears(-1);
+        CurrentDate = CurrentViewModel == DatePickerViewModel.Year ? CurrentDate.GetSafeYearDateTime(-20) : CurrentDate.GetSafeYearDateTime(-1);
         Ranger?.UpdateStart(CurrentDate);
     }
 
@@ -394,7 +390,7 @@ public sealed partial class DatePickerBody
     private void OnClickPrevMonth()
     {
         ShowTimePicker = false;
-        CurrentDate = CurrentDate.AddMonths(-1);
+        CurrentDate = CurrentDate.GetSafeMonthDateTime(-1);
         Ranger?.UpdateStart(CurrentDate);
     }
 
@@ -404,7 +400,7 @@ public sealed partial class DatePickerBody
     private void OnClickNextYear()
     {
         ShowTimePicker = false;
-        CurrentDate = CurrentViewModel == DatePickerViewModel.Year ? CurrentDate.AddYears(20) : CurrentDate.AddYears(1);
+        CurrentDate = CurrentViewModel == DatePickerViewModel.Year ? CurrentDate.GetSafeYearDateTime(20) : CurrentDate.GetSafeYearDateTime(1);
         Ranger?.UpdateEnd(CurrentDate);
     }
 
@@ -414,7 +410,7 @@ public sealed partial class DatePickerBody
     private void OnClickNextMonth()
     {
         ShowTimePicker = false;
-        CurrentDate = CurrentDate.AddMonths(1);
+        CurrentDate = CurrentDate.GetSafeMonthDateTime(1);
         Ranger?.UpdateEnd(CurrentDate);
     }
 
@@ -478,7 +474,7 @@ public sealed partial class DatePickerBody
     /// <returns></returns>
     private string GetYearPeriod()
     {
-        var start = CurrentDate.AddYears(0 - CurrentDate.Year % 20).Year;
+        var start = CurrentDate.GetSafeYearDateTime(0 - CurrentDate.Year % 20).Year;
         return string.Format(YearPeriodText, start, start + 19);
     }
 
@@ -487,22 +483,23 @@ public sealed partial class DatePickerBody
     /// </summary>
     /// <param name="year"></param>
     /// <returns></returns>
-    private DateTime GetYear(int year) => CurrentDate.AddYears(year - (CurrentDate.Year % 20));
+    private DateTime GetYear(int year) => CurrentDate.GetSafeYearDateTime(year - (CurrentDate.Year % 20));
 
     /// <summary>
     /// 获取 年视图下月份单元格显示文字
     /// </summary>
     /// <param name="year"></param>
     /// <returns></returns>
-    private string? GetYearText(int year) => $"{GetYear(year).Year}";
+    private string GetYearText(int year) => GetYear(year).Year.ToString();
 
     /// <summary>
     /// 获取 年视图下的年份单元格样式
     /// </summary>
     /// <returns></returns>
-    private string? GetYearClassName(int year) => CssBuilder.Default()
-        .AddClass("current", CurrentDate.AddYears(year - (CurrentDate.Year % 20)).Year == Value.Year)
-        .AddClass("today", CurrentDate.AddYears(year - (CurrentDate.Year % 20)).Year == DateTime.Today.Year)
+    private string? GetYearClassName(int year, bool overflow) => CssBuilder.Default()
+        .AddClass("current", CurrentDate.GetSafeYearDateTime(year - (CurrentDate.Year % 20)).Year == Value.Year)
+        .AddClass("today", CurrentDate.GetSafeYearDateTime(year - (CurrentDate.Year % 20)).Year == DateTime.Today.Year)
+        .AddClass("disabled", overflow)
         .Build();
 
     /// <summary>
@@ -510,14 +507,14 @@ public sealed partial class DatePickerBody
     /// </summary>
     /// <param name="month"></param>
     /// <returns></returns>
-    private DateTime GetMonth(int month) => CurrentDate.AddMonths(month - CurrentDate.Month);
+    private DateTime GetMonth(int month) => CurrentDate.GetSafeMonthDateTime(month - CurrentDate.Month);
 
     /// <summary>
     /// 获取 月视图下的月份单元格样式
     /// </summary>
     /// <returns></returns>
     private string? GetMonthClassName(int month) => CssBuilder.Default()
-        .AddClass("current", CurrentDate.Year == Value.Year && month == Value.Month)
+        .AddClass("current", month == Value.Month)
         .AddClass("today", CurrentDate.Year == DateTime.Today.Year && month == DateTime.Today.Month)
         .Build();
 
@@ -526,7 +523,7 @@ public sealed partial class DatePickerBody
     /// </summary>
     /// <param name="day"></param>
     /// <returns></returns>
-    private static string? GetDayText(int day) => $"{day}";
+    private static string GetDayText(int day) => day.ToString();
 
     /// <summary>
     /// 获取 月视图下月份单元格显示文字

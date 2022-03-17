@@ -34,7 +34,7 @@
     <p>@((MarkupString)Localizer["P4"].Value)</p>
     <GroupBox Title="@Localizer["GroupBox2"]" style="margin-top: 1.5rem;">
         <ValidateForm Model="@ValidateModel">
-            <EditorForm Model="@ValidateModel">
+            <EditorForm TModel="Foo">
                 <FieldItems>
                     <EditorItem @bind-Field="@context.DateTime" Readonly="true" />
                     <EditorItem @bind-Field="@context.Hobby" Items="@Hobbys" />
@@ -104,7 +104,7 @@
 </DemoBlock>
 
 <DemoBlock Title="@Localizer["Block6Title"]" Introduction="@Localizer["Block6Intro"]" Name="Alignment">
-    <ul class="ul-demo">
+    <ul class="ul-demo mb-3">
         <li>@((MarkupString)Localizer["Li5"].Value)</li>
         <li>@((MarkupString)Localizer["Li6"].Value)</li>
     </ul>

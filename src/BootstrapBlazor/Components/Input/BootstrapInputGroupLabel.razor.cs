@@ -11,16 +11,28 @@ namespace BootstrapBlazor.Components;
 /// </summary>
 public partial class BootstrapInputGroupLabel
 {
-    private string? ClassString => CssBuilder.Default("input-group-text")
+    private string? ClassString => CssBuilder.Default()
+        .AddClass("input-group-text", IsInnerLabel)
+        .AddClass("form-label", !IsInnerLabel)
         .AddClassFromAttributes(AdditionalAttributes)
         .Build();
 
     /// <summary>
-    /// 
+    /// 获得/设置 显示名称 已弃用，请使用 DisplayText
     /// </summary>
     [Parameter]
-#if NET6_0_OR_GREATER
-    [EditorRequired]
-#endif
-    public string? Text { get; set; }
+    [Obsolete("已弃用，请使用 DisplayText")]
+    public string? Text { get => DisplayText; set => DisplayText = value; }
+
+    private bool IsInnerLabel { get; set; }
+
+    /// <summary>
+    /// OnParametersSet 方法
+    /// </summary>
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+
+        IsInnerLabel = InputGroup != null;
+    }
 }

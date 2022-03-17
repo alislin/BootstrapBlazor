@@ -23,7 +23,7 @@
 </DemoBlock>
 
 <DemoBlock Title="@Localizer["FormTitle"]" Introduction="@Localizer["FormIntro"]" Name="FormSettings">
-    <ul class="ul-demo">
+    <ul class="ul-demo mb-3">
         <li>@((MarkupString)Localizer["FormLi1"].Value)</li>
         <li>@((MarkupString)Localizer["FormLi2"].Value)</li>
     </ul>
@@ -135,6 +135,10 @@
 
 <DemoBlock Title="@Localizer["FileIconTitle"]" Introduction="@Localizer["FileIconIntro"]" Name="FileIcon">
     <CardUpload TValue="string" DefaultFileList="@DefaultFormatFileList" OnChange="@OnCardUpload" OnDelete="@(fileName => Task.FromResult(true))"></CardUpload>
+</DemoBlock>
+
+<DemoBlock Title="@Localizer["Base64FormatTitle"]" Introduction="@Localizer["Base64FormatIntro"]" Name="Base64">
+    <CardUpload TValue="string" DefaultFileList="@Base64FormatFileList" IsSingle="true" />
 </DemoBlock>
 
 <AttributeTable Items="@GetInputAttributes()" Title="InputUpload" />

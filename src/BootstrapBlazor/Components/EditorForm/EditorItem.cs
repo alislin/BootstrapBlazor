@@ -94,7 +94,7 @@ public class EditorItem<TModel, TValue> : ComponentBase, IEditorItem
     /// </summary>
     [Parameter]
 #if NET5_0
-        public RenderFragment<object>? EditTemplate { get; set; }
+    public RenderFragment<object>? EditTemplate { get; set; }
 #elif NET6_0_OR_GREATER
     public RenderFragment<TModel>? EditTemplate { get; set; }
 
@@ -148,6 +148,12 @@ public class EditorItem<TModel, TValue> : ComponentBase, IEditorItem
     /// </summary>
     [Parameter]
     public IEnumerable<SelectedItem>? Lookup { get; set; }
+
+    /// <summary>
+    /// 获得/设置 LookupService 服务获取 Lookup 数据集合键值 常用于外键自动转换为名称操作
+    /// </summary>
+    [Parameter]
+    public string? LookUpServiceKey { get; set; }
 
     /// <summary>
     /// 获得/设置 自定义验证集合
