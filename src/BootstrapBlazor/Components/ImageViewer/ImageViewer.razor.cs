@@ -93,7 +93,7 @@ partial class ImageViewer
     {
         if (firstRender)
         {
-            module = await JS.InvokeAsync<IJSObjectReference>("import", "/_content/BootstrapBlazor/lib/viewerjs/js/viewerjs.js");
+            module = await JS.InvokeAsync<IJSObjectReference>("import", "./_content/BootstrapBlazor/lib/viewerjs/js/viewerjs.js");
             await module!.InvokeVoidAsync("initOptions", Options);
         }
     }
