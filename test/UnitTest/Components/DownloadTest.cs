@@ -113,4 +113,32 @@ public class DownloadTest : BootstrapBlazorTestBase
         await cut.InvokeAsync(() => btn.Click());
         Assert.True(download);
     }
+
+    [Fact]
+    public async Task DownloadFilePath_Ok()
+    {
+        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Test.log");
+        if (File.Exists(filePath))
+        {
+            File.Delete(filePath);
+        }
+        var downloadService = Context.Services.GetRequiredService<DownloadService>();
+        var cut = Context.RenderComponent<BootstrapBlazorRoot>(pb =>
+        {
+            pb.AddChildContent<Button>(pb =>
+            {
+                pb.Add(a => a.OnClick, async () =>
+                {
+                    await downloadService.DownloadAsync("test.log", filePath);
+                });
+            });
+        });
+        var btn = cut.Find("button");
+        await Assert.ThrowsAsync<FileNotFoundException>(() => cut.InvokeAsync(() => btn.Click()));
+
+        using var fs = File.Create(filePath);
+        fs.Close();
+        btn = cut.Find("button");
+        await cut.InvokeAsync(() => btn.Click());
+    }
 }
