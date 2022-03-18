@@ -46,4 +46,27 @@ public class DownloadTest : BootstrapBlazorTestBase
         await cut.InvokeAsync(() => btn.Click());
         Assert.Equal("test.text", fileName);
     }
+
+    [Fact]
+    public async Task CreateUrlAsync_Steam_Ok()
+    {
+        var fileName = "";
+        var downloadService = Context.Services.GetRequiredService<DownloadService>();
+        var cut = Context.RenderComponent<BootstrapBlazorRoot>(pb =>
+        {
+            pb.AddChildContent<Button>(pb =>
+            {
+                pb.Add(a => a.OnClick, async () =>
+                {
+                    using var stream = new MemoryStream();
+                    await downloadService.CreateUrlAsync("test.txt", stream);
+                    fileName = "test.text";
+                    stream.Close();
+                });
+            });
+        });
+        var btn = cut.Find("button");
+        await cut.InvokeAsync(() => btn.Click());
+        Assert.Equal("test.text", fileName);
+    }
 }
