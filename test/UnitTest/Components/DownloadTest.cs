@@ -141,4 +141,42 @@ public class DownloadTest : BootstrapBlazorTestBase
         btn = cut.Find("button");
         await cut.InvokeAsync(() => btn.Click());
     }
+
+    [Fact]
+    public async Task DownloadFolder_Ok()
+    {
+        var folder = Path.Combine(Directory.GetCurrentDirectory(), "Test");
+        if (Directory.Exists(folder))
+        {
+            Directory.Delete(folder, true);
+        }
+        var fileName = Path.Combine(folder, "test.txt");
+        var downloadService = Context.Services.GetRequiredService<DownloadService>();
+        var cut = Context.RenderComponent<BootstrapBlazorRoot>(pb =>
+        {
+            pb.AddChildContent<Button>(pb =>
+            {
+                pb.Add(a => a.OnClick, async () =>
+                {
+                    await downloadService.DownloadFolderAsync(fileName, folder);
+                });
+            });
+        });
+        var btn = cut.Find("button");
+        await Assert.ThrowsAsync<DirectoryNotFoundException>(() => cut.InvokeAsync(() => btn.Click()));
+
+        if (!Directory.Exists(folder))
+        {
+            Directory.CreateDirectory(folder);
+        }
+        var zipFile = Path.Combine(Directory.GetCurrentDirectory(), "Test.zip");
+        if (File.Exists(zipFile))
+        {
+            File.Delete(zipFile);
+        }
+        using var fs = File.Create(fileName);
+        fs.Close();
+        btn = cut.Find("button");
+        await cut.InvokeAsync(() => btn.Click());
+    }
 }
