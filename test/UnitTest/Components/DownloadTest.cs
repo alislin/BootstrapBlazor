@@ -9,7 +9,25 @@ namespace UnitTest.Components;
 public class DownloadTest : BootstrapBlazorTestBase
 {
     [Fact]
-    public async Task Download_Ok()
+    public async Task CreateUrlAsync_NoService_Ok()
+    {
+        var fileName = "";
+        var downloadService = Context.Services.GetRequiredService<DownloadService>();
+        var cut = Context.RenderComponent<Button>(pb =>
+        {
+            pb.Add(a => a.OnClick, async () =>
+            {
+                await downloadService.CreateUrlAsync("test.txt", new byte[] { 0x01, 0x02 });
+                fileName = "test.text";
+            });
+        });
+        var btn = cut.Find("button");
+        await cut.InvokeAsync(() => btn.Click());
+        Assert.Equal("test.text", fileName);
+    }
+
+    [Fact]
+    public async Task CreateUrlAsync_Ok()
     {
         var fileName = "";
         var downloadService = Context.Services.GetRequiredService<DownloadService>();
