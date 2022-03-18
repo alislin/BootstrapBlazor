@@ -90,4 +90,27 @@ public class DownloadTest : BootstrapBlazorTestBase
         await cut.InvokeAsync(() => btn.Click());
         Assert.True(download);
     }
+
+    [Fact]
+    public async Task DownloadFile_Stream_Ok()
+    {
+        var download = false;
+        var downloadService = Context.Services.GetRequiredService<DownloadService>();
+        var cut = Context.RenderComponent<BootstrapBlazorRoot>(pb =>
+        {
+            pb.AddChildContent<Button>(pb =>
+            {
+                pb.Add(a => a.OnClick, async () =>
+                {
+                    using var stream = new MemoryStream();
+                    await downloadService.DownloadAsync("test.txt", stream);
+                    stream.Close();
+                    download = true;
+                });
+            });
+        });
+        var btn = cut.Find("button");
+        await cut.InvokeAsync(() => btn.Click());
+        Assert.True(download);
+    }
 }
