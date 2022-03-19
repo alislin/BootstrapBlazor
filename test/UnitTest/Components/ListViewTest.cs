@@ -27,6 +27,21 @@ public class ListViewTest : BootstrapBlazorTestBase
         cut.Contains("images/Pic1.jpg");
     }
 
+    [Fact]
+    public void Items_Ok()
+    {
+        var items = Enumerable.Range(1, 6).Select(i => new Product()
+        {
+            ImageUrl = $"images/Pic{i}.jpg",
+            Description = $"Pic{i}.jpg",
+            Category = $"Group{(i % 4) + 1}"
+        });
+        var cut = Context.RenderComponent<ListView<Product>>(pb =>
+        {
+            pb.Add(a => a.Items, items);
+            pb.Add(a => a.GroupName, item => "Test-GroupName");
+        });
+    }
 
     private class Product
     {
