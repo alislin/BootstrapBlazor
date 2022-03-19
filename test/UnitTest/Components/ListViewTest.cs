@@ -41,7 +41,7 @@ public class ListViewTest : BootstrapBlazorTestBase
             pb.Add(a => a.GroupName, p => p.Category);
             pb.Add(a => a.IsVertical, true);
         });
-        cut.Contains("Grooup1");
+        cut.Contains("Group1");
         cut.Contains("is-vertical");
 
         clicked = false;
@@ -67,7 +67,7 @@ public class ListViewTest : BootstrapBlazorTestBase
     }
 
     [Fact]
-    public void Pageable_Ok()
+    public async Task Pageable_Ok()
     {
         var items = Enumerable.Range(1, 6).Select(i => new Product()
         {
@@ -79,21 +79,16 @@ public class ListViewTest : BootstrapBlazorTestBase
         {
             pb.Add(a => a.OnQueryAsync, Query);
             pb.Add(a => a.Pageable, true);
+            pb.Add(a => a.PageItemsSource, new int[] { 2, 4 });
         });
 
-        cut.SetParametersAndRender(pb =>
-        {
-            pb.Add(a => a.OnQueryAsync, NullQuery);
-        });
+        var pages = cut.FindAll(".page-link");
+        await cut.InvokeAsync(() => pages[2].Click());
 
         Task<QueryData<Product>> Query(QueryPageOptions option) => Task.FromResult(new QueryData<Product>()
         {
             Items = items,
-        });
-
-        Task<QueryData<Product>> NullQuery(QueryPageOptions option) => Task.FromResult(new QueryData<Product>()
-        {
-            Items = null!
+            TotalCount = 6
         });
     }
 
