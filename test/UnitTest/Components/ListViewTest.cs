@@ -51,7 +51,7 @@ public class ListViewTest : BootstrapBlazorTestBase
     }
 
     [Fact]
-    public void Items_Ok()
+    public void Pageable_Exception()
     {
         var items = Enumerable.Range(1, 6).Select(i => new Product()
         {
@@ -59,10 +59,13 @@ public class ListViewTest : BootstrapBlazorTestBase
             Description = $"Pic{i}.jpg",
             Category = $"Group{(i % 4) + 1}"
         });
-        var cut = Context.RenderComponent<ListView<Product>>(pb =>
+        Assert.Throws<InvalidOperationException>(() => Context.RenderComponent<ListView<Product>>(pb =>
         {
             pb.Add(a => a.Items, items);
-            pb.Add(a => a.GroupName, item => "Test-GroupName");
+            pb.Add(a => a.Pageable, true);
+        }));
+    }
+
     [Fact]
     public void Pageable_Ok()
     {
