@@ -11,6 +11,7 @@ public class MessageTest : BootstrapBlazorTestBase
     [Fact]
     public async Task Message_Ok()
     {
+        var dismiss = false;
         var service = Context.Services.GetRequiredService<MessageService>();
         var cut = Context.RenderComponent<BootstrapBlazorRoot>(pb =>
         {
@@ -27,13 +28,22 @@ public class MessageTest : BootstrapBlazorTestBase
                         Icon = "fa fa-fa",
                         IsAutoHide = true,
                         ShowBar = true,
-                        ShowDismiss = true
+                        ShowDismiss = true,
+                        OnDismiss = () =>
+                        {
+                            dismiss = true;
+                            return Task.CompletedTask;
+                        }
                     });
                 });
             });
         });
         var btn = cut.Find("button");
         await cut.InvokeAsync(() => btn.Click());
+
+        var btnClose = cut.Find(".btn-close");
+        await cut.InvokeAsync(() => btnClose.Click());
+        Assert.True(dismiss);
 
         var message = cut.FindComponent<Message>();
         await message.InvokeAsync(() => message.Instance.Clear());
