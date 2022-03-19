@@ -35,7 +35,19 @@ public class MessageTest : BootstrapBlazorTestBase
         var btn = cut.Find("button");
         await cut.InvokeAsync(() => btn.Click());
 
-        var btnClose = cut.Find(".btn-close");
-        await cut.InvokeAsync(() => btnClose.Click());
+        var message = cut.FindComponent<Message>();
+        await message.InvokeAsync(() => message.Instance.Clear());
+    }
+
+    [Fact]
+    public async Task SetPlacement_Ok()
+    {
+        var cut = Context.RenderComponent<Message>(pb =>
+        {
+            pb.Add(a => a.Placement, Placement.Left);
+        });
+
+        await cut.InvokeAsync(() => cut.Instance.SetPlacement(Placement.Top));
+        Assert.Equal(Placement.Top, cut.Instance.Placement);
     }
 }
