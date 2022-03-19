@@ -63,6 +63,34 @@ public class ListViewTest : BootstrapBlazorTestBase
         {
             pb.Add(a => a.Items, items);
             pb.Add(a => a.GroupName, item => "Test-GroupName");
+    [Fact]
+    public void Pageable_Ok()
+    {
+        var items = Enumerable.Range(1, 6).Select(i => new Product()
+        {
+            ImageUrl = $"images/Pic{i}.jpg",
+            Description = $"Pic{i}.jpg",
+            Category = $"Group{(i % 4) + 1}"
+        });
+        var cut = Context.RenderComponent<ListView<Product>>(pb =>
+        {
+            pb.Add(a => a.OnQueryAsync, Query);
+            pb.Add(a => a.Pageable, true);
+        });
+
+        cut.SetParametersAndRender(pb =>
+        {
+            pb.Add(a => a.OnQueryAsync, NullQuery);
+        });
+
+        Task<QueryData<Product>> Query(QueryPageOptions option) => Task.FromResult(new QueryData<Product>()
+        {
+            Items = items,
+        });
+
+        Task<QueryData<Product>> NullQuery(QueryPageOptions option) => Task.FromResult(new QueryData<Product>()
+        {
+            Items = null!
         });
     }
 
