@@ -7,8 +7,9 @@ namespace UnitTest.Components;
 public class ListViewTest : BootstrapBlazorTestBase
 {
     [Fact]
-    public void ListView_Ok()
+    public async Task ListView_Ok()
     {
+        var clicked = false;
         var items = Enumerable.Range(1, 6).Select(i => new Product()
         {
             ImageUrl = $"images/Pic{i}.jpg",
@@ -21,10 +22,32 @@ public class ListViewTest : BootstrapBlazorTestBase
             pb.Add(a => a.HeaderTemplate, builder => builder.AddContent(0, "Test-Header"));
             pb.Add(a => a.BodyTemplate, p => builder => builder.AddContent(0, $"{p.ImageUrl}-{p.Description}-{p.Category}"));
             pb.Add(a => a.FooterTemplate, builder => builder.AddContent(0, "Footer-Header"));
+            pb.Add(a => a.OnListViewItemClick, p =>
+            {
+                clicked = true;
+                return Task.CompletedTask;
+            });
         });
         cut.Contains("Test-Header");
         cut.Contains("Footer-Header");
         cut.Contains("images/Pic1.jpg");
+
+        var item = cut.Find(".listview-item");
+        await cut.InvokeAsync(() => item.Click());
+        Assert.True(clicked);
+
+        cut.SetParametersAndRender(pb =>
+        {
+            pb.Add(a => a.GroupName, p => p.Category);
+            pb.Add(a => a.IsVertical, true);
+        });
+        cut.Contains("Grooup1");
+        cut.Contains("is-vertical");
+
+        clicked = false;
+        item = cut.Find(".listview-item");
+        await cut.InvokeAsync(() => item.Click());
+        Assert.True(clicked);
     }
 
     [Fact]
