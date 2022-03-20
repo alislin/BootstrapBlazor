@@ -1139,7 +1139,8 @@
     "Att12": "Whether to read only",
     "Att13": "Edit the column's front label name",
     "Att14": "Column editing template",
-    "IsDisplay": "Shown as Display component"
+    "IsDisplay": "Shown as Display component",
+    "ShowLabelTooltip": "Show complete information when mouse hover over the label"
   },
   "BootstrapBlazor.Shared.Samples.FloatingLabels": {
     "Title": "FloatingLabel",
@@ -1829,7 +1830,8 @@
     "OnValidSubmitCallBackLog": "OnValidSubmit callback delegate",
     "DatabaseExistLog": "Exists in the database",
     "LongDisplayText": "I am very long display text",
-    "LongDisplayDescription": "In this example, set the <code>ShowLabelTooltip</code> in the <code>form-inline</code> style to <code>true</code> to make the mouse hover over the cropped label to display the complete information"
+    "LongDisplayDescription": "In this example, set the <code>ShowLabelTooltip</code> in the <code>form-inline</code> style to <code>true</code> to make the mouse hover over the cropped label to display the complete information",
+    "ShowLabelTooltip": "Show complete information when mouse hover over the label"
   },
   "BootstrapBlazor.Shared.Samples.Avatars": {
     "Title": "Avatar",

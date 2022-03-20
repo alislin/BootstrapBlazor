@@ -1141,7 +1141,8 @@
     "Att12": "是否只读",
     "Att13": "编辑列前置标签名",
     "Att14": "列编辑模板",
-    "IsDisplay": "是否显示为 Display 组件"
+    "IsDisplay": "是否显示为 Display 组件",
+    "ShowLabelTooltip": "鼠标悬停标签时显示完整信息"
   },
   "BootstrapBlazor.Shared.Samples.FloatingLabels": {
     "Title": "FloatingLabel 输入框",
@@ -1832,7 +1833,8 @@
     "OnValidSubmitCallBackLog": "OnValidSubmit 回调委托",
     "DatabaseExistLog": "数据库中已存在",
     "LongDisplayText": "我是特别长的显示标签",
-    "LongDisplayDescription": "本例中通过设置 <code>form-inline</code> 样式内的 <code>BootstrapInput</code> 组件 <code>ShowLabelTooltip</code> 为 <code>true</code> 使鼠标悬停在被裁剪的 <code>label</code> 时显示完整信息"
+    "LongDisplayDescription": "本例中通过设置 <code>form-inline</code> 样式内的 <code>BootstrapInput</code> 组件 <code>ShowLabelTooltip</code> 为 <code>true</code> 使鼠标悬停在被裁剪的 <code>label</code> 时显示完整信息",
+    "ShowLabelTooltip": "鼠标悬停标签时显示完整信息"
   },
   "BootstrapBlazor.Shared.Samples.Avatars": {
     "Title": "Avatar 头像",
