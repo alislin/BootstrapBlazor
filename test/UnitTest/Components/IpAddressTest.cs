@@ -22,4 +22,16 @@ public class IpAddressTest : BootstrapBlazorTestBase
         await cut.InvokeAsync(() => inputs[3].Change("1"));
         Assert.Equal("1.1.1.1", cut.Instance.Value);
     }
+
+    [Fact]
+    public async Task IpAddress_Null()
+    {
+        var cut = Context.RenderComponent<IpAddress>();
+        var inputs = cut.FindAll(".ipv4-cell");
+        await cut.InvokeAsync(() => inputs[0].Change(new ChangeEventArgs() { Value = null }));
+        await cut.InvokeAsync(() => inputs[1].Change(new ChangeEventArgs() { Value = null }));
+        await cut.InvokeAsync(() => inputs[2].Change(new ChangeEventArgs() { Value = null }));
+        await cut.InvokeAsync(() => inputs[3].Change(new ChangeEventArgs() { Value = null }));
+        Assert.Equal("0.0.0.0", cut.Instance.Value);
+    }
 }
