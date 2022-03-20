@@ -34,4 +34,16 @@ public class IpAddressTest : BootstrapBlazorTestBase
         await cut.InvokeAsync(() => inputs[3].Change(new ChangeEventArgs() { Value = null }));
         Assert.Equal("0.0.0.0", cut.Instance.Value);
     }
+
+    [Fact]
+    public async Task IpAddress_Value()
+    {
+        var cut = Context.RenderComponent<IpAddress>();
+        var inputs = cut.FindAll(".ipv4-cell");
+        await cut.InvokeAsync(() => inputs[0].Change(new ChangeEventArgs() { Value = "1234" }));
+        await cut.InvokeAsync(() => inputs[1].Change(new ChangeEventArgs() { Value = "1234" }));
+        await cut.InvokeAsync(() => inputs[2].Change(new ChangeEventArgs() { Value = "1234" }));
+        await cut.InvokeAsync(() => inputs[3].Change(new ChangeEventArgs() { Value = "1234" }));
+        Assert.Equal("123.123.123.123", cut.Instance.Value);
+    }
 }
