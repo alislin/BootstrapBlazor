@@ -1827,7 +1827,9 @@
     "OnValidSubmitDoneLog": "OnValidSubmit callback delegate: Done!",
     "OnInvalidSubmitCallBackLog": "OnInvalidSubmit callback delegate",
     "OnValidSubmitCallBackLog": "OnValidSubmit callback delegate",
-    "DatabaseExistLog": "Exists in the database"
+    "DatabaseExistLog": "Exists in the database",
+    "LongDisplayText": "I am very long display text",
+    "LongDisplayDescription": "In this example, set the <code>ShowLabelTooltip</code> in the <code>form-inline</code> style to <code>true</code> to make the mouse hover over the cropped label to display the complete information"
   },
   "BootstrapBlazor.Shared.Samples.Avatars": {
     "Title": "Avatar",
