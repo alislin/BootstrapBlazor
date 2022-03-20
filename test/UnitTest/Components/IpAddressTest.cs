@@ -8,4 +8,18 @@ namespace UnitTest.Components;
 
 public class IpAddressTest : BootstrapBlazorTestBase
 {
+    [Fact]
+    public async Task IpAddress_Ok()
+    {
+        var cut = Context.RenderComponent<IpAddress>();
+        cut.Contains("ipaddress form-control");
+        Assert.Equal("0.0.0.0", cut.Instance.Value);
+
+        var inputs = cut.FindAll(".ipv4-cell");
+        await cut.InvokeAsync(() => inputs[0].Change("1"));
+        await cut.InvokeAsync(() => inputs[1].Change("1"));
+        await cut.InvokeAsync(() => inputs[2].Change("1"));
+        await cut.InvokeAsync(() => inputs[3].Change("1"));
+        Assert.Equal("1.1.1.1", cut.Instance.Value);
+    }
 }
