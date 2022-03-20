@@ -367,7 +367,7 @@ public static class Utility
     public static object GenerateValueExpression(object model, string fieldName, Type fieldType)
     {
         var type = model.GetType();
-        return fieldName.Contains(".") ? ComplexPropertyValueExpression() : SimplePropertyValueExpression();
+        return fieldName.Contains('.') ? ComplexPropertyValueExpression() : SimplePropertyValueExpression();
 
         object SimplePropertyValueExpression()
         {
