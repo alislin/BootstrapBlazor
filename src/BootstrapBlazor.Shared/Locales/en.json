@@ -1222,6 +1222,7 @@
     "Block11Intro": "Use the <code>BootstrapPassword</code> component",
     "IsTrimTitle": "Trim",
     "IsTrimIntro": "Use <code>IsTrim=\"true\"</code> to automatically trim white space when entering content",
+    "TrimDescription": "The front and back spaces in the component will be trimmed when set <code>IsTrim</code> to <code>true</code>",
     "PlaceHolder": "Please enter ...",
     "TestName": "Tom",
     "Log": "The key triggers the current text box value",

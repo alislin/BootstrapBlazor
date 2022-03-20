@@ -1224,6 +1224,7 @@
     "Block11Intro": "使用 <code>BootstrapPassword</code> 组件",
     "IsTrimTitle": "修剪空白",
     "IsTrimIntro": "使用 <code>IsTrim=\"true\"</code> 可在输入内容的时候自动修剪空白",
+    "TrimDescription": "设置参数 <code>IsTrim</code> 值为 <code>true</code> 后，组件内的前后空格将会被裁减",
     "PlaceHolder": "请输入 ...",
     "TestName": "张三",
     "Log": "按键触发 当前文本框值",
