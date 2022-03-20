@@ -57,6 +57,12 @@ public abstract class DisplayBase<TValue> : TooltipComponentBase
     public bool? ShowLabel { get; set; }
 
     /// <summary>
+    /// 获得/设置 是否显示标签 Tooltip 多用于标签文字过长导致裁减时使用 默认 false 始终不显示
+    /// </summary>
+    [Parameter]
+    public bool ShowLabelTooltip { get; set; }
+
+    /// <summary>
     /// 获得/设置 显示名称
     /// </summary>
     [Parameter]
