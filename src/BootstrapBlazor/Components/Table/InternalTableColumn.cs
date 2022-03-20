@@ -46,6 +46,11 @@ internal class InternalTableColumn : ITableColumn
     /// </summary>
     public bool IsReadonlyWhenEdit { get; set; }
 
+    /// <summary>
+    /// 获得/设置 是否显示标签 Tooltip 多用于标签文字过长导致裁减时使用 默认 null
+    /// </summary>
+    public bool? ShowLabelTooltip { get; set; }
+
     public string? CssClass { get; set; }
 
     public BreakPoint ShownWithBreakPoint { get; set; }

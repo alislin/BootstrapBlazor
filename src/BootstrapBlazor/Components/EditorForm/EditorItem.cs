@@ -72,6 +72,12 @@ public class EditorItem<TModel, TValue> : ComponentBase, IEditorItem
     public bool SkipValidate { get; set; }
 
     /// <summary>
+    /// 获得/设置 是否显示标签 Tooltip 多用于标签文字过长导致裁减时使用 默认 null
+    /// </summary>
+    [Parameter]
+    public bool? ShowLabelTooltip { get; set; }
+
+    /// <summary>
     /// 获得/设置 表头显示文字
     /// </summary>
     [Parameter]
