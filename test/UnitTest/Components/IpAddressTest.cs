@@ -46,4 +46,19 @@ public class IpAddressTest : BootstrapBlazorTestBase
         await cut.InvokeAsync(() => inputs[3].Change(new ChangeEventArgs() { Value = "1234" }));
         Assert.Equal("123.123.123.123", cut.Instance.Value);
     }
+
+    [Fact]
+    public void ValidateForm_Ok()
+    {
+        var foo = new Foo() { Name = "1.1.1.1" };
+        var cut = Context.RenderComponent<ValidateForm>(pb =>
+        {
+            pb.Add(a => a.Model, foo);
+            pb.AddChildContent<IpAddress>(pb =>
+            {
+                pb.Add(a => a.Value, foo.Name);
+            });
+        });
+        cut.Contains("form-label");
+    }
 }
